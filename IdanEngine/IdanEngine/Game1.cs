@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace IdanEngine
 {
@@ -9,13 +11,27 @@ namespace IdanEngine
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        
+        public static GraphicsDeviceManager Graphics;
+        public static SpriteBatch SpriteBatch;
+
+        public Dictionary<ScreenType, Screen> Screens;
+        public ScreenType CurrentScreen;
+
+        public static ContentManager PublicContent;
+
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
+            Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
             Content.RootDirectory = "Content";
+            PublicContent = Content;
+
+            IsMouseVisible = true;
+
+            Screens = new Dictionary<ScreenType, Screen>();
+            CurrentScreen = ScreenType.Game;
         }
 
         /// <summary>
@@ -38,7 +54,10 @@ namespace IdanEngine
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Screens.Add(ScreenType.Menu, new MenuScreen());
+            Screens.Add(ScreenType.Game, new GameScreen());
 
             // TODO: use this.Content to load your game content here
         }
@@ -64,6 +83,8 @@ namespace IdanEngine
 
             // TODO: Add your update logic here
 
+            Screens [CurrentScreen].Update();
+
             base.Update(gameTime);
         }
 
@@ -76,6 +97,12 @@ namespace IdanEngine
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            SpriteBatch.Begin();
+
+            Screens [CurrentScreen].Draw();
+
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }
