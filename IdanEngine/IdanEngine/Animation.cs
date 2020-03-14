@@ -12,6 +12,9 @@ namespace IdanEngine {
         private int StartAnimationFromIndex;
         private int EndAnimationInIndex;
         private int CurrentFrame;
+        private bool IsPlaying;
+        private int NextFrameDelay;
+        private int NextFrameDelayTimer;
 
         public Animation(Image image, int startAnimationFromIndex, int endAnimationInIndex, int spritesLength) {
 
@@ -19,6 +22,9 @@ namespace IdanEngine {
             StartAnimationFromIndex = startAnimationFromIndex;
             EndAnimationInIndex = endAnimationInIndex;
             CurrentFrame = StartAnimationFromIndex;
+            IsPlaying = false;
+            NextFrameDelay = 3;
+            NextFrameDelayTimer = 0;
             LoadSprites(image);
         }
 
@@ -41,6 +47,26 @@ namespace IdanEngine {
                                                      image.GetRectangle().Height, Color.White);
                 Sprites [i].SetNewImage(path + i);
             }
+        }
+
+        public void Play() {
+            if (IsPlaying) {
+
+                if (CurrentFrame < EndAnimationInIndex - 1)
+                    CurrentFrame++;
+                else {
+                    CurrentFrame = StartAnimationFromIndex;
+                    IsPlaying = false;
+                }
+            }
+        }
+
+        public void Start() {
+            IsPlaying = true;
+        }
+
+        public void Stop() {
+            IsPlaying = false;
         }
 
         public Image GetCurrentSprite() {

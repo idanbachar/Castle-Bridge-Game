@@ -24,6 +24,7 @@ namespace IdanEngine {
 
         public virtual void Update() {
             Animation.SetNewRectangle(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+            Animation.Play();
         }
 
         public abstract void Draw();

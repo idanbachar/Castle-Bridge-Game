@@ -16,18 +16,22 @@ namespace IdanEngine {
 
         public void MoveUp() {
             Rectangle.Y -= Speed;
+            Animation.Start();
         }
 
         public void MoveDown() {
             Rectangle.Y += Speed;
+            Animation.Start();
         }
 
         public void MoveRight() {
             Rectangle.X += Speed;
+            Animation.Start();
         }
 
         public void MoveLeft() {
             Rectangle.X -= Speed;
+            Animation.Start();
         }
 
         public override void Update() {
