@@ -18,6 +18,10 @@ namespace IdanEngine {
             Labels.Add(text);
         }
 
+        public List<Text> GetLabels() {
+            return Labels;
+        }
+
         public void Draw() {
 
             foreach (Text label in Labels)

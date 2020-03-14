@@ -14,6 +14,10 @@ namespace IdanEngine {
             Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Green);
         }
 
+        public Rectangle GetCurrentAnimationRectangle() {
+            return Animation.GetCurrentSprite().GetRectangle();
+        }
+
         public void MoveUp() {
             Rectangle.Y -= Speed;
             Animation.Start();

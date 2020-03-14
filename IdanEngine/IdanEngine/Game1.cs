@@ -19,15 +19,17 @@ namespace IdanEngine
 
         public static ContentManager PublicContent;
 
+ 
         public Game1()
         {
             Graphics = new GraphicsDeviceManager(this);
             Graphics.PreferredBackBufferWidth = 1265;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = 705;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+ 
 
             Content.RootDirectory = "Content";
             PublicContent = Content;
-
+            
             IsMouseVisible = true;
 
             Screens = new Dictionary<ScreenType, Screen>();
@@ -56,8 +58,8 @@ namespace IdanEngine
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Screens.Add(ScreenType.Menu, new MenuScreen());
-            Screens.Add(ScreenType.Game, new GameScreen());
+            Screens.Add(ScreenType.Menu, new MenuScreen(GraphicsDevice.Viewport));
+            Screens.Add(ScreenType.Game, new GameScreen(GraphicsDevice.Viewport));
 
             // TODO: use this.Content to load your game content here
         }
@@ -98,11 +100,11 @@ namespace IdanEngine
 
             // TODO: Add your drawing code here
 
-            SpriteBatch.Begin();
+ 
 
             Screens [CurrentScreen].Draw();
 
-            SpriteBatch.End();
+ 
 
             base.Draw(gameTime);
         }

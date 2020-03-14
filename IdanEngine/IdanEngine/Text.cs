@@ -69,7 +69,9 @@ namespace IdanEngine {
                     Background.Draw();
 
 
+                //Game1.SpriteBatch.Begin();
                 Game1.SpriteBatch.DrawString(Font, Value, Position, Color);
+                //Game1.SpriteBatch.End();
             }
         }
     

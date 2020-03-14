@@ -10,19 +10,12 @@ namespace IdanEngine {
     public class Camera {
 
         public Matrix Transform; 
-        public Vector2 Position;  
         private Vector2 Center;  
         private Viewport Viewport;
 
         public Camera(Viewport viewport) {
 
             Viewport = viewport;
-            Position = new Vector2();
- 
-        }
- 
-        public void FocusPosition(int width, int height) {
-            Focus(Position, width, height);
         }
  
         public void Focus(Vector2 position, int xOffset, int yOffset) {
@@ -40,10 +33,10 @@ namespace IdanEngine {
             else
                 Center.Y = position.Y;
 
-            Center = new Vector2(Position.X, Position.Y);
-            Transform = Matrix.CreateTranslation(new Vector3(-Center.X, -Center.Y, 0)) *
-                    Matrix.CreateTranslation(new Vector3(Viewport.Width / 2, Viewport.Height / 2, 0));
+
+            Transform = Matrix.CreateTranslation(new Vector3(-Center.X + (Viewport.Width / 2), -Center.Y + (Viewport.Height / 2), 0));
+
         }
- 
+
     }
 }

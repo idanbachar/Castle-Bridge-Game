@@ -27,6 +27,10 @@ namespace IdanEngine {
             Animation.Play();
         }
 
+        public Rectangle GetRectangle() {
+            return Rectangle;
+        }
+
         public abstract void Draw();
     }
 }

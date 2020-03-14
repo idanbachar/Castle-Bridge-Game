@@ -53,8 +53,12 @@ namespace IdanEngine {
 
         public void Draw() {
 
+            //Game1.SpriteBatch.Begin();
+
             if (Visible)
                 Game1.SpriteBatch.Draw(Texture, Rectangle, Color);
+
+            //Game1.SpriteBatch.End();
         }
     }
 }
