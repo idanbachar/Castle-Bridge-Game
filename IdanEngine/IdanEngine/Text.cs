@@ -57,6 +57,10 @@ namespace IdanEngine {
 
         }
 
+        public void SetVisible(bool value) {
+            Visible = value;
+        }
+
         public void Draw() {
 
             if (Visible) {

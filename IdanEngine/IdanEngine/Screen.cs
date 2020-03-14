@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace IdanEngine {
     public abstract class Screen {
 
-        
         public Screen() {
 
         }

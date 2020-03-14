@@ -13,11 +13,12 @@ namespace IdanEngine {
         private Rectangle Rectangle;
         private Color Color;
         private bool Visible;
+        public string FullPath;
 
         public Image(string imageFolderPath, string imageName, int x, int y, int width, int height, Color imageColor) {
 
-            string fullPath = imageFolderPath.Length == 0 ? imageName : (imageFolderPath + "/" + imageName);
-            LoadImage(fullPath);
+            FullPath = imageFolderPath.Length == 0 ? imageName : (imageFolderPath + "/" + imageName);
+            LoadImage(FullPath);
             Rectangle = new Rectangle(x, y, width, height);
             Color = imageColor;
             Visible = true;
@@ -44,6 +45,10 @@ namespace IdanEngine {
             Rectangle.Y = y;
             Rectangle.Width = width;
             Rectangle.Height = height;
+        }
+
+        public Rectangle GetRectangle() {
+            return Rectangle;
         }
 
         public void Draw() {
