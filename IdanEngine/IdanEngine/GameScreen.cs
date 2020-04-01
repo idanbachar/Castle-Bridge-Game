@@ -12,9 +12,8 @@ namespace IdanEngine {
 
         private HUD HUD;
         private Player Player;
-        private Image Block;
         private Camera Camera;
-        private List<Entity> Entities;
+        private Map Map;
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -24,9 +23,7 @@ namespace IdanEngine {
 
             InitHUD();
             InitPlayer();
-            InitEntities();
-
-            Block = new Image("", "", 0, 800, 2000, 500, Color.Green);
+            InitMap();
             Camera = new Camera(viewPort);
         }
 
@@ -47,8 +44,8 @@ namespace IdanEngine {
             Player = new Player(new Animation(new Image("player/walk", "Run_", 100, 100, 100, 100, Color.White), 0, 7, 7), false, false, "Idan");
         }
 
-        private void InitEntities() {
-            Entities = new List<Entity>();
+        private void InitMap() {
+            Map = new Map();
         }
 
         private void InitHUD() {
@@ -80,8 +77,8 @@ namespace IdanEngine {
                             null,
                             Camera.Transform
                             );
-            Block.Draw();
 
+            Map.Draw();
             Player.Draw();
             HUD.Draw();
 
