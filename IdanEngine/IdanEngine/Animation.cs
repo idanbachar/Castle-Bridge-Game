@@ -34,6 +34,11 @@ namespace IdanEngine {
                 sprite.SetNewRectangle(x, y, width, height);
         }
 
+        public void SetVisible(bool value) {
+            foreach (Image sprite in Sprites)
+                sprite.SetVisible(value);
+        }
+
         private void LoadSprites(Image image) {
 
             string path = image.FullPath;

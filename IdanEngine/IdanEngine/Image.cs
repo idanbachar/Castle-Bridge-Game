@@ -47,6 +47,10 @@ namespace IdanEngine {
             Rectangle.Height = height;
         }
 
+        public void SetVisible(bool value) {
+            Visible = value;
+        }
+
         public Rectangle GetRectangle() {
             return Rectangle;
         }

@@ -57,7 +57,7 @@ namespace IdanEngine {
         public override void Update() {
             CheckMovement();
             Player.Update();
-            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), 2000, 2000);
+            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.GetWidth(), Map.GetHeight());
 
             HUD.GetLabels() [0].SetText("(" + Player.GetRectangle().X + "," + Player.GetRectangle().Y + ")");
         }
