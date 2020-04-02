@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="Block.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityType.cs" />

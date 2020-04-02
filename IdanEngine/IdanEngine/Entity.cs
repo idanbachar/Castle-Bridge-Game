@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 namespace IdanEngine {
     public abstract class Entity {
 
-        protected bool IsColide;
-        protected bool IsGravity;
-        protected Animation Animation;
-        protected Rectangle Rectangle;
+        public bool IsColide;
+        public bool IsGravity;
+        public Animation Animation;
+        public Rectangle Rectangle;
         protected int Speed;
 
         public Entity(Animation animation, bool isColide, bool isGravity) {

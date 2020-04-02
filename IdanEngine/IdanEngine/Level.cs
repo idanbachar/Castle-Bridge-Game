@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace IdanEngine {
     public class Level {
@@ -15,26 +16,27 @@ namespace IdanEngine {
         private int LevelIndex;
 
         private int [,] LevelMatrix;
-        private Animation [,] Objects;
+        private Block [,] Objects;
         public Level(int [,] levelMatrix, MapName mapName, int levelIndex) {
 
             MapName = mapName;
             LevelIndex = levelIndex;
-            Generate(levelMatrix);
+            new Thread(() => Generate(levelMatrix)).Start();
         }
 
         public void Generate(int [,] levelMatrix) {
+
             LevelMatrix = levelMatrix;
-            Objects = new Animation [levelMatrix.GetLength(0), levelMatrix.GetLength(1)];
+            Objects = new Block [levelMatrix.GetLength(0), levelMatrix.GetLength(1)];
 
             for (int y = 0; y < Objects.GetLength(1); y++) {
                 for (int x = 0; x < Objects.GetLength(0); x++) {
-                    Objects [x, y] = new Animation(new Image("map/" + MapName + "/level_" + LevelIndex + "/" + (LevelEntity)LevelMatrix [x, y],
-                                        ((LevelEntity)LevelMatrix [x, y]).ToString() + "_", y * OBJECT_WIDTH, x * OBJECT_HEIGHT, OBJECT_WIDTH, OBJECT_HEIGHT, Color.White), 0, 0, 1);
+                    Objects [x, y] = new Block(new Animation(new Image("map/" + MapName + "/level_" + LevelIndex + "/" + (LevelEntity)LevelMatrix [x, y],
+                                        ((LevelEntity)LevelMatrix [x, y]).ToString() + "_", y * OBJECT_WIDTH, x * OBJECT_HEIGHT, OBJECT_WIDTH, OBJECT_HEIGHT, Color.White), 0, 0, 1), true, false);
 
 
                     if ((LevelEntity)LevelMatrix [x, y] == LevelEntity.None) {
-                        Objects [x, y].SetVisible(false);
+                        Objects [x, y].Animation.SetVisible(false);
                     }
                 }
             }
@@ -49,9 +51,9 @@ namespace IdanEngine {
         }
 
         public void Draw() {
-
-            foreach (Animation levelObject in Objects)
-                levelObject.Draw();
+            foreach (Block block in Objects)
+                if (block != null)
+                    block.Draw();
 
         }
     }
