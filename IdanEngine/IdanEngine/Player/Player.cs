@@ -12,6 +12,7 @@ namespace IdanEngine {
         private Dictionary<string, Character> Characters;
         private Rectangle Rectangle;
         private int Speed;
+        private PlayerState State;
 
         public Player(CharacterName character, string name){
 
@@ -19,6 +20,7 @@ namespace IdanEngine {
             Rectangle = new Rectangle(100, 100, 125, 175);
             Speed = 3;
             Characters = new Dictionary<string, Character>();
+            State = PlayerState.Afk;
             AddCharacter(character);
             Init();
         }
@@ -35,22 +37,27 @@ namespace IdanEngine {
             
             switch (direction) {
                 case Direction.Up:
-                    Rectangle = new Rectangle(Rectangle.X, Rectangle.Y - Speed, Rectangle.Width, Rectangle.Height);
                     SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y - Speed, Rectangle.Width, Rectangle.Height));
                     break;
                 case Direction.Down:
-                    Rectangle = new Rectangle(Rectangle.X, Rectangle.Y + Speed, Rectangle.Width, Rectangle.Height);
                     SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y + Speed, Rectangle.Width, Rectangle.Height));
                     break;
                 case Direction.Right:
-                    Rectangle = new Rectangle(Rectangle.X + Speed, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                     SetRectangle(new Rectangle(Rectangle.X + Speed, Rectangle.Y, Rectangle.Width, Rectangle.Height));
                     break;
                 case Direction.Left:
-                    Rectangle = new Rectangle(Rectangle.X - Speed, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                     SetRectangle(new Rectangle(Rectangle.X - Speed, Rectangle.Y, Rectangle.Width, Rectangle.Height));
                     break;
             }
+        }
+
+        public void SetState(PlayerState state) {
+
+            State = state;
+
+            foreach (KeyValuePair<string, Character> character in Characters)
+                character.Value.SetCurrentAnimation(state);
+
         }
 
         public void Update() {
@@ -66,6 +73,11 @@ namespace IdanEngine {
         }
 
         public void SetRectangle(Rectangle newRectangle) {
+
+            Rectangle.X = newRectangle.X;
+            Rectangle.Y = newRectangle.Y;
+            Rectangle.Width = newRectangle.Width;
+            Rectangle.Height = newRectangle.Height;
 
             foreach (KeyValuePair<string, Character> character in Characters)
                 character.Value.SetNewRectangle(newRectangle);

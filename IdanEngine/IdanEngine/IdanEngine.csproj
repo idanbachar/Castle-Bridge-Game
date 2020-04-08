@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Components\Animation\Animation.cs" />
     <Compile Include="Components\Animation\AnimationState.cs" />
-    <Compile Include="Camera.cs" />
+    <Compile Include="Components\Camera\Camera.cs" />
     <Compile Include="Player\Character\Character.cs" />
     <Compile Include="Player\Character\CharacterName.cs" />
     <Compile Include="Direction.cs" />
@@ -54,6 +54,7 @@
     <Compile Include="Components\GUI\Image.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapName.cs" />
+    <Compile Include="Player\PlayerState.cs" />
     <Compile Include="Screen\MenuScreen.cs" />
     <Compile Include="Screen\GameScreen.cs" />
     <Compile Include="Player\Player.cs" />

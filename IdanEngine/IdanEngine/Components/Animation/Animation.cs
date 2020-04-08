@@ -20,7 +20,7 @@ namespace IdanEngine {
         private bool IsReverse;
         private AnimationState AnimationState;
 
-        public Animation(Image image, int startAnimationFromIndex, int endAnimationInIndex, int spritesLength, bool isReverse, bool isLoop) {
+        public Animation(Image image, int startAnimationFromIndex, int endAnimationInIndex, int spritesLength, int nextFrameDelay, bool isReverse, bool isLoop) {
 
             Sprites = new Image [spritesLength];
             StartAnimationFromIndex = startAnimationFromIndex;
@@ -28,7 +28,7 @@ namespace IdanEngine {
             CurrentFrame = StartAnimationFromIndex;
             IsPlaying = false;
             IsLoop = isLoop;
-            NextFrameDelay = 7;
+            NextFrameDelay = nextFrameDelay;
             NextFrameDelayTimer = 0;
             Direction = Direction.Right;
             IsReverse = isReverse;

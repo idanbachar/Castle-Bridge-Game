@@ -15,34 +15,42 @@ namespace IdanEngine {
         private Animation WalkAnimation;
         private Animation AttackAnimation;
         private Animation DefenceAnimation;
+
+        private PlayerState State;
         public Character(CharacterName name, int x, int y, int width, int height) {
             Name = name;
-            AfkAnimation = new Animation(new Image("player/characters/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, true, true);
-            CurrentAnimation = AfkAnimation;
+            AfkAnimation = new Animation(new Image("player/characters/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
+            WalkAnimation = new Animation(new Image("player/characters/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
+            State = PlayerState.Afk;
+            SetCurrentAnimation(State);
             CurrentAnimation.Start();
         }
 
-        public void SetCurrentAnimation(string currentAnimation) {
+        public void SetCurrentAnimation(PlayerState State) {
 
-            switch (currentAnimation) {
-                case "afk":
+            switch (State) {
+                case PlayerState.Afk:
                     CurrentAnimation = AfkAnimation;
                     break;
-                case "walk":
+                case PlayerState.Walk:
                     CurrentAnimation = WalkAnimation;
                     break;
-                case "attack":
+                case PlayerState.Attack:
                     CurrentAnimation = AttackAnimation;
                     break;
-                case "defence":
+                case PlayerState.Defence:
                     CurrentAnimation = DefenceAnimation;
                     break;
             }
+            CurrentAnimation.Start();
         }
 
         public void SetNewDirection(Direction newDirection) {
 
-            CurrentAnimation.SetDirection(newDirection);
+            AfkAnimation.SetDirection(newDirection);
+            WalkAnimation.SetDirection(newDirection);
+            //AttackAnimation.SetDirection(newDirection);
+            //DefenceAnimation.SetDirection(newDirection);
 
         }
 
@@ -52,8 +60,11 @@ namespace IdanEngine {
 
         public void SetNewRectangle(Rectangle newRectangle) {
 
-            CurrentAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
- 
+            AfkAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            WalkAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            //AttackAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            //DefenceAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+    
         }
 
         public void Draw() {

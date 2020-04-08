@@ -29,19 +29,30 @@ namespace IdanEngine {
 
         private void CheckMovement() {
 
+            if(Keyboard.GetState().GetPressedKeys().Length == 0) {
+                Player.SetState(PlayerState.Afk);
+            }
+
+
             if (Keyboard.GetState().IsKeyDown(Keys.D)) {
                 Player.SetDirection(Direction.Right);
+                Player.SetState(PlayerState.Walk);
                 Player.Move(Direction.Right);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A)) {
                 Player.SetDirection(Direction.Left);
+                Player.SetState(PlayerState.Walk);
                 Player.Move(Direction.Left);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.W)) {
                 Player.Move(Direction.Up);
+                Player.SetState(PlayerState.Walk);
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            if (Keyboard.GetState().IsKeyDown(Keys.S)) {
                 Player.Move(Direction.Down);
+                Player.SetState(PlayerState.Walk);
+            }
+
         }
 
         private void InitPlayer() {
