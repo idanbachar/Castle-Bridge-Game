@@ -14,11 +14,11 @@ namespace IdanEngine {
         private int Speed;
         private PlayerState State;
 
-        public Player(CharacterName character, string name){
+        public Player(CharacterName character, string name, int x, int y, int width, int height){
 
             Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Green);
-            Rectangle = new Rectangle(100, 100, 125, 175);
-            Speed = 3;
+            Rectangle = new Rectangle(x, y, width, height);
+            Speed = 2;
             Characters = new Dictionary<string, Character>();
             State = PlayerState.Afk;
             AddCharacter(character);
@@ -64,6 +64,8 @@ namespace IdanEngine {
 
             foreach (KeyValuePair<string, Character> character in Characters)
                 character.Value.Update();
+
+
         }
 
         public void SetDirection(Direction newDirection) {

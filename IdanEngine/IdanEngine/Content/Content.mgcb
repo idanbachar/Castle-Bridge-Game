@@ -32,7 +32,7 @@
 /processorParam:TextureFormat=Color
 /build:images/colors/empty.png
 
-#begin images/map/forest/level_1/grass/grass_0.png
+#begin images/map/clouds/cloud_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -42,9 +42,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/map/forest/level_1/grass/grass_0.png
+/build:images/map/clouds/cloud_0.png
 
-#begin images/map/forest/level_1/water/water_0.png
+#begin images/map/clouds/cloud_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -54,7 +54,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/map/forest/level_1/water/water_0.png
+/build:images/map/clouds/cloud_1.png
+
+#begin images/map/forest/grass.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/map/forest/grass.png
 
 #begin images/player/characters/archer/afk/archer_afk_0.png
 /importer:TextureImporter

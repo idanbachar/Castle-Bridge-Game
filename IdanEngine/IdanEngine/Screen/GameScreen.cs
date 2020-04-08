@@ -22,8 +22,8 @@ namespace IdanEngine {
         private void Init(Viewport viewPort) {
 
             InitHUD();
-            InitPlayer();
             InitMap();
+            InitPlayer();
             Camera = new Camera(viewPort);
         }
 
@@ -57,7 +57,7 @@ namespace IdanEngine {
 
         private void InitPlayer() {
 
-            Player = new Player(CharacterName.Archer, "Idan");
+            Player = new Player(CharacterName.Archer, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
         }
 
         private void InitMap() {
@@ -73,7 +73,8 @@ namespace IdanEngine {
         public override void Update() {
             CheckMovement();
             Player.Update();
-            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), 1000, 1000);
+            Map.Update();
+            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.WIDTH, Map.HEIGHT);
 
             HUD.GetLabels() [0].SetText("(" + Player.GetRectangle().X + "," + Player.GetRectangle().Y + ")");
         }

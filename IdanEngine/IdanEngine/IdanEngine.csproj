@@ -45,6 +45,7 @@
     <Compile Include="Components\Animation\Animation.cs" />
     <Compile Include="Components\Animation\AnimationState.cs" />
     <Compile Include="Components\Camera\Camera.cs" />
+    <Compile Include="Map\Cloud.cs" />
     <Compile Include="Player\Character\Character.cs" />
     <Compile Include="Player\Character\CharacterName.cs" />
     <Compile Include="Direction.cs" />

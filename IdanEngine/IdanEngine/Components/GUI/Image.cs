@@ -22,6 +22,7 @@ namespace IdanEngine {
             LoadImage(FullPath);
             Rectangle = new Rectangle(x, y, width, height);
             Color = imageColor;
+            Direction = Direction.Right;
             Visible = true;
         }
 
