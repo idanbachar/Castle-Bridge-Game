@@ -13,12 +13,13 @@ namespace IdanEngine {
         private List<Cloud> Clouds;
         public static int WIDTH;
         public static int HEIGHT;
+        public List<MapEntity> WorldEntities;
 
         public Map() {
 
             Name = MapName.Forest;
-            WIDTH = 2000;
-            HEIGHT = 1000;
+            WIDTH = 10000;
+            HEIGHT = 5000;
 
             Init();
         }
@@ -27,6 +28,7 @@ namespace IdanEngine {
 
             InitGrass();
             InitClouds();
+            InitWorldEntities();
         }
 
         public void Update() {
@@ -36,7 +38,7 @@ namespace IdanEngine {
         }
 
         private void InitGrass() {
-            Grass = new Image("map/" + Name, "grass", 0, Game1.Graphics.PreferredBackBufferHeight / 2, Game1.Graphics.PreferredBackBufferWidth * 2, Game1.Graphics.PreferredBackBufferHeight, Color.White);
+            Grass = new Image("map/" + Name, "grass", 0, HEIGHT / 10, HEIGHT, HEIGHT, Color.White);
         }
 
         private void InitClouds() {
@@ -47,6 +49,21 @@ namespace IdanEngine {
 
                 GenerateCloud();
             }
+        }
+
+        private void InitWorldEntities() {
+
+            WorldEntities = new List<MapEntity>();
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 635, 1257, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 1435, 509, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 1827, 845, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 809, 785, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, -43, 561, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 1329, 541, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 393, 529, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 993, 785, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 1717, 613, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 13, 1157, 36, 36));
         }
 
         private void GenerateCloud() {
@@ -61,6 +78,9 @@ namespace IdanEngine {
 
             foreach (Cloud cloud in Clouds)
                 cloud.Draw();
+
+            foreach (MapEntity mapEntity in WorldEntities)
+                mapEntity.Draw();
         }
     
     }

@@ -18,7 +18,7 @@ namespace IdanEngine {
 
         public Image(string imageFolderPath, string imageName, int x, int y, int width, int height, Color imageColor) {
 
-            FullPath = imageFolderPath.Length == 0 ? imageName : (imageFolderPath + "/" + imageName);
+            FullPath = imageFolderPath.Length == 0 ? imageName : (imageFolderPath.Replace("_", " ") + "/" + imageName);
             LoadImage(FullPath);
             Rectangle = new Rectangle(x, y, width, height);
             Color = imageColor;

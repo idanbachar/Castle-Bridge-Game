@@ -18,7 +18,7 @@ namespace IdanEngine {
 
             Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Green);
             Rectangle = new Rectangle(x, y, width, height);
-            Speed = 2;
+            Speed = 4;
             Characters = new Dictionary<string, Character>();
             State = PlayerState.Afk;
             AddCharacter(character);

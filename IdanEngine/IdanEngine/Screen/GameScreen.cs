@@ -97,9 +97,13 @@ namespace IdanEngine {
 
             Map.Draw();
             Player.Draw();
-            HUD.Draw();
 
             Game1.SpriteBatch.End();
+
+            Game1.SpriteBatch.Begin();
+            HUD.Draw();
+            Game1.SpriteBatch.End();
+
         }
     }
 }
