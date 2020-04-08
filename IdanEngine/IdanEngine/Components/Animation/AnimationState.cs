@@ -5,11 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace IdanEngine {
-    public enum LevelEntity {
+    public enum AnimationState {
+        Forward,
+        Backward
     
-        None = 0,
-        Grass = 1,
-        Water = 2,
-        Dirt = 3
     }
 }

@@ -14,6 +14,7 @@ namespace IdanEngine {
         private Color Color;
         private bool Visible;
         public string FullPath;
+        private Direction Direction;
 
         public Image(string imageFolderPath, string imageName, int x, int y, int width, int height, Color imageColor) {
 
@@ -39,6 +40,10 @@ namespace IdanEngine {
             LoadImage(fullPath);
         }
 
+        public void SetNewDirection(Direction newDirection) {
+            Direction = newDirection;
+        }
+
         public void SetNewRectangle(int x, int y, int width, int height) {
 
             Rectangle.X = x;
@@ -59,9 +64,18 @@ namespace IdanEngine {
 
             //Game1.SpriteBatch.Begin();
 
-            if (Visible)
-                Game1.SpriteBatch.Draw(Texture, Rectangle, Color);
+            if (Visible) {
 
+                switch (Direction) {
+                    case Direction.Right:
+                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, 0, new Vector2(), SpriteEffects.FlipHorizontally, 1);
+                        break;
+                    case Direction.Left:
+                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, 0, new Vector2(), SpriteEffects.None, 1);
+                        break;
+                }
+                
+            }
             //Game1.SpriteBatch.End();
         }
     }

@@ -29,19 +29,24 @@ namespace IdanEngine {
 
         private void CheckMovement() {
 
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-                Player.MoveRight();
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-                Player.MoveLeft();
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-                Player.MoveUp();
+            if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                Player.SetDirection(Direction.Right);
+                Player.Move(Direction.Right);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+                Player.SetDirection(Direction.Left);
+                Player.Move(Direction.Left);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                Player.Move(Direction.Up);
+            }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-                Player.MoveDown();
+                Player.Move(Direction.Down);
         }
 
         private void InitPlayer() {
 
-            Player = new Player(new Animation(new Image("player/walk", "Run_", 100, 100, 100, 100, Color.White), 0, 7, 7), false, false, "Idan");
+            Player = new Player(CharacterName.Archer, "Idan");
         }
 
         private void InitMap() {
@@ -57,7 +62,7 @@ namespace IdanEngine {
         public override void Update() {
             CheckMovement();
             Player.Update();
-            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.GetWidth(), Map.GetHeight());
+            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), 1000, 1000);
 
             HUD.GetLabels() [0].SetText("(" + Player.GetRectangle().X + "," + Player.GetRectangle().Y + ")");
         }

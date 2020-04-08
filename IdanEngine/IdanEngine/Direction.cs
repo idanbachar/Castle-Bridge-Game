@@ -5,9 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace IdanEngine {
-    public enum EntityType {
-        Player,
-        Enemy,
-        Food
+    public enum Direction {
+        
+        Up,
+        Down,
+        Right,
+        Left
+    
     }
 }
