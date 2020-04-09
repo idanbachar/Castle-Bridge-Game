@@ -15,8 +15,6 @@ namespace IdanEngine {
         private Camera Camera;
         private Map Map;
 
-        private bool IsPressedSpaceKey;
-
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
         }
@@ -29,10 +27,8 @@ namespace IdanEngine {
             Camera = new Camera(viewPort);
         }
 
-        private void CheckMovement() {
-
-
-
+        private void CheckKeyboard() {
+ 
             if (Player.GetState() != PlayerState.Attack) {
 
                 if (Keyboard.GetState().GetPressedKeys().Length == 0) {
@@ -68,6 +64,12 @@ namespace IdanEngine {
 
             if (Player.GetState() == PlayerState.Attack && Player.CurrentCharacter.AttackAnimation.IsFinished) {
                 Player.CurrentCharacter.AttackAnimation.Reset();
+
+                if(Player.CurrentCharacter is Archer) {
+                    ((Archer)Player.CurrentCharacter).ShootArrow();
+                }
+
+
                 Player.SetState(PlayerState.Afk);
             }
 
@@ -89,9 +91,10 @@ namespace IdanEngine {
         }
 
         public override void Update() {
-            CheckMovement();
+            CheckKeyboard();
             Player.Update();
-            Map.Update();
+            Map.Update(Player);
+
             Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.WIDTH, Map.HEIGHT);
 
             HUD.GetLabels() [0].SetText("(" + Player.GetRectangle().X + "," + Player.GetRectangle().Y + ")");

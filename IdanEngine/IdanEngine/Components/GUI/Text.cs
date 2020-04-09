@@ -62,8 +62,12 @@ namespace IdanEngine {
         }
 
         public void SetPosition(Vector2 newPosition) {
+
             Position.X = newPosition.X;
             Position.Y = newPosition.Y;
+            Width = (int)Font.MeasureString(Value).X;
+            Height = (int)Font.MeasureString(Value).Y;
+            Background.SetNewRectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
         public void Draw() {

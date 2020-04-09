@@ -10,17 +10,17 @@ namespace IdanEngine {
 
         private Text Name;
         public Character CurrentCharacter;
-        private Dictionary<string, Character> Characters;
+        private List<Character> Characters;
         private Rectangle Rectangle;
         private int Speed;
         private PlayerState State;
 
         public Player(CharacterName character, string name, int x, int y, int width, int height){
 
-            Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Green);
+            Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Red);
             Rectangle = new Rectangle(x, y, width, height);
             Speed = 4;
-            Characters = new Dictionary<string, Character>();
+            Characters = new List<Character>();
             State = PlayerState.Afk;
             CurrentCharacter = AddCharacter(character);
             
@@ -33,9 +33,15 @@ namespace IdanEngine {
 
         private Character AddCharacter(CharacterName name) {
 
-            Character character = new Character(name, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
-            Characters.Add("Archer", character);
+            Character character = null;
 
+            switch (name) {
+                case CharacterName.Archer:
+                    character = new Archer(name, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                    break;
+            }
+
+            Characters.Add(character);
             return character;
         }
  
@@ -99,6 +105,7 @@ namespace IdanEngine {
         }
 
         public void Draw() {
+
             Name.Draw();
             CurrentCharacter.Draw();
         }
