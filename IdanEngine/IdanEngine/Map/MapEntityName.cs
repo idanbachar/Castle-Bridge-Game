@@ -9,7 +9,8 @@ namespace IdanEngine {
     
         Red_Flower,
         Bush,
-        Tree
-    
+        Tree,
+        Ground_Leaves,
+        Stone
     }
 }

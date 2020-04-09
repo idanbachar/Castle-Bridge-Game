@@ -80,6 +80,18 @@
 /processorParam:TextureFormat=Color
 /build:images/map/forest/grass.png
 
+#begin images/map/forest/ground leaves/ground_leaves_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/map/forest/ground leaves/ground_leaves_0.png
+
 #begin images/map/forest/red flower/red_flower_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -91,6 +103,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/map/forest/red flower/red_flower_0.png
+
+#begin images/map/forest/stone/stone_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/map/forest/stone/stone_0.png
+
+#begin images/map/forest/tree/tree_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/map/forest/tree/tree_0.png
 
 #begin images/player/characters/archer/afk/archer_afk_0.png
 /importer:TextureImporter
