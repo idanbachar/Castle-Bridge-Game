@@ -19,6 +19,7 @@ namespace IdanEngine {
         private Direction Direction;
         private bool IsReverse;
         private AnimationState AnimationState;
+        public bool IsFinished;
 
         public Animation(Image image, int startAnimationFromIndex, int endAnimationInIndex, int spritesLength, int nextFrameDelay, bool isReverse, bool isLoop) {
 
@@ -33,7 +34,7 @@ namespace IdanEngine {
             Direction = Direction.Right;
             IsReverse = isReverse;
             AnimationState = AnimationState.Forward;
-
+            IsFinished = false;
             LoadSprites(image);
         }
 
@@ -124,6 +125,7 @@ namespace IdanEngine {
                     else {
                         CurrentFrame = StartAnimationFromIndex;
                         IsPlaying = false;
+                        IsFinished = true;
                     }
 
                 }
@@ -136,6 +138,7 @@ namespace IdanEngine {
                             CurrentFrame = StartAnimationFromIndex;
                             IsPlaying = false;
                             AnimationState = AnimationState.Forward;
+                            IsFinished = true;
                         }
                     }
                     else if (AnimationState == AnimationState.Forward) {
@@ -172,6 +175,10 @@ namespace IdanEngine {
 
         public void Stop() {
             IsPlaying = false;
+        }
+
+        public void Reset() {
+            IsFinished = false;
         }
 
         public Image GetCurrentSprite() {

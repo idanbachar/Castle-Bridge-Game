@@ -15,6 +15,8 @@ namespace IdanEngine {
         private Camera Camera;
         private Map Map;
 
+        private bool IsPressedSpaceKey;
+
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
         }
@@ -29,28 +31,44 @@ namespace IdanEngine {
 
         private void CheckMovement() {
 
-            if(Keyboard.GetState().GetPressedKeys().Length == 0) {
+
+
+            if (Player.GetState() != PlayerState.Attack) {
+
+                if (Keyboard.GetState().GetPressedKeys().Length == 0) {
+
+                    Player.SetState(PlayerState.Afk);
+                }
+
+
+                if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+                    Player.SetDirection(Direction.Right);
+                    Player.SetState(PlayerState.Walk);
+                    Player.Move(Direction.Right);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+                    Player.SetDirection(Direction.Left);
+                    Player.SetState(PlayerState.Walk);
+                    Player.Move(Direction.Left);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.W)) {
+                    if (!Map.IsOnTopMap(Player))
+                        Player.Move(Direction.Up);
+
+                    Player.SetState(PlayerState.Walk);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.S)) {
+                    Player.Move(Direction.Down);
+                    Player.SetState(PlayerState.Walk);
+                }
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && Player.GetState() != PlayerState.Attack) {
+                Player.SetState(PlayerState.Attack);
+            }
+
+            if (Player.GetState() == PlayerState.Attack && Player.CurrentCharacter.AttackAnimation.IsFinished) {
+                Player.CurrentCharacter.AttackAnimation.Reset();
                 Player.SetState(PlayerState.Afk);
-            }
-
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D)) {
-                Player.SetDirection(Direction.Right);
-                Player.SetState(PlayerState.Walk);
-                Player.Move(Direction.Right);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.A)) {
-                Player.SetDirection(Direction.Left);
-                Player.SetState(PlayerState.Walk);
-                Player.Move(Direction.Left);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                Player.Move(Direction.Up);
-                Player.SetState(PlayerState.Walk);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                Player.Move(Direction.Down);
-                Player.SetState(PlayerState.Walk);
             }
 
         }
@@ -82,7 +100,8 @@ namespace IdanEngine {
         public override void Draw() {
 
             Game1.SpriteBatch.Begin();
-           
+
+            Map.DrawStuck();
 
             Game1.SpriteBatch.End();
 
@@ -95,12 +114,13 @@ namespace IdanEngine {
                             Camera.Transform
                             );
 
-            Map.Draw();
+            Map.DrawTile();
             Player.Draw();
 
             Game1.SpriteBatch.End();
 
             Game1.SpriteBatch.Begin();
+
             HUD.Draw();
             Game1.SpriteBatch.End();
 

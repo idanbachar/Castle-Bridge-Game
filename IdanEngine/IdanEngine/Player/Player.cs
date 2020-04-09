@@ -9,6 +9,7 @@ namespace IdanEngine {
     public class Player {
 
         private Text Name;
+        public Character CurrentCharacter;
         private Dictionary<string, Character> Characters;
         private Rectangle Rectangle;
         private int Speed;
@@ -21,7 +22,8 @@ namespace IdanEngine {
             Speed = 4;
             Characters = new Dictionary<string, Character>();
             State = PlayerState.Afk;
-            AddCharacter(character);
+            CurrentCharacter = AddCharacter(character);
+            
             Init();
         }
 
@@ -29,8 +31,12 @@ namespace IdanEngine {
 
         }
 
-        private void AddCharacter(CharacterName name) {
-            Characters.Add("Archer", new Character(name, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height));
+        private Character AddCharacter(CharacterName name) {
+
+            Character character = new Character(name, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+            Characters.Add("Archer", character);
+
+            return character;
         }
  
         public void Move(Direction direction) {
@@ -55,23 +61,22 @@ namespace IdanEngine {
 
             State = state;
 
-            foreach (KeyValuePair<string, Character> character in Characters)
-                character.Value.SetCurrentAnimation(state);
+            CurrentCharacter.SetCurrentAnimation(state);
+
 
         }
 
         public void Update() {
 
-            foreach (KeyValuePair<string, Character> character in Characters)
-                character.Value.Update();
+            CurrentCharacter.Update();
 
 
         }
 
         public void SetDirection(Direction newDirection) {
 
-            foreach (KeyValuePair<string, Character> character in Characters)
-                character.Value.SetNewDirection(newDirection);
+            CurrentCharacter.SetNewDirection(newDirection);
+
         }
 
         public void SetRectangle(Rectangle newRectangle) {
@@ -81,16 +86,19 @@ namespace IdanEngine {
             Rectangle.Width = newRectangle.Width;
             Rectangle.Height = newRectangle.Height;
 
-            foreach (KeyValuePair<string, Character> character in Characters)
-                character.Value.SetNewRectangle(newRectangle);
+            CurrentCharacter.SetNewRectangle(newRectangle);
         }
 
         public Rectangle GetRectangle() {
             return Rectangle;
         }
 
+        public PlayerState GetState() {
+            return State;
+        }
+
         public void Draw() {
-            Characters ["Archer"].Draw();
+            CurrentCharacter.Draw();
         }
     }
 }

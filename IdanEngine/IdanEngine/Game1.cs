@@ -23,8 +23,8 @@ namespace IdanEngine
         public Game1()
         {
             Graphics = new GraphicsDeviceManager(this);
-            Graphics.PreferredBackBufferWidth = 1265;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            Graphics.PreferredBackBufferHeight = 705;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            Graphics.PreferredBackBufferWidth = 1365;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Graphics.PreferredBackBufferHeight = 728;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
  
 
             Content.RootDirectory = "Content";

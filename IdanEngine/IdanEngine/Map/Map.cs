@@ -10,6 +10,8 @@ namespace IdanEngine {
 
         private MapName Name;
         public Image Grass;
+        public Image Sun;
+        public Image Sky;
         private List<Cloud> Clouds;
         public static int WIDTH;
         public static int HEIGHT;
@@ -19,7 +21,7 @@ namespace IdanEngine {
 
             Name = MapName.Forest;
             WIDTH = 10000;
-            HEIGHT = 5000;
+            HEIGHT = 2000;
 
             Init();
         }
@@ -38,14 +40,14 @@ namespace IdanEngine {
         }
 
         private void InitGrass() {
-            Grass = new Image("map/" + Name, "grass", 0, HEIGHT / 10, WIDTH, HEIGHT, Color.White);
+            Grass = new Image("map/" + Name, "grass", 0, HEIGHT / 5, WIDTH, HEIGHT, Color.White);
         }
 
         private void InitClouds() {
 
             Clouds = new List<Cloud>();
  
-            for(int i = 0; i < 25; i++) {
+            for(int i = 0; i < 100; i++) {
 
                 GenerateCloud();
             }
@@ -80,12 +82,38 @@ namespace IdanEngine {
             WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 6661, 541, 50, 50));
 
 
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < 60; i++) {
                 WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, grassY - 250, 200, 250));
             }
             for (int i = 0; i < 150; i++) {
                 WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), grassY - 60, 75, 75));
             }
+
+
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 6989, 1257, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 5042, 509, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 7532, 845, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 6433, 785, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Bush, MapName.Forest, 9012, 561, 100, 45));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 8432, 541, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 5674, 529, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 5532, 785, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 8832, 613, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Red_Flower, MapName.Forest, 6643, 1157, 36, 36));
+            WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, 5019, 909, 400, 500));
+            WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, 9942, 809, 400, 500));
+            WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, 8532, 1161, 400, 500));
+            WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, 8001, 881, 400, 500));
+            WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 7543, 713, 50, 50));
+            WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 6942, 1329, 50, 50));
+            WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 9931, 1429, 50, 50));
+            WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 8821, 785, 50, 50));
+            WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 6664, 661, 50, 50));
+            WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 7777, 1245, 50, 50));
+            WorldEntities.Add(new MapEntity(MapEntityName.Stone, MapName.Forest, 4523, 541, 50, 50));
+
+            Sun = new Image("map/sun", "sun_0", Game1.Graphics.PreferredBackBufferWidth / 2 - 75, 0, 150, 150, Color.White);
+            Sky = new Image("map/sky", "sky", 0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight, Color.White);
         }
 
         private void GenerateCloud() {
@@ -95,7 +123,15 @@ namespace IdanEngine {
             Clouds.Add(cloud);
         }
 
-        public void Draw() {
+        public bool IsOnTopMap(Player player) {
+            if (player.GetRectangle().Bottom - player.GetRectangle().Height / 2 < Grass.GetRectangle().Top)
+                return true;
+
+            return false;
+        }
+
+        public void DrawTile() {
+
             Grass.Draw();
 
             foreach (Cloud cloud in Clouds)
@@ -103,6 +139,11 @@ namespace IdanEngine {
 
             foreach (MapEntity mapEntity in WorldEntities)
                 mapEntity.Draw();
+        }
+
+        public void DrawStuck() {
+            Sky.Draw();
+            Sun.Draw();
         }
     
     }
