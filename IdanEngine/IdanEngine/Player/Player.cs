@@ -87,6 +87,7 @@ namespace IdanEngine {
             Rectangle.Height = newRectangle.Height;
 
             CurrentCharacter.SetNewRectangle(newRectangle);
+            Name.SetPosition(new Vector2(newRectangle.X, newRectangle.Y - 12));
         }
 
         public Rectangle GetRectangle() {
@@ -98,6 +99,7 @@ namespace IdanEngine {
         }
 
         public void Draw() {
+            Name.Draw();
             CurrentCharacter.Draw();
         }
     }

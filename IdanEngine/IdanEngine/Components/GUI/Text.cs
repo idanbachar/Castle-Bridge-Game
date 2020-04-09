@@ -61,6 +61,11 @@ namespace IdanEngine {
             Visible = value;
         }
 
+        public void SetPosition(Vector2 newPosition) {
+            Position.X = newPosition.X;
+            Position.Y = newPosition.Y;
+        }
+
         public void Draw() {
 
             if (Visible) {
