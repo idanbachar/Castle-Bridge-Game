@@ -12,6 +12,7 @@ namespace IdanEngine {
         public Image Grass;
         public Image Sun;
         public Image Sky;
+        public Image Castle;
         private List<Cloud> Clouds;
         public static int WIDTH;
         public static int HEIGHT;
@@ -122,6 +123,7 @@ namespace IdanEngine {
 
             Sun = new Image("map/sun", "sun_0", Game1.Graphics.PreferredBackBufferWidth / 2 - 75, 0, 150, 150, Color.White);
             Sky = new Image("map/sky", "sky", 0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight, Color.White);
+            Castle = new Image("map/castles/teams/red/outside", "castle", 300, grassY - 390, 1400, 600, Color.White);
         }
 
         private void GenerateCloud() {
@@ -147,6 +149,9 @@ namespace IdanEngine {
 
             foreach (MapEntity mapEntity in WorldEntities)
                 mapEntity.Draw();
+
+
+            Castle.Draw();
         }
 
         public void DrawStuck() {
