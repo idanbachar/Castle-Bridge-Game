@@ -63,6 +63,14 @@ namespace CastleBridge {
             }
         }
 
+        public bool IsTouchWorldEntity(MapEntity entity) {
+
+            if (Rectangle.Intersects(entity.Animation.GetCurrentSprite().GetRectangle()) && entity.IsTouchable)
+                return true;
+
+            return false;
+        }
+
         public void SetState(PlayerState state) {
 
             State = state;
@@ -72,10 +80,13 @@ namespace CastleBridge {
 
         }
 
+        public void TakeItem(MapEntity item) {
+
+        }
+
         public void Update() {
 
             CurrentCharacter.Update();
-
 
         }
 

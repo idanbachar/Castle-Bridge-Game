@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class MapEntity {
 
-        private MapEntityName Name;
+        public MapEntityName Name;
         public Animation Animation;
         public Text DisplayedText;
         public bool IsTouchable;

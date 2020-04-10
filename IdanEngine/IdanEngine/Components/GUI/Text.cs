@@ -70,6 +70,10 @@ namespace CastleBridge {
             Background.SetNewRectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
+        public Vector2 GetPosition() {
+            return Position;
+        }
+
         public void Draw() {
 
             if (Visible) {

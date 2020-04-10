@@ -45,6 +45,7 @@
     <Compile Include="Components\Animation\Animation.cs" />
     <Compile Include="Components\Animation\AnimationState.cs" />
     <Compile Include="Components\Camera\Camera.cs" />
+    <Compile Include="Components\Popup\Popup.cs" />
     <Compile Include="Map\Cloud.cs" />
     <Compile Include="Map\MapEntity.cs" />
     <Compile Include="Map\MapEntityName.cs" />

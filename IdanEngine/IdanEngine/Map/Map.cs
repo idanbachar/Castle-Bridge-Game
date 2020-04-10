@@ -39,13 +39,8 @@ namespace CastleBridge {
             foreach (Cloud cloud in Clouds)
                 cloud.Update();
 
-            foreach(MapEntity entity in WorldEntities)
-                if(player.GetRectangle().Intersects(entity.Animation.GetCurrentSprite().GetRectangle()) && entity.IsTouchable) {
-                    entity.DisplayedText.SetVisible(true);
-                }
-                else {
-                    entity.DisplayedText.SetVisible(false);
-                }
+            foreach (MapEntity mapEntity in WorldEntities)
+                    mapEntity.DisplayedText.SetVisible(player.IsTouchWorldEntity(mapEntity));
         }
 
         private void InitGrass() {
