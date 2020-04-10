@@ -19,18 +19,18 @@ namespace CastleBridge {
             Health = 110;
         }
 
-        public void ShootArrow() {
+        public void ShootArrow(Direction shootDirection) {
 
             if (CurrentArrows > 0) {
-                AddArrow();
+                AddArrow(shootDirection);
                 CurrentArrows--;
             }
         }
 
-        private void AddArrow() {
+        private void AddArrow(Direction shootDirection) {
  
             Arrows.Add(new Arrow(CurrentAnimation.GetCurrentSprite().GetRectangle().Left + CurrentAnimation.GetCurrentSprite().GetRectangle().Width / 2,
-                                    CurrentAnimation.GetCurrentSprite().GetRectangle().Top + CurrentAnimation.GetCurrentSprite().GetRectangle().Height / 2, Direction));
+                                    CurrentAnimation.GetCurrentSprite().GetRectangle().Top + CurrentAnimation.GetCurrentSprite().GetRectangle().Height / 2, Direction, shootDirection));
         }
 
         private void DrawArrows() {

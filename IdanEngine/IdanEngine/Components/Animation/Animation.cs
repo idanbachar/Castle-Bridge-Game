@@ -130,24 +130,23 @@ namespace CastleBridge {
 
                 }
                 else if (IsReverse) {
-
-                    if (AnimationState == AnimationState.Backward) {
+                    if (AnimationState == AnimationState.Forward) {
+                        if (CurrentFrame < EndAnimationInIndex - 1)
+                            CurrentFrame++;
+                        else {
+                            CurrentFrame = EndAnimationInIndex - 1;
+                            AnimationState = AnimationState.Backward;
+                        }
+                    }
+                    
+                    else if (AnimationState == AnimationState.Backward) {
                         if (CurrentFrame > StartAnimationFromIndex)
                             CurrentFrame--;
                         else {
                             CurrentFrame = StartAnimationFromIndex;
                             IsPlaying = false;
-                            AnimationState = AnimationState.Forward;
                             IsFinished = true;
-                        }
-                    }
-                    else if (AnimationState == AnimationState.Forward) {
-                        if (CurrentFrame < EndAnimationInIndex - 1)
-                            CurrentFrame++;
-                        else {
-                            CurrentFrame = EndAnimationInIndex - 1;
-                            IsPlaying = false;
-                            AnimationState = AnimationState.Backward;
+                            AnimationState = AnimationState.Forward;
                         }
                     }
                 }
@@ -179,6 +178,7 @@ namespace CastleBridge {
 
         public void Reset() {
             IsFinished = false;
+            IsPlaying = false;
         }
 
         public Image GetCurrentSprite() {

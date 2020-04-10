@@ -29,7 +29,7 @@ namespace CastleBridge {
 
         private void CheckKeyboard() {
  
-            if (Player.GetState() != PlayerState.Attack) {
+            if (Player.GetState() != PlayerState.Attack && Player.GetState() != PlayerState.Loot) {
 
                 if (Keyboard.GetState().GetPressedKeys().Length == 0) {
 
@@ -66,10 +66,27 @@ namespace CastleBridge {
                 Player.CurrentCharacter.AttackAnimation.Reset();
 
                 if(Player.CurrentCharacter is Archer) {
-                    ((Archer)Player.CurrentCharacter).ShootArrow();
+
+                    Direction shootDirection = Direction.Down;
+
+                    if (Keyboard.GetState().IsKeyDown(Keys.W))
+                        shootDirection = Direction.Up;
+                    else if (Keyboard.GetState().IsKeyDown(Keys.S))
+                        shootDirection = Direction.Down;
+
+                    ((Archer)Player.CurrentCharacter).ShootArrow(shootDirection);
                 }
 
 
+                Player.SetState(PlayerState.Afk);
+            }
+
+            if(Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
+                Player.SetState(PlayerState.Loot);
+            }
+
+            if (Player.GetState() == PlayerState.Loot && Player.CurrentCharacter.LootAnimation.IsFinished) {
+                Player.CurrentCharacter.LootAnimation.Reset();
                 Player.SetState(PlayerState.Afk);
             }
 
@@ -78,6 +95,7 @@ namespace CastleBridge {
         private void InitPlayer() {
 
             Player = new Player(CharacterName.Archer, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
+            HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName());
         }
 
         private void InitMap() {

@@ -9,6 +9,7 @@ namespace CastleBridge {
         Afk,
         Walk,
         Attack,
-        Defence
+        Defence,
+        Loot
     }
 }

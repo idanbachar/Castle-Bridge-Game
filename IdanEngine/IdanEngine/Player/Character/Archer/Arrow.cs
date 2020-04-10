@@ -13,8 +13,9 @@ namespace CastleBridge {
         public Animation Animation;
         private int Speed;
         private Direction Direction;
+        private Direction ShootUpDownDirection;
 
-        public Arrow(int startX, int startY, Direction direction) {
+        public Arrow(int startX, int startY, Direction direction, Direction shootUpDownDirection) {
 
             ShootTime = 0;
             IsFinished = false;
@@ -22,6 +23,7 @@ namespace CastleBridge {
             Direction = direction;
             Animation = new Animation(new Image("player/characters/archer/weapons/arrow", "arrow_", startX, startY, 44, 21, Color.White), 0, 0, 1, 3, false, false);
             Animation.SetDirection(direction);
+            ShootUpDownDirection = shootUpDownDirection;
         }
 
         public void Move() {
@@ -30,16 +32,34 @@ namespace CastleBridge {
 
                 switch (Direction) {
                     case Direction.Right:
-                        Animation.SetNewRectangle(Animation.GetCurrentSprite().GetRectangle().X + Speed, 
-                                                  Animation.GetCurrentSprite().GetRectangle().Y + Speed / 10,
-                                                  Animation.GetCurrentSprite().GetRectangle().Width,
-                                                  Animation.GetCurrentSprite().GetRectangle().Height);
+
+                        if (ShootUpDownDirection == Direction.Down) {
+                            Animation.SetNewRectangle(Animation.GetCurrentSprite().GetRectangle().X + Speed,
+                                                      Animation.GetCurrentSprite().GetRectangle().Y + Speed / 10,
+                                                      Animation.GetCurrentSprite().GetRectangle().Width,
+                                                      Animation.GetCurrentSprite().GetRectangle().Height);
+                        }
+                        else if(ShootUpDownDirection == Direction.Up) {
+                            Animation.SetNewRectangle(Animation.GetCurrentSprite().GetRectangle().X + Speed,
+                                                      Animation.GetCurrentSprite().GetRectangle().Y - Speed / 10,
+                                                      Animation.GetCurrentSprite().GetRectangle().Width,
+                                                      Animation.GetCurrentSprite().GetRectangle().Height);
+                        }
                         break;
                     case Direction.Left:
-                        Animation.SetNewRectangle(Animation.GetCurrentSprite().GetRectangle().X - Speed,
-                                                  Animation.GetCurrentSprite().GetRectangle().Y + Speed / 10,
-                                                  Animation.GetCurrentSprite().GetRectangle().Width,
-                                                  Animation.GetCurrentSprite().GetRectangle().Height);
+
+                        if (ShootUpDownDirection == Direction.Down) {
+                            Animation.SetNewRectangle(Animation.GetCurrentSprite().GetRectangle().X - Speed,
+                                                      Animation.GetCurrentSprite().GetRectangle().Y + Speed / 10,
+                                                      Animation.GetCurrentSprite().GetRectangle().Width,
+                                                      Animation.GetCurrentSprite().GetRectangle().Height);
+                        }
+                        else if (ShootUpDownDirection == Direction.Up) {
+                            Animation.SetNewRectangle(Animation.GetCurrentSprite().GetRectangle().X - Speed,
+                                                      Animation.GetCurrentSprite().GetRectangle().Y - Speed / 10,
+                                                      Animation.GetCurrentSprite().GetRectangle().Width,
+                                                      Animation.GetCurrentSprite().GetRectangle().Height);
+                        }
                         break;
                 }
 

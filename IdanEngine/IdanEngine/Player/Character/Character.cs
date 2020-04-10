@@ -8,19 +8,17 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public abstract class Character {
 
-        public int Health;
-        public int Level;
+        protected int Health;
+        protected int Level;
         protected CharacterName Name;
-        protected Animation CurrentAnimation;
-
         protected Image Shadow;
-
+        protected Animation CurrentAnimation;
         public Animation AfkAnimation;
         public Animation WalkAnimation;
         public Animation AttackAnimation;
         public Animation DefenceAnimation;
+        public Animation LootAnimation;
         protected Direction Direction;
-
         protected PlayerState State;
         public Character(CharacterName name, int x, int y, int width, int height) {
 
@@ -28,6 +26,8 @@ namespace CastleBridge {
             AfkAnimation = new Animation(new Image("player/characters/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
             WalkAnimation = new Animation(new Image("player/characters/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
             AttackAnimation = new Animation(new Image("player/characters/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 6, 7, 4, false, false);
+            LootAnimation = new Animation(new Image("player/characters/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 4, 5, 4, true, false);
+            
             Health = 100;
             Shadow = new Image("player/characters/" + name + "/shadow/", name + "_shadow", x, y, width / 2, height / 2, Color.White);
             State = PlayerState.Afk;
@@ -51,6 +51,9 @@ namespace CastleBridge {
                 case PlayerState.Defence:
                     CurrentAnimation = DefenceAnimation;
                     break;
+                case PlayerState.Loot:
+                    CurrentAnimation = LootAnimation;
+                    break;
             }
             CurrentAnimation.Start();
         }
@@ -64,6 +67,7 @@ namespace CastleBridge {
             AfkAnimation.SetDirection(newDirection);
             WalkAnimation.SetDirection(newDirection);
             AttackAnimation.SetDirection(newDirection);
+            LootAnimation.SetDirection(newDirection);
             //DefenceAnimation.SetDirection(newDirection);
 
         }
@@ -78,8 +82,20 @@ namespace CastleBridge {
             Health = hp;
         }
 
+        public int GetHealth() {
+            return Health;
+        }
+
+        public int GetLevel() {
+            return Level;
+        }
+
         public void LevelUp() {
             Level++;
+        }
+
+        public CharacterName GetName() {
+            return Name;
         }
 
         public void SetNewRectangle(Rectangle newRectangle) {
@@ -87,6 +103,7 @@ namespace CastleBridge {
             AfkAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
             WalkAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
             AttackAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            LootAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
             //DefenceAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
     
         }
