@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdanEngine {
+namespace CastleBridge {
     public class MenuScreen: Screen {
 
         public MenuScreen(Viewport viewPort) : base(viewPort) {

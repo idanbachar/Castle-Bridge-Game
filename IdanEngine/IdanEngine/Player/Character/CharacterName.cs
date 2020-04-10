@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdanEngine {
+namespace CastleBridge {
     public enum CharacterName {
     
         Archer,

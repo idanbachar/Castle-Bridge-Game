@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdanEngine {
+namespace CastleBridge {
     public class Image {
 
         private Texture2D Texture;

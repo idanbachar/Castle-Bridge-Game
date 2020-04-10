@@ -9,8 +9,8 @@
     <ProjectGuid>{03A1672F-A9E7-4C53-89FC-7BB155CF0AFD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IdanEngine</RootNamespace>
-    <AssemblyName>IdanEngine</AssemblyName>
+    <RootNamespace>CastleBridge</RootNamespace>
+    <AssemblyName>Castle Bridge</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>

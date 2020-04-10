@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdanEngine {
+namespace CastleBridge {
     public class Animation {
 
         private Image [] Sprites;

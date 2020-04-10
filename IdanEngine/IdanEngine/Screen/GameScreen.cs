@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdanEngine {
+namespace CastleBridge {
     public class GameScreen: Screen {
 
         private HUD HUD;

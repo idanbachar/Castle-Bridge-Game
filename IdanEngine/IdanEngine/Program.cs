@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IdanEngine
+namespace CastleBridge
 {
     /// <summary>
     /// The main class.
