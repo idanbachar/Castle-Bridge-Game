@@ -15,6 +15,7 @@ namespace CastleBridge {
         private bool Visible;
         public string FullPath;
         private Direction Direction;
+        private float Rotation;
 
         public Image(string imageFolderPath, string imageName, int x, int y, int width, int height, Color imageColor) {
 
@@ -24,6 +25,7 @@ namespace CastleBridge {
             Color = imageColor;
             Direction = Direction.Left;
             Visible = true;
+            Rotation = 0f;
         }
 
         private void LoadImage(string fullPath) {
@@ -57,6 +59,10 @@ namespace CastleBridge {
             Visible = value;
         }
 
+        public void SetRotation(float rotation) {
+            Rotation = rotation;
+        }
+
         public Rectangle GetRectangle() {
             return Rectangle;
         }
@@ -69,10 +75,10 @@ namespace CastleBridge {
 
                 switch (Direction) {
                     case Direction.Right:
-                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, 0, new Vector2(), SpriteEffects.FlipHorizontally, 1);
+                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, Rotation, new Vector2(), SpriteEffects.FlipHorizontally, 1);
                         break;
                     case Direction.Left:
-                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, 0, new Vector2(), SpriteEffects.None, 1);
+                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, Rotation, new Vector2(), SpriteEffects.None, 1);
                         break;
                 }
                 

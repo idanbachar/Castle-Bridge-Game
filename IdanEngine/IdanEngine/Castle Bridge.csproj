@@ -60,6 +60,7 @@
     <Compile Include="Components\GUI\Image.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapName.cs" />
+    <Compile Include="Player\Character\Weapon.cs" />
     <Compile Include="Player\PlayerState.cs" />
     <Compile Include="Screen\MenuScreen.cs" />
     <Compile Include="Screen\GameScreen.cs" />

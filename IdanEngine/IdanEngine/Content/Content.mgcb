@@ -92,6 +92,18 @@
 /processorParam:TextureFormat=Color
 /build:images/map/forest/grass.png
 
+#begin images/player/characters/archer/weapons/arrow/arrow_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/player/characters/archer/weapons/arrow/arrow_0.png
+
 #begin images/map/forest/ground leaves/ground_leaves_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -452,7 +464,7 @@
 /processorParam:TextureFormat=Color
 /build:images/player/characters/archer/walk/archer_walk_3.png
 
-#begin images/player/characters/archer/weapons/arrow/arrow_0.png
+#begin images/player/characters/archer/weapons/bow/archer_bow_avatar.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -462,7 +474,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/player/characters/archer/weapons/arrow/arrow_0.png
+/build:images/player/characters/archer/weapons/bow/archer_bow_avatar.png
 
 #begin images/player/walk/Run_0.png
 /importer:TextureImporter

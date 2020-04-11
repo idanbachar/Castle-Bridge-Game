@@ -56,6 +56,11 @@ namespace CastleBridge {
                 sprite.SetNewDirection(direction);
         }
 
+        public void SetRotation(float rotation) {
+            foreach (Image sprite in Sprites)
+                sprite.SetRotation(rotation);
+        }
+
         private void LoadSprites(Image image) {
 
             string path = image.FullPath;

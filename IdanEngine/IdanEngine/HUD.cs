@@ -10,12 +10,14 @@ namespace CastleBridge {
 
         private List<Text> Labels;
         private Image PlayerAvatar;
+        private Image PlayerWeapon;
         private List<Popup> Popups;
         public HUD() {
 
             Labels = new List<Text>();
             Popups = new List<Popup>();
             PlayerAvatar = new Image(string.Empty, string.Empty, 0, 0, 100, 100, Color.White);
+            PlayerWeapon = new Image(string.Empty, string.Empty, PlayerAvatar.GetRectangle().Right, PlayerAvatar.GetRectangle().Top, 50, 50, Color.White);
         }
 
         public void AddLabel(Text text) {
@@ -28,6 +30,10 @@ namespace CastleBridge {
 
         public void SetPlayerAvatar(CharacterName name) {
             PlayerAvatar.SetNewImage("player/characters/" + name + "/avatar/" + name + "_avatar");
+        }
+
+        public void SetPlayerWeapon(Weapon weapon, CharacterName name) {
+            PlayerWeapon.SetNewImage("player/characters/" + name + "/weapons/" + weapon + "/" + name + "_" + weapon + "_avatar");
         }
 
         public void Update() {
@@ -62,6 +68,7 @@ namespace CastleBridge {
                 label.Draw();
 
             PlayerAvatar.Draw();
+            PlayerWeapon.Draw();
         }
     
     }

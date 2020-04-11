@@ -117,6 +117,7 @@ namespace CastleBridge {
 
             Player = new Player(CharacterName.Archer, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
             HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName());
+            HUD.SetPlayerWeapon(Weapon.Bow,Player.CurrentCharacter.GetName());
         }
 
         private void InitMap() {

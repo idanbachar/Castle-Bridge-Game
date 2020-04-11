@@ -17,13 +17,14 @@ namespace CastleBridge {
         public static int WIDTH;
         public static int HEIGHT;
         public List<MapEntity> WorldEntities;
+        public List<Arrow> UsedArrows;
 
         public Map() {
 
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
-
+            UsedArrows = new List<Arrow>();
             Init();
         }
 
@@ -117,7 +118,7 @@ namespace CastleBridge {
                 case MapEntityName.Tree:
                     width = 400;
                     height = 500;
-                    isTouchable = true;
+                    isTouchable = false;
                     break;
                 case MapEntityName.Stone:
                     width = 50;
@@ -127,6 +128,10 @@ namespace CastleBridge {
             }
 
             WorldEntities.Add(new MapEntity(name, Name, x , y + height, width, height, isTouchable));
+        }
+
+        public void AddUsedArrows(Arrow arrow) {
+            UsedArrows.Add(arrow);
         }
 
         public bool IsOnTopMap(Player player) {

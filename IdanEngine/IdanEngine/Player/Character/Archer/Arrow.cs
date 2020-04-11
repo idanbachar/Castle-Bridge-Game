@@ -67,6 +67,7 @@ namespace CastleBridge {
             else {
                 ShootTime = 0;
                 IsFinished = true;
+                Animation.SetRotation(Direction == Direction.Right ? 0.7f : -0.7f);
             }
         }
 
