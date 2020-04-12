@@ -72,6 +72,10 @@ namespace CastleBridge {
 
         }
 
+        public Animation GetCurrentAnimation() {
+            return CurrentAnimation;
+        }
+
         public virtual void Update() {
 
             CurrentAnimation.Play();

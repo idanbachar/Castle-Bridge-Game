@@ -37,6 +37,10 @@ namespace CastleBridge {
             }
         }
 
+        public Animation GetCurrentAnimation() {
+            return Animation;
+        }
+
         public void ResetPosition() {
             Animation.SetNewRectangle(Map.WIDTH * 2, Rnd.Next(0, 200), 125, 75);
         }

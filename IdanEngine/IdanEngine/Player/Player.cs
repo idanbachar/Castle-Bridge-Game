@@ -115,10 +115,12 @@ namespace CastleBridge {
             return State;
         }
 
-        public void Draw() {
+        public void Draw(int i) {
 
-            Name.Draw();
-            CurrentCharacter.Draw();
+            if (CurrentCharacter.GetCurrentAnimation().GetCurrentSprite().GetRectangle().Bottom - 10 == i) {
+                Name.Draw();
+                CurrentCharacter.Draw();
+            }
         }
     }
 }

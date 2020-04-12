@@ -33,30 +33,17 @@ namespace CastleBridge {
                                     CurrentAnimation.GetCurrentSprite().GetRectangle().Top + CurrentAnimation.GetCurrentSprite().GetRectangle().Height / 2, Direction, shootDirection));
         }
 
-        private void DrawArrows() {
+        public void DrawArrows(int i) {
 
             foreach (Arrow arrow in Arrows)
-                arrow.Draw();
+                if (arrow.Animation.GetCurrentSprite().GetRectangle().Bottom == i)
+                    arrow.Draw();
         }
+ 
 
-        private void UpdateArrows() {
-
-            for (int i = 0; i < Arrows.Count; i++) {
-                if (!Arrows [i].IsFinished)
-                    Arrows [i].Move();
-            }
+        public List<Arrow> GetArrows() {
+            return Arrows;
         }
-
-        public override void Update() {
-            base.Update();
-
-            UpdateArrows();
-        }
-
-        public override void Draw() {
-            base.Draw();
-
-            DrawArrows();
-        }
+ 
     }
 }

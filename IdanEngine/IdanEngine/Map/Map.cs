@@ -13,7 +13,7 @@ namespace CastleBridge {
         public Image Sun;
         public Image Sky;
         public Image Castle;
-        private List<Cloud> Clouds;
+        public List<Cloud> Clouds;
         public static int WIDTH;
         public static int HEIGHT;
         public List<MapEntity> WorldEntities;
@@ -72,7 +72,7 @@ namespace CastleBridge {
             for (int i = 0; i < 60; i++) {
                 WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false));
             }
-            for (int i = 0; i < 150; i++) {
+            for (int i = 0; i < 156; i++) {
                 WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false));
             }
 
@@ -141,18 +141,15 @@ namespace CastleBridge {
             return false;
         }
 
-        public void DrawTile() {
-
-            Grass.Draw();
-
-            foreach (Cloud cloud in Clouds)
-                cloud.Draw();
+        public void DrawTile(int i) {
 
             foreach (MapEntity mapEntity in WorldEntities)
-                mapEntity.Draw();
+                if (mapEntity.Animation.GetCurrentSprite().GetRectangle().Bottom == i)
+                    mapEntity.Draw();
 
 
-            Castle.Draw();
+            if (Castle.GetRectangle().Bottom == i)
+                Castle.Draw();
         }
 
         public void DrawStuck() {

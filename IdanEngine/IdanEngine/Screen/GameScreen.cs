@@ -133,6 +133,16 @@ namespace CastleBridge {
         public override void Update() {
             CheckKeyboard();
             Player.Update();
+
+            if (Player.CurrentCharacter is Archer) {
+
+
+                for (int i = 0; i < ((Archer)Player.CurrentCharacter).GetArrows().Count; i++) {
+                    if (!((Archer)Player.CurrentCharacter).GetArrows() [i].IsFinished)
+                        ((Archer)Player.CurrentCharacter).GetArrows() [i].Move();
+                }
+            }
+
             Map.Update(Player);
 
             Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.WIDTH, Map.HEIGHT);
@@ -158,8 +168,18 @@ namespace CastleBridge {
                             Camera.Transform
                             );
 
-            Map.DrawTile();
-            Player.Draw();
+            Map.Grass.Draw();
+
+            foreach (Cloud cloud in Map.Clouds)
+                cloud.Draw();
+
+            for (int i = Map.Grass.GetRectangle().Top; i < Map.Grass.GetRectangle().Bottom; i++) {
+                Map.DrawTile(i);
+                Player.Draw(i);
+
+                if (Player.CurrentCharacter is Archer)
+                    ((Archer)Player.CurrentCharacter).DrawArrows(i);
+            }
             HUD.DrawTile();
 
             Game1.SpriteBatch.End();
