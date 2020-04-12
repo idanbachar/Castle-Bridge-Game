@@ -71,10 +71,17 @@ namespace CastleBridge {
             return false;
         }
 
+        public bool IsTouchFallenArrow(Arrow arrow) {
+
+            if (Rectangle.Intersects(arrow.Animation.GetCurrentSprite().GetRectangle()) && arrow.IsFinished)
+                return true;
+
+            return false;
+        }
+
         public void SetState(PlayerState state) {
 
             State = state;
-
             CurrentCharacter.SetCurrentAnimation(state);
 
 

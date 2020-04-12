@@ -11,13 +11,15 @@ namespace CastleBridge {
         private List<Text> Labels;
         private Image PlayerAvatar;
         private Image PlayerWeapon;
+        private Text PlayerWeaponAmmo;
         private List<Popup> Popups;
         public HUD() {
 
             Labels = new List<Text>();
             Popups = new List<Popup>();
-            PlayerAvatar = new Image(string.Empty, string.Empty, 0, 0, 100, 100, Color.White);
+            PlayerAvatar = new Image(string.Empty, string.Empty, 30, Game1.Graphics.PreferredBackBufferHeight - 135, 100, 100, Color.White);
             PlayerWeapon = new Image(string.Empty, string.Empty, PlayerAvatar.GetRectangle().Right, PlayerAvatar.GetRectangle().Top, 50, 50, Color.White);
+            PlayerWeaponAmmo = new Text(FontType.Default, "0", new Vector2(PlayerWeapon.GetRectangle().Left, PlayerWeapon.GetRectangle().Bottom + 5), Color.White, true, Color.Black);
         }
 
         public void AddLabel(Text text) {
@@ -34,6 +36,10 @@ namespace CastleBridge {
 
         public void SetPlayerWeapon(Weapon weapon, CharacterName name) {
             PlayerWeapon.SetNewImage("player/characters/" + name + "/weapons/" + weapon + "/" + name + "_" + weapon + "_avatar");
+        }
+
+        public void SetPlayerWeaponAmmo(string ammo) {
+            PlayerWeaponAmmo.SetText(ammo);
         }
 
         public void Update() {
@@ -69,6 +75,7 @@ namespace CastleBridge {
 
             PlayerAvatar.Draw();
             PlayerWeapon.Draw();
+            PlayerWeaponAmmo.Draw();
         }
     
     }

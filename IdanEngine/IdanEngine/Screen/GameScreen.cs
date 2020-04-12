@@ -14,6 +14,7 @@ namespace CastleBridge {
         private Player Player;
         private Camera Camera;
         private Map Map;
+        private List<Arrow> FallenArrows;
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -21,10 +22,12 @@ namespace CastleBridge {
 
         private void Init(Viewport viewPort) {
 
-            InitHUD();
             InitMap();
             InitPlayer();
+            InitHUD();
             Camera = new Camera(viewPort);
+
+            FallenArrows = new List<Arrow>();
         }
 
         private void CheckMovement() {
@@ -63,13 +66,22 @@ namespace CastleBridge {
                 if (Player.CurrentCharacter is Archer) {
 
                     Direction shootDirection = Direction.Down;
+                    Archer archer = Player.CurrentCharacter as Archer;
 
                     if (Keyboard.GetState().IsKeyDown(Keys.W))
                         shootDirection = Direction.Up;
                     else if (Keyboard.GetState().IsKeyDown(Keys.S))
                         shootDirection = Direction.Down;
 
-                    ((Archer)Player.CurrentCharacter).ShootArrow(shootDirection);
+                    if (archer.IsCanShoot()) {
+                        archer.GetCurrentAnimation().SetReverse(false);
+                        archer.ShootArrow(shootDirection);
+                    }
+                    else {
+                        archer.GetCurrentAnimation().SetReverse(true);
+                    }
+                    HUD.SetPlayerWeaponAmmo(archer.CurrentArrows + "/" + archer.MaxArrows);
+      
                 }
 
 
@@ -86,6 +98,24 @@ namespace CastleBridge {
                         Player.SetState(PlayerState.Loot);
                         HUD.AddPopup(new Popup("+1 " + Map.WorldEntities [i].Name.ToString().Replace("_", " "), Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White));
                         Map.WorldEntities.RemoveAt(i);
+                        break;
+                    }
+                }
+
+                for(int i = 0; i < FallenArrows.Count; i++) {
+
+                    if (Player.IsTouchFallenArrow(FallenArrows [i])) {
+
+                        if (Player.CurrentCharacter is Archer) {
+
+                            Archer archer = Player.CurrentCharacter as Archer;
+
+                            Player.SetState(PlayerState.Loot);
+                            HUD.AddPopup(new Popup("+1 Arrow", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White));
+                            FallenArrows.RemoveAt(i);
+                            archer.AddArrow();
+                            HUD.SetPlayerWeaponAmmo(archer.CurrentArrows + "/" + archer.MaxArrows);
+                        }
                         break;
                     }
                 }
@@ -116,8 +146,6 @@ namespace CastleBridge {
         private void InitPlayer() {
 
             Player = new Player(CharacterName.Archer, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
-            HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName());
-            HUD.SetPlayerWeapon(Weapon.Bow,Player.CurrentCharacter.GetName());
         }
 
         private void InitMap() {
@@ -127,7 +155,12 @@ namespace CastleBridge {
         private void InitHUD() {
 
             HUD = new HUD();
-            HUD.AddLabel(new Text(FontType.Default, "Idan", new Vector2(100, 100), Color.White, true, Color.Black));
+            HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName());
+
+            if (Player.CurrentCharacter is Archer) {
+                HUD.SetPlayerWeapon(Weapon.Bow, Player.CurrentCharacter.GetName());
+                HUD.SetPlayerWeaponAmmo(((Archer)Player.CurrentCharacter).CurrentArrows + "/" + ((Archer)Player.CurrentCharacter).MaxArrows);
+            }
         }
 
         public override void Update() {
@@ -136,10 +169,15 @@ namespace CastleBridge {
 
             if (Player.CurrentCharacter is Archer) {
 
+                Archer archer = Player.CurrentCharacter as Archer;
 
-                for (int i = 0; i < ((Archer)Player.CurrentCharacter).GetArrows().Count; i++) {
-                    if (!((Archer)Player.CurrentCharacter).GetArrows() [i].IsFinished)
-                        ((Archer)Player.CurrentCharacter).GetArrows() [i].Move();
+                for (int i = 0; i < archer.GetArrows().Count; i++) {
+                    if (!archer.GetArrows() [i].IsFinished)
+                        archer.GetArrows() [i].Move();
+                    else {
+                        FallenArrows.Add(archer.GetArrows() [i]);
+                        archer.GetArrows().RemoveAt(i);
+                    }
                 }
             }
 
@@ -148,7 +186,6 @@ namespace CastleBridge {
             Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.WIDTH, Map.HEIGHT);
 
             HUD.Update();
-            HUD.GetLabels() [0].SetText("(" + Player.GetRectangle().X + "," + Player.GetRectangle().Y + ")");
         }
 
         public override void Draw() {
@@ -177,8 +214,14 @@ namespace CastleBridge {
                 Map.DrawTile(i);
                 Player.Draw(i);
 
-                if (Player.CurrentCharacter is Archer)
-                    ((Archer)Player.CurrentCharacter).DrawArrows(i);
+                if (Player.CurrentCharacter is Archer) {
+                    Archer archer = Player.CurrentCharacter as Archer;
+                    archer.DrawArrows(i);
+                }
+
+                foreach (Arrow arrow in FallenArrows)
+                    if (arrow.Animation.GetCurrentSprite().GetRectangle().Bottom == i)
+                        arrow.Draw();
             }
             HUD.DrawTile();
 

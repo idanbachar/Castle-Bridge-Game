@@ -61,6 +61,10 @@ namespace CastleBridge {
                 sprite.SetRotation(rotation);
         }
 
+        public void SetReverse(bool value) {
+            IsReverse = value;
+        }
+
         private void LoadSprites(Image image) {
 
             string path = image.FullPath;
