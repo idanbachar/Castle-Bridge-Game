@@ -14,16 +14,24 @@ namespace CastleBridge {
         private int Speed;
         private Direction Direction;
         private Direction ShootUpDownDirection;
+        public Text DisplayedText;
 
         public Arrow(int startX, int startY, Direction direction, Direction shootUpDownDirection) {
 
             ShootTime = 0;
             IsFinished = false;
-            Speed = 10;
+            Speed = 20;
             Direction = direction;
             Animation = new Animation(new Image("player/characters/archer/weapons/arrow", "arrow_", startX, startY, 44, 21, Color.White), 0, 0, 1, 3, false, false);
             Animation.SetDirection(direction);
             ShootUpDownDirection = shootUpDownDirection;
+
+            DisplayedText = new Text(FontType.Default, string.Empty, new Vector2(startX, startY - 25), Color.Black, true, Color.Gold);
+            DisplayedText.SetVisible(false);
+
+            DisplayedText.SetText("Press 'E' to take" +
+                "\n" +
+                "(+1 Arrow)");
         }
 
         public void Move() {
@@ -68,11 +76,13 @@ namespace CastleBridge {
                 ShootTime = 0;
                 IsFinished = true;
                 Animation.SetRotation(Direction == Direction.Right ? 0.7f : -0.7f);
+                DisplayedText.SetPosition(new Vector2(Animation.GetCurrentSprite().GetRectangle().X, Animation.GetCurrentSprite().GetRectangle().Y));
             }
         }
 
         public void Draw() {
             Animation.Draw();
+            DisplayedText.Draw();
         }
 
     }

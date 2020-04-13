@@ -17,14 +17,14 @@ namespace CastleBridge {
         public static int WIDTH;
         public static int HEIGHT;
         public List<MapEntity> WorldEntities;
-        public List<Arrow> UsedArrows;
+        public List<Arrow> FallenArrows;
 
         public Map() {
 
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
-            UsedArrows = new List<Arrow>();
+            FallenArrows = new List<Arrow>();
             Init();
         }
 
@@ -42,6 +42,10 @@ namespace CastleBridge {
 
             foreach (MapEntity mapEntity in WorldEntities)
                     mapEntity.DisplayedText.SetVisible(player.IsTouchWorldEntity(mapEntity));
+
+            foreach (Arrow arrow in FallenArrows)
+                arrow.DisplayedText.SetVisible(player.IsTouchFallenArrow(arrow));
+
         }
 
         private void InitGrass() {
@@ -130,8 +134,8 @@ namespace CastleBridge {
             WorldEntities.Add(new MapEntity(name, Name, x , y + height, width, height, isTouchable));
         }
 
-        public void AddUsedArrows(Arrow arrow) {
-            UsedArrows.Add(arrow);
+        public void AddFallerArrow(Arrow arrow) {
+            FallenArrows.Add(arrow);
         }
 
         public bool IsOnTopMap(Player player) {

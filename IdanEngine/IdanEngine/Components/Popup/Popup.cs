@@ -12,8 +12,8 @@ namespace CastleBridge {
         private int ShowTimer;
         public bool IsFinished;
 
-        public Popup(string text, int x, int y, Color color) {
-            Text = new Text(FontType.Default, text, new Vector2(x, y), color, true, Color.Green);
+        public Popup(string text, int x, int y, Color textColor, Color backgroundColor) {
+            Text = new Text(FontType.Default, text, new Vector2(x, y), textColor, true, backgroundColor);
             ShowTimer = 0;
             IsFinished = false;
         }

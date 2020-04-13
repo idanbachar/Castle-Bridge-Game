@@ -14,7 +14,6 @@ namespace CastleBridge {
         private Player Player;
         private Camera Camera;
         private Map Map;
-        private List<Arrow> FallenArrows;
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -26,8 +25,6 @@ namespace CastleBridge {
             InitPlayer();
             InitHUD();
             Camera = new Camera(viewPort);
-
-            FallenArrows = new List<Arrow>();
         }
 
         private void CheckMovement() {
@@ -79,6 +76,7 @@ namespace CastleBridge {
                     }
                     else {
                         archer.GetCurrentAnimation().SetReverse(true);
+                        HUD.AddPopup(new Popup("No arrows!", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.Red, Color.Black), true);
                     }
                     HUD.SetPlayerWeaponAmmo(archer.CurrentArrows + "/" + archer.MaxArrows);
       
@@ -94,25 +92,48 @@ namespace CastleBridge {
             if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
 
                 for(int i = 0; i < Map.WorldEntities.Count; i++) {
-                    if (Player.IsTouchWorldEntity(Map.WorldEntities[i])) {
+
+                    MapEntity currentEntity = Map.WorldEntities [i];
+
+                    if (Player.IsTouchWorldEntity(currentEntity)) {
                         Player.SetState(PlayerState.Loot);
-                        HUD.AddPopup(new Popup("+1 " + Map.WorldEntities [i].Name.ToString().Replace("_", " "), Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White));
+
+                        switch (currentEntity.Name) {
+                            case MapEntityName.Red_Flower:
+                                Player.CurrentCharacter.IncreaseHp(15);
+                                HUD.SetPlayerHealth(15);
+                                HUD.AddPopup(new Popup("+15hp", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Red), true);
+                                HUD.AddPopup(new Popup("+15", HUD.GetPlayerHealthBar().GetRectangle().Left + 3, HUD.GetPlayerHealthBar().GetRectangle().Top, Color.White, Color.Red), false);
+                                break;
+                            case MapEntityName.Stone:
+                                Player.AddStones(1);
+                                HUD.AddPopup(new Popup("+1 Stone", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                                break;
+                            case MapEntityName.Tree:
+                                Player.SetWoods(5);
+                                HUD.AddPopup(new Popup("+5 Woods", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                                break;
+                        }
+
                         Map.WorldEntities.RemoveAt(i);
                         break;
                     }
                 }
 
-                for(int i = 0; i < FallenArrows.Count; i++) {
+                for(int i = 0; i < Map.FallenArrows.Count; i++) {
 
-                    if (Player.IsTouchFallenArrow(FallenArrows [i])) {
+                    Arrow currentArrow = Map.FallenArrows [i];
+
+                    if (Player.IsTouchFallenArrow(currentArrow)) {
 
                         if (Player.CurrentCharacter is Archer) {
 
                             Archer archer = Player.CurrentCharacter as Archer;
 
                             Player.SetState(PlayerState.Loot);
-                            HUD.AddPopup(new Popup("+1 Arrow", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White));
-                            FallenArrows.RemoveAt(i);
+                            HUD.AddPopup(new Popup("+1 Arrow", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                            HUD.AddPopup(new Popup("+1", (int)HUD.GetPlayerWeaponAmmo().GetPosition().X, (int)HUD.GetPlayerWeaponAmmo().GetPosition().Y - 10, Color.White, Color.Black), false);
+                            Map.FallenArrows.RemoveAt(i);
                             archer.AddArrow();
                             HUD.SetPlayerWeaponAmmo(archer.CurrentArrows + "/" + archer.MaxArrows);
                         }
@@ -175,7 +196,7 @@ namespace CastleBridge {
                     if (!archer.GetArrows() [i].IsFinished)
                         archer.GetArrows() [i].Move();
                     else {
-                        FallenArrows.Add(archer.GetArrows() [i]);
+                        Map.FallenArrows.Add(archer.GetArrows() [i]);
                         archer.GetArrows().RemoveAt(i);
                     }
                 }
@@ -219,7 +240,7 @@ namespace CastleBridge {
                     archer.DrawArrows(i);
                 }
 
-                foreach (Arrow arrow in FallenArrows)
+                foreach (Arrow arrow in Map.FallenArrows)
                     if (arrow.Animation.GetCurrentSprite().GetRectangle().Bottom == i)
                         arrow.Draw();
             }

@@ -9,6 +9,7 @@ namespace CastleBridge {
     public abstract class Character {
 
         protected int Health;
+        protected int MaxHealth;
         protected int Level;
         protected CharacterName Name;
         protected Image Shadow;
@@ -29,6 +30,7 @@ namespace CastleBridge {
             LootAnimation = new Animation(new Image("player/characters/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 4, 5, 4, true, false);
             
             Health = 100;
+            MaxHealth = 100;
             Shadow = new Image("player/characters/" + name + "/shadow/", name + "_shadow", x, y, width / 2, height / 2, Color.White);
             State = PlayerState.Afk;
             SetCurrentAnimation(State);
@@ -84,6 +86,14 @@ namespace CastleBridge {
 
         public void SetHealth(int hp) {
             Health = hp;
+        }
+
+        public void IncreaseHp(int hp) {
+            Health += Health < MaxHealth ? hp : 0;
+        }
+
+        public void DecreaseHp(int hp) {
+            Health -= (Health - hp) > 0 ? hp : 0;
         }
 
         public int GetHealth() {

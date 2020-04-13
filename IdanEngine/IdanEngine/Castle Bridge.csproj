@@ -56,7 +56,7 @@
     <Compile Include="Direction.cs" />
     <Compile Include="Components\GUI\FontType.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="HUD.cs" />
+    <Compile Include="HUD\HUD.cs" />
     <Compile Include="Components\GUI\Image.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapName.cs" />

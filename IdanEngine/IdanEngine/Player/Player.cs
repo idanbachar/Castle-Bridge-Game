@@ -14,7 +14,8 @@ namespace CastleBridge {
         private Rectangle Rectangle;
         private int Speed;
         private PlayerState State;
-
+        private int Stones;
+        private int Woods;
         public Player(CharacterName character, string name, int x, int y, int width, int height){
 
             Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Red);
@@ -23,12 +24,8 @@ namespace CastleBridge {
             Characters = new List<Character>();
             State = PlayerState.Afk;
             CurrentCharacter = AddCharacter(character);
-            
-            Init();
-        }
-
-        public void Init() {
-
+            Stones = 0;
+            Woods = 0;
         }
 
         private Character AddCharacter(CharacterName name) {
@@ -86,10 +83,7 @@ namespace CastleBridge {
 
 
         }
-
-        public void TakeItem(MapEntity item) {
-
-        }
+ 
 
         public void Update() {
 
@@ -120,6 +114,22 @@ namespace CastleBridge {
 
         public PlayerState GetState() {
             return State;
+        }
+
+        public int GetStones() {
+            return Stones;
+        }
+
+        public void AddStones(int stones) {
+            Stones += stones;
+        }
+
+        public int GetWoods() {
+            return Woods;
+        }
+
+        public void SetWoods(int woods) {
+            Woods += woods;
         }
 
         public void Draw(int i) {
