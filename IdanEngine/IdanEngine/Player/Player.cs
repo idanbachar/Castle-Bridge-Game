@@ -16,9 +16,11 @@ namespace CastleBridge {
         private PlayerState State;
         private int Stones;
         private int Woods;
-        public Player(CharacterName character, string name, int x, int y, int width, int height){
+        private Team Team;
+        public Player(CharacterName character, Team team, string name, int x, int y, int width, int height){
 
             Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Red);
+            Team = team;
             Rectangle = new Rectangle(x, y, width, height);
             Speed = 4;
             Characters = new List<Character>();
@@ -80,10 +82,11 @@ namespace CastleBridge {
 
             State = state;
             CurrentCharacter.SetCurrentAnimation(state);
-
-
         }
- 
+
+        public Team GetTeam() {
+            return Team;
+        }
 
         public void Update() {
 

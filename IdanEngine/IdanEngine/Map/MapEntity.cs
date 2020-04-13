@@ -20,7 +20,7 @@ namespace CastleBridge {
             Animation = new Animation(new Image("map/" + mapName + "/" + entityName, entityName + "_", x, y, width, height, Color.White), 0, 0, 1, 5, true, true);
             Animation.Start();
 
-            DisplayedText = new Text(FontType.Default, string.Empty, new Vector2(x, y - 25), Color.Black, true, Color.Gold);
+            DisplayedText = new Text(FontType.Default, string.Empty, new Vector2(x + 50, y - 65), Color.Black, true, Color.Gold);
             DisplayedText.SetVisible(false);
 
             switch (entityName) {

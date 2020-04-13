@@ -14,6 +14,8 @@ namespace CastleBridge {
         private Player Player;
         private Camera Camera;
         private Map Map;
+        private int generateXpTimer;
+
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -25,6 +27,19 @@ namespace CastleBridge {
             InitPlayer();
             InitHUD();
             Camera = new Camera(viewPort);
+        }
+
+        private void GenerateXp() {
+            
+            if(generateXpTimer < 1000) {
+                generateXpTimer++;
+            }
+            else {
+                generateXpTimer = 0;
+                Player.CurrentCharacter.AddXp(1);
+                HUD.AddPopup(new Popup("+1xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
+                HUD.SetPlayerLevel(1);
+            }
         }
 
         private void CheckMovement() {
@@ -108,10 +123,14 @@ namespace CastleBridge {
                             case MapEntityName.Stone:
                                 Player.AddStones(1);
                                 HUD.AddPopup(new Popup("+1 Stone", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                                Player.CurrentCharacter.AddXp(3);
+                                HUD.AddPopup(new Popup("+3xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
                                 break;
                             case MapEntityName.Tree:
                                 Player.SetWoods(5);
                                 HUD.AddPopup(new Popup("+5 Woods", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                                Player.CurrentCharacter.AddXp(20);
+                                HUD.AddPopup(new Popup("+20xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
                                 break;
                         }
 
@@ -166,7 +185,7 @@ namespace CastleBridge {
 
         private void InitPlayer() {
 
-            Player = new Player(CharacterName.Archer, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
+            Player = new Player(CharacterName.Archer, Team.Red, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
         }
 
         private void InitMap() {
@@ -187,6 +206,7 @@ namespace CastleBridge {
         public override void Update() {
             CheckKeyboard();
             Player.Update();
+            GenerateXp();
 
             if (Player.CurrentCharacter is Archer) {
 
@@ -230,6 +250,8 @@ namespace CastleBridge {
 
             foreach (Cloud cloud in Map.Clouds)
                 cloud.Draw();
+
+            Map.DrawCastles();
 
             for (int i = Map.Grass.GetRectangle().Top; i < Map.Grass.GetRectangle().Bottom; i++) {
                 Map.DrawTile(i);

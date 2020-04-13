@@ -11,6 +11,7 @@ namespace CastleBridge {
         protected int Health;
         protected int MaxHealth;
         protected int Level;
+        protected int Xp;
         protected CharacterName Name;
         protected Image Shadow;
         protected Animation CurrentAnimation;
@@ -36,6 +37,7 @@ namespace CastleBridge {
             SetCurrentAnimation(State);
             CurrentAnimation.Start();
             Level = 0;
+            Xp = 0;
         }
 
         public void SetCurrentAnimation(PlayerState State) {
@@ -106,6 +108,15 @@ namespace CastleBridge {
 
         public void LevelUp() {
             Level++;
+            Xp = 0;
+        }
+
+        public void AddXp(int xp) {
+
+            Xp += xp;
+            if (Xp >= 100) {
+                LevelUp();
+            }
         }
 
         public CharacterName GetName() {

@@ -46,6 +46,8 @@
     <Compile Include="Components\Animation\AnimationState.cs" />
     <Compile Include="Components\Camera\Camera.cs" />
     <Compile Include="Components\Popup\Popup.cs" />
+    <Compile Include="Map\Castle\Castle.cs" />
+    <Compile Include="Map\Castle\Chest.cs" />
     <Compile Include="Map\Cloud.cs" />
     <Compile Include="Map\MapEntity.cs" />
     <Compile Include="Map\MapEntityName.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Map\MapName.cs" />
     <Compile Include="Player\Character\Weapon.cs" />
     <Compile Include="Player\PlayerState.cs" />
+    <Compile Include="Player\Team.cs" />
     <Compile Include="Screen\MenuScreen.cs" />
     <Compile Include="Screen\GameScreen.cs" />
     <Compile Include="Player\Player.cs" />
