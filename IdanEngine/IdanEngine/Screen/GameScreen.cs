@@ -14,8 +14,7 @@ namespace CastleBridge {
         private Player Player;
         private Camera Camera;
         private Map Map;
-        private int generateXpTimer;
-
+        private int GenerateXpTimer;
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -31,11 +30,11 @@ namespace CastleBridge {
 
         private void GenerateXp() {
             
-            if(generateXpTimer < 1000) {
-                generateXpTimer++;
+            if(GenerateXpTimer < 1000) {
+                GenerateXpTimer++;
             }
             else {
-                generateXpTimer = 0;
+                GenerateXpTimer = 0;
                 Player.CurrentCharacter.AddXp(1);
                 HUD.AddPopup(new Popup("+1xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
                 HUD.SetPlayerLevel(1);
@@ -105,7 +104,7 @@ namespace CastleBridge {
         private void CheckLoot() {
 
             if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
-
+            
                 for(int i = 0; i < Map.WorldEntities.Count; i++) {
 
                     MapEntity currentEntity = Map.WorldEntities [i];
