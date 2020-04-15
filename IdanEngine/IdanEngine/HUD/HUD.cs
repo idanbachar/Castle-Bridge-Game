@@ -43,12 +43,12 @@ namespace CastleBridge {
             }
         }
 
-        public void SetPlayerAvatar(CharacterName name) {
-            PlayerAvatar.SetNewImage("player/characters/" + name + "/avatar/" + name + "_avatar");
+        public void SetPlayerAvatar(CharacterName name, Team team) {
+            PlayerAvatar.SetNewImage("player/characters/teams/" + team + "/" + name + "/avatar/" + name + "_avatar");
         }
 
-        public void SetPlayerWeapon(Weapon weapon, CharacterName name) {
-            PlayerWeapon.SetNewImage("player/characters/" + name + "/weapons/" + weapon + "/" + name + "_" + weapon + "_avatar");
+        public void SetPlayerWeapon(Weapon weapon, CharacterName name, Team team) {
+            PlayerWeapon.SetNewImage("player/characters/teams/" + team + "/" + name + "/weapons/" + weapon + "/" + name + "_" + weapon + "_avatar");
         }
 
         public void SetPlayerWeaponAmmo(string ammo) {

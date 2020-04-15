@@ -36,7 +36,7 @@ namespace CastleBridge {
 
             switch (name) {
                 case CharacterName.Archer:
-                    character = new Archer(name, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                    character = new Archer(name, Team, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                     break;
             }
 

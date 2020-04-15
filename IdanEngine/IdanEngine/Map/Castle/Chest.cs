@@ -15,6 +15,7 @@ namespace CastleBridge {
         public Chest(Team team, int x, int y) {
             Team = Team;
             Image = new Image(string.Empty, string.Empty, x, y, 150, 50, Color.White);
+            Owner = null;
         }
 
         public Team GetTeam() {

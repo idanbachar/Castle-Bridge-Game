@@ -22,7 +22,7 @@ namespace CastleBridge {
             IsFinished = false;
             Speed = 20;
             Direction = direction;
-            Animation = new Animation(new Image("player/characters/archer/weapons/arrow", "arrow_", startX, startY, 44, 21, Color.White), 0, 0, 1, 3, false, false);
+            Animation = new Animation(new Image("player/characters/teams/red/archer /weapons/arrow", "arrow_", startX, startY, 44, 21, Color.White), 0, 0, 1, 3, false, false);
             Animation.SetDirection(direction);
             ShootUpDownDirection = shootUpDownDirection;
 

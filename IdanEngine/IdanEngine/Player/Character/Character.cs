@@ -22,17 +22,18 @@ namespace CastleBridge {
         public Animation LootAnimation;
         protected Direction Direction;
         protected PlayerState State;
-        public Character(CharacterName name, int x, int y, int width, int height) {
+        protected Team Team;
+        public Character(CharacterName name, Team team, int x, int y, int width, int height) {
 
             Name = name;
-            AfkAnimation = new Animation(new Image("player/characters/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
-            WalkAnimation = new Animation(new Image("player/characters/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
-            AttackAnimation = new Animation(new Image("player/characters/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 6, 7, 4, false, false);
-            LootAnimation = new Animation(new Image("player/characters/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 4, 5, 4, true, false);
+            AfkAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
+            WalkAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
+            AttackAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 6, 7, 4, false, false);
+            LootAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 4, 5, 4, true, false);
             
             Health = 100;
             MaxHealth = 100;
-            Shadow = new Image("player/characters/" + name + "/shadow/", name + "_shadow", x, y, width / 2, height / 2, Color.White);
+            Shadow = new Image("player/characters/teams/" + team + "/" + name + "/shadow/", name + "_shadow", x, y, width / 2, height / 2, Color.White);
             State = PlayerState.Afk;
             SetCurrentAnimation(State);
             CurrentAnimation.Start();
@@ -121,6 +122,10 @@ namespace CastleBridge {
 
         public CharacterName GetName() {
             return Name;
+        }
+
+        public Team GetTeam() {
+            return Team;
         }
 
         public void SetNewRectangle(Rectangle newRectangle) {

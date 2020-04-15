@@ -195,10 +195,10 @@ namespace CastleBridge {
         private void InitHUD() {
 
             HUD = new HUD();
-            HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName());
+            HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeam());
 
             if (Player.CurrentCharacter is Archer) {
-                HUD.SetPlayerWeapon(Weapon.Bow, Player.CurrentCharacter.GetName());
+                HUD.SetPlayerWeapon(Weapon.Bow, Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeam());
                 HUD.SetPlayerWeaponAmmo(((Archer)Player.CurrentCharacter).CurrentArrows + "/" + ((Archer)Player.CurrentCharacter).MaxArrows);
             }
         }

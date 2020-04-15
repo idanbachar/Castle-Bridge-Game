@@ -11,7 +11,7 @@ namespace CastleBridge {
         public int MaxArrows;
         public int CurrentArrows;
 
-        public Archer(CharacterName name, int x, int y, int width, int height) : base(name, x, y, width, height) {
+        public Archer(CharacterName name, Team team, int x, int y, int width, int height) : base(name, team, x, y, width, height) {
 
             Arrows = new List<Arrow>();
             MaxArrows = 7;
