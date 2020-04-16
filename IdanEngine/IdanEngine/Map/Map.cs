@@ -144,13 +144,6 @@ namespace CastleBridge {
             FallenArrows.Add(arrow);
         }
 
-        public bool IsOnTopMap(Player player) {
-            if (player.GetRectangle().Bottom - player.GetRectangle().Height / 2 < Grass.GetRectangle().Top)
-                return true;
-
-            return false;
-        }
-
         public void DrawTile(int i) {
 
             foreach (MapEntity mapEntity in WorldEntities)

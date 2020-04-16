@@ -45,23 +45,31 @@ namespace CastleBridge {
 
             if (Keyboard.GetState().IsKeyDown(Keys.D)) {
                 Player.SetDirection(Direction.Right);
-                Player.SetState(PlayerState.Walk);
-                Player.Move(Direction.Right);
+
+                if (!Player.IsOnRightMap()) {
+                    Player.SetState(PlayerState.Walk);
+                    Player.Move(Direction.Right);
+                }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A)) {
                 Player.SetDirection(Direction.Left);
-                Player.SetState(PlayerState.Walk);
-                Player.Move(Direction.Left);
+
+                if (!Player.IsOnLeftMap()) {
+                    Player.SetState(PlayerState.Walk);
+                    Player.Move(Direction.Left);
+                }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                if (!Map.IsOnTopMap(Player))
+                if (!Player.IsOnTopMap(Map)) {
                     Player.Move(Direction.Up);
-
-                Player.SetState(PlayerState.Walk);
+                    Player.SetState(PlayerState.Walk);
+                }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                Player.Move(Direction.Down);
-                Player.SetState(PlayerState.Walk);
+                if (!Player.IsOnBottomMap()) {
+                    Player.Move(Direction.Down);
+                    Player.SetState(PlayerState.Walk);
+                }
             }
         }
 
@@ -199,6 +207,10 @@ namespace CastleBridge {
             if (Player.CurrentCharacter is Archer) {
                 HUD.SetPlayerWeapon(Weapon.Bow, Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeam());
                 HUD.SetPlayerWeaponAmmo(((Archer)Player.CurrentCharacter).CurrentArrows + "/" + ((Archer)Player.CurrentCharacter).MaxArrows);
+            }
+            else if(Player.CurrentCharacter is Knight) {
+                HUD.SetPlayerWeapon(Weapon.Sword, Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeam());
+                HUD.SetPlayerWeaponAmmo(string.Empty);
             }
         }
 

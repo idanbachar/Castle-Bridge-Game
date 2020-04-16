@@ -121,6 +121,33 @@ namespace CastleBridge {
         public PlayerState GetState() {
             return State;
         }
+        public bool IsOnTopMap(Map map) {
+            if (Rectangle.Bottom - Rectangle.Height / 2 < map.Grass.GetRectangle().Top)
+                return true;
+
+            return false;
+        }
+
+        public bool IsOnLeftMap() {
+            if (Rectangle.Left <= 0)
+                return true;
+
+            return false;
+        }
+
+        public bool IsOnRightMap() {
+            if (Rectangle.Right >= Map.WIDTH)
+                return true;
+
+            return false;
+        }
+
+        public bool IsOnBottomMap() {
+            if (Rectangle.Bottom > Map.HEIGHT)
+                return true;
+
+            return false;
+        }
 
         public int GetStones() {
             return Stones;

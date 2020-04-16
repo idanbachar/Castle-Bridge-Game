@@ -28,8 +28,8 @@ namespace CastleBridge {
             Name = name;
             AfkAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
             WalkAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
-            AttackAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 6, 7, 4, false, false);
-            LootAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 4, 5, 4, true, false);
+            AttackAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
+            LootAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 5, 5, 4, true, false);
             
             Health = 100;
             MaxHealth = 100;
