@@ -9,6 +9,7 @@ namespace CastleBridge {
     
         Archer,
         Knight,
-        Assassin
+        Assassin,
+        Mage
     }
 }

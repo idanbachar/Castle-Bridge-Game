@@ -560,6 +560,54 @@
 /processorParam:TextureFormat=Color
 /build:images/player/characters/teams/red/knight/afk/knight_afk_5.png
 
+#begin images/player/characters/teams/red/knight/walk/knight_walk_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/player/characters/teams/red/knight/walk/knight_walk_0.png
+
+#begin images/player/characters/teams/red/knight/walk/knight_walk_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/player/characters/teams/red/knight/walk/knight_walk_1.png
+
+#begin images/player/characters/teams/red/knight/walk/knight_walk_2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/player/characters/teams/red/knight/walk/knight_walk_2.png
+
+#begin images/player/characters/teams/red/knight/walk/knight_walk_3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/player/characters/teams/red/knight/walk/knight_walk_3.png
+
 #begin images/player/characters/teams/yellow/archer/afk/archer_afk_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
