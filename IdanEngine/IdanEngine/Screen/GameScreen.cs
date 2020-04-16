@@ -184,7 +184,7 @@ namespace CastleBridge {
 
         private void InitPlayer() {
 
-            Player = new Player(CharacterName.Archer, Team.Red, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
+            Player = new Player(CharacterName.Knight, Team.Red, "Idan", Map.Grass.GetRectangle().X + 25, Map.Grass.GetRectangle().Top - 75, 125, 175);
         }
 
         private void InitMap() {
