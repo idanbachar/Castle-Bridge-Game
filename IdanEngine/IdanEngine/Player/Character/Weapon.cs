@@ -8,6 +8,7 @@ namespace CastleBridge {
 
     public enum Weapon {
         Bow,
-        Sword
+        Sword,
+        Wand
     }
 }

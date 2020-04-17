@@ -47,6 +47,9 @@ namespace CastleBridge {
                 case CharacterName.Knight:
                     character = new Knight(name, Team, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                     break;
+                case CharacterName.Mage:
+                    character = new Mage(name, Team, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                    break;
             }
 
             Characters.Add(character);

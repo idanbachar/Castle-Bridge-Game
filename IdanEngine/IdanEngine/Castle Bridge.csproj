@@ -63,6 +63,7 @@
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapName.cs" />
     <Compile Include="Player\Character\Knight\Knight.cs" />
+    <Compile Include="Player\Character\Mage\Mage.cs" />
     <Compile Include="Player\Character\Weapon.cs" />
     <Compile Include="Player\PlayerState.cs" />
     <Compile Include="Player\Team.cs" />
