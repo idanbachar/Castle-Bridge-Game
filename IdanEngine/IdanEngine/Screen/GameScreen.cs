@@ -15,6 +15,8 @@ namespace CastleBridge {
         private Camera Camera;
         private Map Map;
         private int GenerateXpTimer;
+        private bool IsPressedD1;
+        private bool IsPressedD2;
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -69,6 +71,29 @@ namespace CastleBridge {
                 if (!Player.IsOnBottomMap()) {
                     Player.Move(Direction.Down);
                     Player.SetState(PlayerState.Walk);
+                }
+            }
+
+            if(Keyboard.GetState().IsKeyDown(Keys.D1) && !IsPressedD1) {
+                IsPressedD1 = true;
+                if (Player.CurrentCharacter.GetName() != CharacterName.Archer) {
+                    Player.ChangeCharacter(CharacterName.Archer);
+                    UpdateHud();
+                }
+            }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.D1))
+                IsPressedD1 = false;
+
+            if (Keyboard.GetState().IsKeyUp(Keys.D2))
+                IsPressedD2 = false;
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D2) && !IsPressedD2) {
+                IsPressedD2 = true;
+                if (Player.CurrentCharacter.GetName() != CharacterName.Knight) {
+                    Player.ChangeCharacter(CharacterName.Knight);
+                    UpdateHud();
                 }
             }
         }
@@ -202,13 +227,17 @@ namespace CastleBridge {
         private void InitHUD() {
 
             HUD = new HUD();
+            UpdateHud();
+        }
+
+        private void UpdateHud() {
             HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeam());
 
             if (Player.CurrentCharacter is Archer) {
                 HUD.SetPlayerWeapon(Weapon.Bow, Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeam());
                 HUD.SetPlayerWeaponAmmo(((Archer)Player.CurrentCharacter).CurrentArrows + "/" + ((Archer)Player.CurrentCharacter).MaxArrows);
             }
-            else if(Player.CurrentCharacter is Knight) {
+            else if (Player.CurrentCharacter is Knight) {
                 HUD.SetPlayerWeapon(Weapon.Sword, Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeam());
                 HUD.SetPlayerWeaponAmmo(string.Empty);
             }

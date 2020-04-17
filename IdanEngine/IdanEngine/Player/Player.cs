@@ -30,6 +30,12 @@ namespace CastleBridge {
             Woods = 0;
         }
 
+        public void ChangeCharacter(CharacterName newCharacter) {
+
+            CurrentCharacter = AddCharacter(newCharacter);
+
+        }
+
         private Character AddCharacter(CharacterName name) {
 
             Character character = null;
