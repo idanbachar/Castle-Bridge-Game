@@ -5,5 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CastleBridge {
-    public enum ScreenType { Menu, Game }
+    public enum ScreenType { 
+        Menu,
+        Game 
+    }
 }

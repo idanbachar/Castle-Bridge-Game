@@ -14,8 +14,8 @@ namespace CastleBridge {
 
         public Castle(TeamName teamName, int x, int y) {
             TeamName = teamName;
-            Chests = new List<Chest>();
             Image = new Image("map/castles/teams/" + teamName + "/outside", "castle", x, y, 1400, 600, Color.White);
+            Chests = new List<Chest>();
         }
 
         public TeamName GetTeam() {

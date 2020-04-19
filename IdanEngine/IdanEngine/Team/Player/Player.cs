@@ -18,10 +18,9 @@ namespace CastleBridge {
         private int Stones;
         private int Woods;
         public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height){
-
-            Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Red);
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
+            Name = new Text(FontType.Default, name, new Vector2(Rectangle.Left + Rectangle.Width / 2 - 5, Rectangle.Bottom + 5), Color.Gold, true, Color.Black);
             Speed = 4;
             Characters = new List<Character>();
             State = PlayerState.Afk;
@@ -114,7 +113,7 @@ namespace CastleBridge {
 
         public void SetDirection(Direction newDirection) {
 
-            CurrentCharacter.SetNewDirection(newDirection);
+            CurrentCharacter.SetDirection(newDirection);
 
         }
 
@@ -125,8 +124,8 @@ namespace CastleBridge {
             Rectangle.Width = newRectangle.Width;
             Rectangle.Height = newRectangle.Height;
 
-            CurrentCharacter.SetNewRectangle(newRectangle);
-            Name.SetPosition(new Vector2(newRectangle.X, newRectangle.Y - 12));
+            CurrentCharacter.SetRectangle(newRectangle);
+            Name.SetPosition(new Vector2(newRectangle.Left + newRectangle.Width / 2 - 5, newRectangle.Bottom + 5));
         }
 
         public Rectangle GetRectangle() {

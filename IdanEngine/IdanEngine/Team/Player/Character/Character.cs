@@ -13,13 +13,13 @@ namespace CastleBridge {
         protected int Level;
         protected int Xp;
         protected CharacterName Name;
-        protected Image Shadow;
         protected Animation CurrentAnimation;
         public Animation AfkAnimation;
         public Animation WalkAnimation;
         public Animation AttackAnimation;
         public Animation DefenceAnimation;
         public Animation LootAnimation;
+        public Animation HorseRidingAnimation;
         protected Direction Direction;
         protected PlayerState State;
         protected TeamName TeamName;
@@ -29,11 +29,12 @@ namespace CastleBridge {
             AfkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
             WalkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
             AttackAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
+            DefenceAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/defence/", name + "_defence_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
             LootAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 5, 5, 4, true, false);
+            HorseRidingAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/horse ride/", name + "_horse_ride_", x, y, width, height, Color.White), 0, 5, 5, 4, true, false);
             
             Health = 100;
             MaxHealth = 100;
-            Shadow = new Image("player/characters/teams/" + teamName + "/" + name + "/shadow/", name + "_shadow", x, y, width / 2, height / 2, Color.White);
             State = PlayerState.Afk;
             SetCurrentAnimation(State);
             CurrentAnimation.Start();
@@ -59,21 +60,22 @@ namespace CastleBridge {
                 case PlayerState.Loot:
                     CurrentAnimation = LootAnimation;
                     break;
+                case PlayerState.RideHorse:
+                    CurrentAnimation = HorseRidingAnimation;
+                    break;
             }
             CurrentAnimation.Start();
         }
 
-        public void SetNewDirection(Direction newDirection) {
+        public void SetDirection(Direction newDirection) {
 
             Direction = newDirection;
-
-            Shadow.SetDirection(newDirection);
 
             AfkAnimation.SetDirection(newDirection);
             WalkAnimation.SetDirection(newDirection);
             AttackAnimation.SetDirection(newDirection);
             LootAnimation.SetDirection(newDirection);
-            //DefenceAnimation.SetDirection(newDirection);
+            DefenceAnimation.SetDirection(newDirection);
 
         }
 
@@ -82,9 +84,7 @@ namespace CastleBridge {
         }
 
         public virtual void Update() {
-
             CurrentAnimation.Play();
-            Shadow.SetRectangle(CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Left, CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Bottom, CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Width, CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height);
         }
 
         public void SetHealth(int hp) {
@@ -128,19 +128,18 @@ namespace CastleBridge {
             return TeamName;
         }
 
-        public void SetNewRectangle(Rectangle newRectangle) {
+        public void SetRectangle(Rectangle newRectangle) {
 
             AfkAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
             WalkAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
             AttackAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
             LootAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
-            //DefenceAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            DefenceAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
     
         }
 
         public virtual void Draw() {
             CurrentAnimation.Draw();
-            //Shadow.Draw();
         }
     }
 }
