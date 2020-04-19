@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CastleBridge {
-    public enum Team {
+    public enum TeamName {
         Red,
         Yellow
     }

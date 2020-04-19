@@ -13,7 +13,7 @@ namespace CastleBridge {
         private Rectangle Rectangle;
         private Color Color;
         private bool Visible;
-        public string FullPath;
+        private string FullPath;
         private Direction Direction;
         private float Rotation;
 
@@ -31,28 +31,36 @@ namespace CastleBridge {
         private void LoadImage(string fullPath) {
 
             try {
-                Texture = Game1.PublicContent.Load<Texture2D>("images/" + fullPath);
+                Texture = CastleBridge.PublicContent.Load<Texture2D>("images/" + fullPath);
             }catch(Exception e) {
                 Console.WriteLine(e.Message);
-                Texture = Game1.PublicContent.Load<Texture2D>("images/undefined");
+                Texture = CastleBridge.PublicContent.Load<Texture2D>("images/undefined");
             }
         }
 
-        public void SetNewImage(string fullPath) {
+        public void ChangeImage(string fullPath) {
 
             LoadImage(fullPath);
         }
 
-        public void SetNewDirection(Direction newDirection) {
+        public void SetDirection(Direction newDirection) {
             Direction = newDirection;
         }
 
-        public void SetNewRectangle(int x, int y, int width, int height) {
+        public Direction GetDirection() {
+            return Direction;
+        }
+
+        public void SetRectangle(int x, int y, int width, int height) {
 
             Rectangle.X = x;
             Rectangle.Y = y;
             Rectangle.Width = width;
             Rectangle.Height = height;
+        }
+
+        public Rectangle GetRectangle() {
+            return Rectangle;
         }
 
         public void SetVisible(bool value) {
@@ -63,27 +71,28 @@ namespace CastleBridge {
             Rotation = rotation;
         }
 
-        public Rectangle GetRectangle() {
-            return Rectangle;
+        public float GetRotation() {
+            return Rotation;
+        }
+
+        public string GetFullPath() {
+            return FullPath;
         }
 
         public void Draw() {
-
-            //Game1.SpriteBatch.Begin();
 
             if (Visible) {
 
                 switch (Direction) {
                     case Direction.Right:
-                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, Rotation, new Vector2(), SpriteEffects.FlipHorizontally, 1);
+                        CastleBridge.SpriteBatch.Draw(Texture, Rectangle, null, Color, Rotation, new Vector2(), SpriteEffects.FlipHorizontally, 1);
                         break;
                     case Direction.Left:
-                        Game1.SpriteBatch.Draw(Texture, Rectangle, null, Color, Rotation, new Vector2(), SpriteEffects.None, 1);
+                        CastleBridge.SpriteBatch.Draw(Texture, Rectangle, null, Color, Rotation, new Vector2(), SpriteEffects.None, 1);
                         break;
                 }
                 
             }
-            //Game1.SpriteBatch.End();
         }
     }
 }

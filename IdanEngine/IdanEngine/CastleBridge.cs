@@ -9,7 +9,7 @@ namespace CastleBridge
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class CastleBridge : Game
     {
         public static GraphicsDeviceManager Graphics;
         public static SpriteBatch SpriteBatch;
@@ -20,7 +20,7 @@ namespace CastleBridge
         public static ContentManager PublicContent;
 
  
-        public Game1()
+        public CastleBridge()
         {
             Graphics = new GraphicsDeviceManager(this);
             Graphics.PreferredBackBufferWidth = 1365;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;

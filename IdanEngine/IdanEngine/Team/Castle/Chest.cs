@@ -9,21 +9,21 @@ namespace CastleBridge {
     public class Chest {
 
         private Image Image;
-        private Team Team;
+        private TeamName TeamName;
         private Player Owner;
 
-        public Chest(Team team, int x, int y) {
-            Team = Team;
+        public Chest(TeamName teamName, int x, int y) {
+            TeamName = teamName;
             Image = new Image(string.Empty, string.Empty, x, y, 150, 50, Color.White);
             Owner = null;
         }
 
-        public Team GetTeam() {
-            return Team;
+        public TeamName GetTeam() {
+            return TeamName;
         }
 
-        public void SetTeam(Team team) {
-            Team = team;
+        public void SetTeam(TeamName team) {
+            TeamName = team;
         }
 
         public Player GetOwner() {

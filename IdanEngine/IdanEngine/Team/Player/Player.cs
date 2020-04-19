@@ -9,18 +9,18 @@ namespace CastleBridge {
     public class Player {
 
         private Text Name;
-        public Character CurrentCharacter;
         private List<Character> Characters;
+        public Character CurrentCharacter;
         private Rectangle Rectangle;
-        private int Speed;
         private PlayerState State;
+        private TeamName TeamName;
+        private int Speed;
         private int Stones;
         private int Woods;
-        private Team Team;
-        public Player(CharacterName character, Team team, string name, int x, int y, int width, int height){
+        public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height){
 
             Name = new Text(FontType.Default, name, new Vector2(0, 0), Color.White, true, Color.Red);
-            Team = team;
+            TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
             Speed = 4;
             Characters = new List<Character>();
@@ -42,20 +42,20 @@ namespace CastleBridge {
 
             switch (name) {
                 case CharacterName.Archer:
-                    character = new Archer(name, Team, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                    character = new Archer(name, TeamName, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                     break;
                 case CharacterName.Knight:
-                    character = new Knight(name, Team, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                    character = new Knight(name, TeamName, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                     break;
                 case CharacterName.Mage:
-                    character = new Mage(name, Team, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                    character = new Mage(name, TeamName, Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
                     break;
             }
 
             Characters.Add(character);
             return character;
         }
- 
+
         public void Move(Direction direction) {
             
             switch (direction) {
@@ -76,7 +76,7 @@ namespace CastleBridge {
 
         public bool IsTouchWorldEntity(MapEntity entity) {
 
-            if (Rectangle.Intersects(entity.Animation.GetCurrentSprite().GetRectangle()) && entity.IsTouchable)
+            if (Rectangle.Intersects(entity.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && entity.IsTouchable)
                 return true;
 
             return false;
@@ -84,7 +84,7 @@ namespace CastleBridge {
 
         public bool IsTouchFallenArrow(Arrow arrow) {
 
-            if (Rectangle.Intersects(arrow.Animation.GetCurrentSprite().GetRectangle()) && arrow.IsFinished)
+            if (Rectangle.Intersects(arrow.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && arrow.IsFinished)
                 return true;
 
             return false;
@@ -96,14 +96,17 @@ namespace CastleBridge {
             CurrentCharacter.SetCurrentAnimation(state);
         }
 
-        public Team GetTeam() {
-            return Team;
+        public TeamName GetTeamName() {
+            return TeamName;
         }
 
         public void Update() {
 
             CurrentCharacter.Update();
+        }
 
+        public Character GetCurrentCharacter() {
+            return CurrentCharacter;
         }
 
         public void SetDirection(Direction newDirection) {
@@ -130,8 +133,9 @@ namespace CastleBridge {
         public PlayerState GetState() {
             return State;
         }
+
         public bool IsOnTopMap(Map map) {
-            if (Rectangle.Bottom - Rectangle.Height / 2 < map.Grass.GetRectangle().Top)
+            if (Rectangle.Bottom - Rectangle.Height / 2 < map.GetGrass().GetRectangle().Top)
                 return true;
 
             return false;
@@ -176,7 +180,7 @@ namespace CastleBridge {
 
         public void Draw(int i) {
 
-            if (CurrentCharacter.GetCurrentAnimation().GetCurrentSprite().GetRectangle().Bottom - 10 == i) {
+            if (CurrentCharacter.GetCurrentAnimation().GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i) {
                 Name.Draw();
                 CurrentCharacter.Draw();
             }

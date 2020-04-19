@@ -9,23 +9,20 @@ namespace CastleBridge {
     public class Map {
 
         private MapName Name;
-        public Image Grass;
-        public Image Sun;
-        public Image Sky;
-        private Castle RedCastle;
-        private Castle YellowCastle;
-        public List<Cloud> Clouds;
         public static int WIDTH;
         public static int HEIGHT;
-        public List<MapEntity> WorldEntities;
-        public List<Arrow> FallenArrows;
-
+        private Image Grass;
+        private Image Sun;
+        private Image Sky;
+        private Castle RedCastle;
+        private Castle YellowCastle;
+        private List<Cloud> Clouds;
+        private List<MapEntity> WorldEntities;
         public Map() {
 
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
-            FallenArrows = new List<Arrow>();
             Init();
         }
 
@@ -43,16 +40,12 @@ namespace CastleBridge {
                 cloud.Update();
 
             foreach (MapEntity mapEntity in WorldEntities)
-                    mapEntity.DisplayedText.SetVisible(player.IsTouchWorldEntity(mapEntity));
-
-            foreach (Arrow arrow in FallenArrows)
-                arrow.DisplayedText.SetVisible(player.IsTouchFallenArrow(arrow));
-
+                    mapEntity.GetTooltip().SetVisible(player.IsTouchWorldEntity(mapEntity));
         }
 
         private void InitCastles() {
-            RedCastle = new Castle(Team.Red, 300, Grass.GetRectangle().Top - 400);
-            YellowCastle = new Castle(Team.Yellow, Grass.GetRectangle().Width - 1700, Grass.GetRectangle().Top - 400);
+            RedCastle = new Castle(TeamName.Red, 300, Grass.GetRectangle().Top - 400);
+            YellowCastle = new Castle(TeamName.Yellow, Grass.GetRectangle().Width - 1700, Grass.GetRectangle().Top - 400);
         }
 
         private void InitGrass() {
@@ -62,35 +55,29 @@ namespace CastleBridge {
         private void InitClouds() {
 
             Clouds = new List<Cloud>();
- 
-            for(int i = 0; i < 50; i++) {
 
+            for (int i = 0; i < 50; i++)
                 GenerateCloud();
-            }
         }
 
         private void InitWorldEntities() {
 
             WorldEntities = new List<MapEntity>();
+            
             Random rnd = new Random();
             for (int i = 1; i < 170; i++) {
-
                 MapEntityName entity = (MapEntityName)rnd.Next(0, 5);
                 GenerateWorldEntity(entity);
             }
  
+            for (int i = 0; i < 60; i++)
+                WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false, Direction.Left, 0f));
 
-            for (int i = 0; i < 60; i++) {
-                WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false));
-            }
-            for (int i = 0; i < 156; i++) {
-                WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false));
-            }
+            for (int i = 0; i < 156; i++)
+                WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false, Direction.Left, 0f));   
 
- 
-
-            Sun = new Image("map/sun", "sun_0", Game1.Graphics.PreferredBackBufferWidth / 2 - 75, 0, 150, 150, Color.White);
-            Sky = new Image("map/sky", "sky", 0, 0, Game1.Graphics.PreferredBackBufferWidth, Game1.Graphics.PreferredBackBufferHeight, Color.White);
+            Sun = new Image("map/sun", "sun_0", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 75, 0, 150, 150, Color.White);
+            Sky = new Image("map/sky", "sky", 0, 0, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight, Color.White);
         }
 
         private void GenerateCloud() {
@@ -105,14 +92,23 @@ namespace CastleBridge {
             int grassX = Grass.GetRectangle().Left;
             int grassY = Grass.GetRectangle().Top;
 
+            Random rnd = new Random();
+            int x = rnd.Next(grassX, WIDTH);
+            int y = rnd.Next(grassY, HEIGHT);
+
+            AddEntity(name, x, y, Direction.Left, 0f);
+        }
+ 
+        public void AddEntity(MapEntityName name, int x, int y, Direction direction, float rotation) {
+
             int width = 0;
             int height = 0;
 
             bool isTouchable = false;
 
-            Random rnd = new Random();
-            int x = rnd.Next(grassX, WIDTH);
-            int y = rnd.Next(grassY, HEIGHT);
+            if (direction != Direction.Left && direction != Direction.Right)
+                direction = Direction.Left;
+
 
             switch (name) {
                 case MapEntityName.Bush:
@@ -135,19 +131,40 @@ namespace CastleBridge {
                     height = 50;
                     isTouchable = true;
                     break;
+                case MapEntityName.Arrow:
+                    width = 44;
+                    height = 21;
+                    isTouchable = true;
+                    break;
             }
 
-            WorldEntities.Add(new MapEntity(name, Name, x , y + height, width, height, isTouchable));
+            WorldEntities.Add(new MapEntity(name, Name, x , y + height, width, height, isTouchable, direction, rotation));
         }
 
-        public void AddFallerArrow(Arrow arrow) {
-            FallenArrows.Add(arrow);
+        public Image GetSun() {
+            return Sun;
+        }
+
+        public Image GetGrass() {
+            return Grass;
+        }
+
+        public Image GetSky() {
+            return Sky;
+        }
+
+        public List<MapEntity> GetWorldEntities() {
+            return WorldEntities;
+        }
+
+        public List<Cloud> GetClouds() {
+            return Clouds;
         }
 
         public void DrawTile(int i) {
 
             foreach (MapEntity mapEntity in WorldEntities)
-                if (mapEntity.Animation.GetCurrentSprite().GetRectangle().Bottom == i)
+                if (mapEntity.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
                     mapEntity.Draw();
         }
 
@@ -156,10 +173,14 @@ namespace CastleBridge {
             YellowCastle.Draw();
         }
 
+        public void DrawClouds() {
+            foreach (Cloud cloud in Clouds)
+                cloud.Draw();
+        }
+
         public void DrawStuck() {
             Sky.Draw();
             Sun.Draw();
         }
-    
     }
 }

@@ -11,6 +11,7 @@ namespace CastleBridge {
         Bush,
         Tree,
         Ground_Leaves,
-        Stone
+        Stone,
+        Arrow
     }
 }

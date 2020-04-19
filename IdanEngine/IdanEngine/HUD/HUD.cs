@@ -22,7 +22,7 @@ namespace CastleBridge {
             Labels = new List<Text>();
             TilePopups = new List<Popup>();
             StuckPopups = new List<Popup>();
-            PlayerAvatar = new Image(string.Empty, string.Empty, 30, Game1.Graphics.PreferredBackBufferHeight - 135, 100, 100, Color.White);
+            PlayerAvatar = new Image(string.Empty, string.Empty, 30, CastleBridge.Graphics.PreferredBackBufferHeight - 135, 100, 100, Color.White);
             PlayerWeapon = new Image(string.Empty, string.Empty, PlayerAvatar.GetRectangle().Right, PlayerAvatar.GetRectangle().Top, 50, 50, Color.White);
             PlayerHealthBar = new Image("player/health", "health_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Top - 50, 15, 25, Color.White);
             PlayerLevelBar = new Image("player/level", "level_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Bottom, 5, 25, Color.White);
@@ -43,29 +43,29 @@ namespace CastleBridge {
             }
         }
 
-        public void SetPlayerAvatar(CharacterName name, Team team) {
-            PlayerAvatar.SetNewImage("player/characters/teams/" + team + "/" + name + "/avatar/" + name + "_avatar");
+        public void SetPlayerAvatar(CharacterName name, TeamName teamName) {
+            PlayerAvatar.ChangeImage("player/characters/teams/" + teamName + "/" + name + "/avatar/" + name + "_avatar");
         }
 
-        public void SetPlayerWeapon(Weapon weapon, CharacterName name, Team team) {
-            PlayerWeapon.SetNewImage("player/characters/teams/" + team + "/" + name + "/weapons/" + weapon + "/" + name + "_" + weapon + "_avatar");
+        public void SetPlayerWeapon(Weapon weapon, CharacterName name, TeamName teamName) {
+            PlayerWeapon.ChangeImage("player/characters/teams/" + teamName + "/" + name + "/weapons/" + weapon + "/" + name + "_" + weapon + "_avatar");
         }
 
         public void SetPlayerWeaponAmmo(string ammo) {
-            PlayerWeaponAmmo.SetText(ammo);
+            PlayerWeaponAmmo.ChangeText(ammo);
         }
 
         public void SetPlayerHealth(int health) {
             if (PlayerHealthBar.GetRectangle().Width < 100) {
-                PlayerHealthBar.SetNewRectangle(PlayerHealthBar.GetRectangle().X, PlayerHealthBar.GetRectangle().Y, PlayerHealthBar.GetRectangle().Width + health, PlayerHealthBar.GetRectangle().Height);
-                PlayerHealth.SetText(PlayerHealthBar.GetRectangle().Width.ToString());
+                PlayerHealthBar.SetRectangle(PlayerHealthBar.GetRectangle().X, PlayerHealthBar.GetRectangle().Y, PlayerHealthBar.GetRectangle().Width + health, PlayerHealthBar.GetRectangle().Height);
+                PlayerHealth.ChangeText(PlayerHealthBar.GetRectangle().Width.ToString());
                 PlayerHealth.SetPosition(new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top));
             }
         }
 
         public void SetPlayerLevel(int levelXp) {
             if (PlayerLevelBar.GetRectangle().Width < 100)
-                PlayerLevelBar.SetNewRectangle(PlayerLevelBar.GetRectangle().X, PlayerLevelBar.GetRectangle().Y, PlayerLevelBar.GetRectangle().Width + levelXp, PlayerLevelBar.GetRectangle().Height);
+                PlayerLevelBar.SetRectangle(PlayerLevelBar.GetRectangle().X, PlayerLevelBar.GetRectangle().Y, PlayerLevelBar.GetRectangle().Width + levelXp, PlayerLevelBar.GetRectangle().Height);
         }
 
         private void UpdateTilePopups() {

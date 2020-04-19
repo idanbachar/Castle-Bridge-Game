@@ -9,17 +9,17 @@ namespace CastleBridge {
     public class Castle {
 
         private Image Image;
-        private Team Team;
+        private TeamName TeamName;
         private List<Chest> Chests;
 
-        public Castle(Team team, int x, int y) {
-            Team = team;
+        public Castle(TeamName teamName, int x, int y) {
+            TeamName = teamName;
             Chests = new List<Chest>();
-            Image = new Image("map/castles/teams/" + team + "/outside", "castle", x, y, 1400, 600, Color.White);
+            Image = new Image("map/castles/teams/" + teamName + "/outside", "castle", x, y, 1400, 600, Color.White);
         }
 
-        public Team GetTeam() {
-            return Team;
+        public TeamName GetTeam() {
+            return TeamName;
         }
 
         public List<Chest> GetChests() {

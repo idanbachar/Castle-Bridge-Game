@@ -24,7 +24,7 @@ namespace CastleBridge {
 
             Animation.Play();
 
-            if (Animation.GetCurrentSprite().GetRectangle().Right < 0)
+            if (Animation.GetCurrentSpriteImage().GetRectangle().Right < 0)
                 IsOnDestination = true;
 
             if (!IsOnDestination) {
@@ -42,11 +42,11 @@ namespace CastleBridge {
         }
 
         public void ResetPosition() {
-            Animation.SetNewRectangle(Map.WIDTH * 2, Rnd.Next(0, 200), 125, 75);
+            Animation.SetRectangle(Map.WIDTH * 2, Rnd.Next(0, 200), 125, 75);
         }
 
         public void Move() {
-            Animation.SetNewRectangle(Animation.GetCurrentSprite().GetRectangle().X - Speed, Animation.GetCurrentSprite().GetRectangle().Y, Animation.GetCurrentSprite().GetRectangle().Width, Animation.GetCurrentSprite().GetRectangle().Height);
+            Animation.SetRectangle(Animation.GetCurrentSpriteImage().GetRectangle().X - Speed, Animation.GetCurrentSpriteImage().GetRectangle().Y, Animation.GetCurrentSpriteImage().GetRectangle().Width, Animation.GetCurrentSpriteImage().GetRectangle().Height);
         }
 
         public void Draw() {

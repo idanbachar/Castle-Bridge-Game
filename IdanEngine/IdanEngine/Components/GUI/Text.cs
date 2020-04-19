@@ -31,32 +31,28 @@ namespace CastleBridge {
             IsBackground = isBackground;
             Visible = true;
             BackgroundColor = backgroundColor;
-            SetText(textValue);
+            ChangeText(textValue);
         }
 
         private void LoadFont(FontType fontType) {
 
             try {
-                Font = Game1.PublicContent.Load<SpriteFont>("fonts/" + fontType);
+                Font = CastleBridge.PublicContent.Load<SpriteFont>("fonts/" + fontType);
             }
             catch (Exception e) {
                 Console.WriteLine(e.Message);
-                Font = Game1.PublicContent.Load<SpriteFont>("fonts/" + FontType.Default);
+                Font = CastleBridge.PublicContent.Load<SpriteFont>("fonts/" + FontType.Default);
             }
         }
 
-        public void SetText(string newTextValue) {
+        public void ChangeText(string newTextValue) {
 
             Value = newTextValue;
             Width = (int)Font.MeasureString(Value).X;
             Height = (int)Font.MeasureString(Value).Y;
-            Background.SetNewRectangle((int)Position.X, (int)Position.Y, Width, Height);
+            Background.SetRectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
-
-        public void Update() {
-
-        }
-
+ 
         public void SetVisible(bool value) {
             Visible = value;
         }
@@ -67,11 +63,31 @@ namespace CastleBridge {
             Position.Y = newPosition.Y;
             Width = (int)Font.MeasureString(Value).X;
             Height = (int)Font.MeasureString(Value).Y;
-            Background.SetNewRectangle((int)Position.X, (int)Position.Y, Width, Height);
+            Background.SetRectangle((int)Position.X, (int)Position.Y, Width, Height);
         }
 
         public Vector2 GetPosition() {
             return Position;
+        }
+
+        public Image GetBackgroundImage() {
+            return Background;
+        }
+
+        public Color GetColor() {
+            return Color;
+        }
+
+        public void SetColor(Color color) {
+            Color = color;
+        }
+
+        public void SetBackgroundVisibility(bool value) {
+            IsBackground = value;
+        }
+
+        public Color GetBackgroundColor() {
+            return BackgroundColor;
         }
 
         public void Draw() {
@@ -80,11 +96,8 @@ namespace CastleBridge {
 
                 if (IsBackground)
                     Background.Draw();
-
-
-                //Game1.SpriteBatch.Begin();
-                Game1.SpriteBatch.DrawString(Font, Value, Position, Color);
-                //Game1.SpriteBatch.End();
+ 
+                CastleBridge.SpriteBatch.DrawString(Font, Value, Position, Color);
             }
         }
     

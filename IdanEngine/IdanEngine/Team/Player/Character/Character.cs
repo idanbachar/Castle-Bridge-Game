@@ -22,18 +22,18 @@ namespace CastleBridge {
         public Animation LootAnimation;
         protected Direction Direction;
         protected PlayerState State;
-        protected Team Team;
-        public Character(CharacterName name, Team team, int x, int y, int width, int height) {
+        protected TeamName TeamName;
+        public Character(CharacterName name, TeamName teamName, int x, int y, int width, int height) {
 
             Name = name;
-            AfkAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
-            WalkAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
-            AttackAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
-            LootAnimation = new Animation(new Image("player/characters/teams/" + team + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 5, 5, 4, true, false);
+            AfkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
+            WalkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
+            AttackAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
+            LootAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 5, 5, 4, true, false);
             
             Health = 100;
             MaxHealth = 100;
-            Shadow = new Image("player/characters/teams/" + team + "/" + name + "/shadow/", name + "_shadow", x, y, width / 2, height / 2, Color.White);
+            Shadow = new Image("player/characters/teams/" + teamName + "/" + name + "/shadow/", name + "_shadow", x, y, width / 2, height / 2, Color.White);
             State = PlayerState.Afk;
             SetCurrentAnimation(State);
             CurrentAnimation.Start();
@@ -67,7 +67,7 @@ namespace CastleBridge {
 
             Direction = newDirection;
 
-            Shadow.SetNewDirection(newDirection);
+            Shadow.SetDirection(newDirection);
 
             AfkAnimation.SetDirection(newDirection);
             WalkAnimation.SetDirection(newDirection);
@@ -84,7 +84,7 @@ namespace CastleBridge {
         public virtual void Update() {
 
             CurrentAnimation.Play();
-            Shadow.SetNewRectangle(CurrentAnimation.GetCurrentSprite().GetRectangle().Left, CurrentAnimation.GetCurrentSprite().GetRectangle().Bottom, CurrentAnimation.GetCurrentSprite().GetRectangle().Width, CurrentAnimation.GetCurrentSprite().GetRectangle().Height);
+            Shadow.SetRectangle(CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Left, CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Bottom, CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Width, CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height);
         }
 
         public void SetHealth(int hp) {
@@ -124,16 +124,16 @@ namespace CastleBridge {
             return Name;
         }
 
-        public Team GetTeam() {
-            return Team;
+        public TeamName GetTeamName() {
+            return TeamName;
         }
 
         public void SetNewRectangle(Rectangle newRectangle) {
 
-            AfkAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
-            WalkAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
-            AttackAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
-            LootAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            AfkAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            WalkAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            AttackAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            LootAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
             //DefenceAnimation.SetNewRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
     
         }

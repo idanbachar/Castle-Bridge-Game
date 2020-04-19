@@ -38,25 +38,28 @@ namespace CastleBridge {
             LoadSprites(image);
         }
 
-        public void SetNewRectangle(int x, int y, int width, int height) {
+        public void SetRectangle(int x, int y, int width, int height) {
 
             foreach (Image sprite in Sprites)
-                sprite.SetNewRectangle(x, y, width, height);
+                sprite.SetRectangle(x, y, width, height);
         }
 
         public void SetVisible(bool value) {
+
             foreach (Image sprite in Sprites)
                 sprite.SetVisible(value);
         }
 
         public void SetDirection(Direction direction) {
+
             Direction = direction;
 
             foreach (Image sprite in Sprites)
-                sprite.SetNewDirection(direction);
+                sprite.SetDirection(direction);
         }
 
         public void SetRotation(float rotation) {
+
             foreach (Image sprite in Sprites)
                 sprite.SetRotation(rotation);
         }
@@ -67,7 +70,7 @@ namespace CastleBridge {
 
         private void LoadSprites(Image image) {
 
-            string path = image.FullPath;
+            string path = image.GetFullPath();
 
             for(int i = 0; i < Sprites.Length; i++) {
                 
@@ -76,7 +79,7 @@ namespace CastleBridge {
                                                      image.GetRectangle().Y,
                                                      image.GetRectangle().Width,
                                                      image.GetRectangle().Height, Color.White);
-                Sprites [i].SetNewImage(path + i);
+                Sprites [i].ChangeImage(path + i);
             }
         }
 
@@ -190,13 +193,13 @@ namespace CastleBridge {
             IsPlaying = false;
         }
 
-        public Image GetCurrentSprite() {
+        public Image GetCurrentSpriteImage() {
             return Sprites [CurrentFrame];
         }
 
         public void Draw() {
 
-            GetCurrentSprite().Draw();
+            GetCurrentSpriteImage().Draw();
         }
     }
 }
