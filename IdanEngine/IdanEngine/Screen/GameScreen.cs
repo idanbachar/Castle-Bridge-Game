@@ -169,13 +169,15 @@ namespace CastleBridge {
 
         private void CheckLoot() {
 
-            if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
 
-                for (int i = 0; i < Map.GetWorldEntities().Count; i++) {
 
-                    MapEntity currentEntity = Map.GetWorldEntities() [i];
+            for (int i = 0; i < Map.GetWorldEntities().Count; i++) {
 
-                    if (Player.IsTouchWorldEntity(currentEntity)) {
+                MapEntity currentEntity = Map.GetWorldEntities() [i];
+
+                if (Player.IsTouchWorldEntity(currentEntity)) {
+
+                    if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
                         Player.SetState(PlayerState.Loot);
 
                         switch (currentEntity.GetName()) {
@@ -213,7 +215,7 @@ namespace CastleBridge {
                         break;
                     }
                 }
- 
+
             }
 
             if (Player.GetState() == PlayerState.Loot && Player.CurrentCharacter.LootAnimation.IsFinished) {
@@ -269,10 +271,8 @@ namespace CastleBridge {
             }
         }
 
-        public override void Update() {
-            CheckKeyboard();
+        private void UpdatePlayer() {
             Player.Update();
-            GenerateXp();
 
             if (Player.CurrentCharacter is Archer) {
 
@@ -302,11 +302,54 @@ namespace CastleBridge {
                     }
                 }
             }
+        }
 
-            Map.Update(Player);
+        private void UpdatePlayers() {
 
+            foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
+
+                foreach (KeyValuePair<string, Player> onlinePlayer in team.Value.GetPlayers()) {
+                    onlinePlayer.Value.Update();
+
+                    if (onlinePlayer.Value.CurrentCharacter is Archer) {
+
+                        Archer archer = onlinePlayer.Value.CurrentCharacter as Archer;
+
+                        for (int i = 0; i < archer.GetArrows().Count; i++) {
+                            if (!archer.GetArrows() [i].IsFinished)
+                                archer.GetArrows() [i].Move();
+                            else {
+                                Map.AddEntity(MapEntityName.Arrow,
+                                              archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
+                                              archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
+                                              archer.GetArrows() [i].GetDirection(), archer.GetArrows() [i].GetDirection() == Direction.Right ? 0.7f : -0.7f);
+                                archer.GetArrows().RemoveAt(i);
+                            }
+                        }
+                    }
+                    else if (onlinePlayer.Value.CurrentCharacter is Mage) {
+
+                        Mage mage = onlinePlayer.Value.CurrentCharacter as Mage;
+
+                        for (int i = 0; i < mage.GetSpells().Count; i++) {
+                            if (!mage.GetSpells() [i].IsFinished)
+                                mage.GetSpells() [i].Move();
+                            else {
+                                mage.GetSpells().RemoveAt(i);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void Update() {
+            CheckKeyboard();
+            UpdatePlayer();
+            UpdatePlayers();
+            GenerateXp();
+            Map.Update();
             Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.WIDTH, Map.HEIGHT);
-
             HUD.Update();
         }
 
@@ -327,7 +370,7 @@ namespace CastleBridge {
 
             Map.GetGrass().Draw();
             Map.DrawClouds();
-            Map.DrawCastles();
+            Map.DrawTeamsCastles();
 
             for (int i = Map.GetGrass().GetRectangle().Top; i < Map.GetGrass().GetRectangle().Bottom; i++) {
                 Map.DrawTile(i);
@@ -342,6 +385,7 @@ namespace CastleBridge {
                     mage.DrawSpells(i);
                 }
 
+                Map.DrawTeamsPlayers(i);
             }
 
             HUD.DrawTile();

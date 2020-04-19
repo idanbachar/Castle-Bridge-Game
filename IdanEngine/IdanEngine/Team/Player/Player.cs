@@ -76,9 +76,12 @@ namespace CastleBridge {
 
         public bool IsTouchWorldEntity(MapEntity entity) {
 
-            if (Rectangle.Intersects(entity.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && entity.IsTouchable)
+            if (Rectangle.Intersects(entity.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && entity.IsTouchable) {
+                entity.GetTooltip().SetVisible(true);
                 return true;
+            }
 
+            entity.GetTooltip().SetVisible(false);
             return false;
         }
 

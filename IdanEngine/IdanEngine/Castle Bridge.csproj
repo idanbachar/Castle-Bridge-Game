@@ -67,6 +67,7 @@
     <Compile Include="Team\Player\Character\Mage\Mage.cs" />
     <Compile Include="Team\Player\Character\Weapon.cs" />
     <Compile Include="Team\Player\PlayerState.cs" />
+    <Compile Include="Team\Team.cs" />
     <Compile Include="Team\TeamName.cs" />
     <Compile Include="Screen\MenuScreen.cs" />
     <Compile Include="Screen\GameScreen.cs" />

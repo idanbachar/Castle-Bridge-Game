@@ -14,10 +14,9 @@ namespace CastleBridge {
         private Image Grass;
         private Image Sun;
         private Image Sky;
-        private Castle RedCastle;
-        private Castle YellowCastle;
         private List<Cloud> Clouds;
         private List<MapEntity> WorldEntities;
+        private Dictionary<TeamName, Team> Teams;
         public Map() {
 
             Name = MapName.Forest;
@@ -31,21 +30,19 @@ namespace CastleBridge {
             InitGrass();
             InitClouds();
             InitWorldEntities();
-            InitCastles();
+            InitTeams();
         }
 
-        public void Update(Player player) {
+        public void Update() {
 
             foreach (Cloud cloud in Clouds)
                 cloud.Update();
-
-            foreach (MapEntity mapEntity in WorldEntities)
-                    mapEntity.GetTooltip().SetVisible(player.IsTouchWorldEntity(mapEntity));
         }
 
-        private void InitCastles() {
-            RedCastle = new Castle(TeamName.Red, 300, Grass.GetRectangle().Top - 400);
-            YellowCastle = new Castle(TeamName.Yellow, Grass.GetRectangle().Width - 1700, Grass.GetRectangle().Top - 400);
+        private void InitTeams() {
+            Teams = new Dictionary<TeamName, Team>();
+            Teams.Add(TeamName.Red, new Team(TeamName.Red, Grass.GetRectangle()));
+            Teams.Add(TeamName.Yellow, new Team(TeamName.Yellow, Grass.GetRectangle()));
         }
 
         private void InitGrass() {
@@ -161,6 +158,10 @@ namespace CastleBridge {
             return Clouds;
         }
 
+        public Dictionary<TeamName, Team> GetTeams() {
+            return Teams;
+        }
+
         public void DrawTile(int i) {
 
             foreach (MapEntity mapEntity in WorldEntities)
@@ -168,9 +169,16 @@ namespace CastleBridge {
                     mapEntity.Draw();
         }
 
-        public void DrawCastles() {
-            RedCastle.Draw();
-            YellowCastle.Draw();
+        public void DrawTeamsPlayers(int i) {
+
+            foreach (KeyValuePair<TeamName, Team> team in Teams)
+                team.Value.DrawPlayers(i);
+        }
+
+        public void DrawTeamsCastles() {
+
+            foreach (KeyValuePair<TeamName, Team> team in Teams)
+                team.Value.DrawCastle();
         }
 
         public void DrawClouds() {
