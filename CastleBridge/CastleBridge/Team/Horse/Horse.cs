@@ -20,10 +20,9 @@ namespace CastleBridge {
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
             AfkAnimation = new Animation(new Image("horse/teams/" + teamName + "/afk", "horse_afk_", x, y, width, height, Color.White), 0, 7, 7, 6, true, true);
-            CurrentAnimation = AfkAnimation;
-            CurrentAnimation.Start();
+            WalkAnimation = new Animation(new Image("horse/teams/" + teamName + "/walk", "horse_walk_", x, y, width, height, Color.White), 0, 4, 5, 3, true, true);
             Speed = 4;
-            State = Horsestate.Afk;
+            SetState(Horsestate.Afk);
             Direction = Direction.Left;
         }
 
