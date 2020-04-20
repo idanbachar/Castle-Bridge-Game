@@ -51,6 +51,8 @@
     <Compile Include="Map\Cloud.cs" />
     <Compile Include="Map\MapEntity.cs" />
     <Compile Include="Map\MapEntityName.cs" />
+    <Compile Include="Team\Horse\Horse.cs" />
+    <Compile Include="Team\Horse\Horsestate.cs" />
     <Compile Include="Team\Player\Character\Archer\Archer.cs" />
     <Compile Include="Team\Player\Character\Archer\Arrow.cs" />
     <Compile Include="Team\Player\Character\Character.cs" />

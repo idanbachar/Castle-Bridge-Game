@@ -386,6 +386,7 @@ namespace CastleBridge {
                 }
 
                 Map.DrawTeamsPlayers(i);
+                Map.DrawTeamsHorses(i);
             }
 
             HUD.DrawTile();

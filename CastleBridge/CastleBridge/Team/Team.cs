@@ -14,6 +14,7 @@ namespace CastleBridge {
         private Rectangle MapDimensionRectangle;
         private int MaxPlayers;
         private int MinPlayers;
+        private Horse Horse;
 
         public Team(TeamName teamName, Rectangle mapDimensionRectangle) {
             Name = teamName;
@@ -25,6 +26,12 @@ namespace CastleBridge {
 
             AddPlayer(CharacterName.Archer, teamName, "gleb");
             AddPlayer(CharacterName.Knight, teamName, "alon");
+
+            InitHorses();
+        }
+
+        private void InitHorses() {
+            Horse = new Horse(Name, 600, 600, 400, 300);
         }
 
         private void InitCastles(Rectangle mapDimensionRectangle) {
@@ -85,6 +92,10 @@ namespace CastleBridge {
             return MinPlayers;
         }
 
+        public Horse GetHorse() {
+            return Horse;
+        }
+
         public void DrawPlayers(int i) {
 
             foreach (KeyValuePair<string, Player> player in Players) {
@@ -99,6 +110,10 @@ namespace CastleBridge {
                     mage.DrawSpells(i);
                 }
             }
+        }
+
+        public void DrawHorses(int i) {
+            Horse.Draw(i);
         }
     }
 }
