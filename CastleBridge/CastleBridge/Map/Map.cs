@@ -66,7 +66,7 @@ namespace CastleBridge {
             WorldEntities = new List<MapEntity>();
             
             Random rnd = new Random();
-            for (int i = 1; i < 170; i++) {
+            for (int i = 1; i < 100; i++) {
                 MapEntityName entity = (MapEntityName)rnd.Next(0, 5);
                 GenerateWorldEntity(entity);
             }

@@ -10,6 +10,7 @@ namespace CastleBridge {
 
         private List<Text> Labels;
         private Image PlayerAvatar;
+        private Image HorseAvatar;
         private Image PlayerWeapon;
         private Image PlayerHealthBar;
         private Image PlayerLevelBar;
@@ -25,6 +26,8 @@ namespace CastleBridge {
             PlayerAvatar = new Image(string.Empty, string.Empty, 30, CastleBridge.Graphics.PreferredBackBufferHeight - 135, 100, 100, Color.White);
             PlayerWeapon = new Image(string.Empty, string.Empty, PlayerAvatar.GetRectangle().Right, PlayerAvatar.GetRectangle().Top, 50, 50, Color.White);
             PlayerHealthBar = new Image("player/health", "health_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Top - 50, 15, 25, Color.White);
+            HorseAvatar = new Image("horse/avatar", "horse_avatar", PlayerHealthBar.GetRectangle().Left, PlayerHealthBar.GetRectangle().Top - 100, 100, 100, Color.White);
+            HorseAvatar.SetVisible(false);
             PlayerLevelBar = new Image("player/level", "level_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Bottom, 5, 25, Color.White);
             PlayerWeaponAmmo = new Text(FontType.Default, "0", new Vector2(PlayerWeapon.GetRectangle().Left, PlayerWeapon.GetRectangle().Bottom + 5), Color.White, true, Color.Black);
             PlayerHealth = new Text(FontType.Default, "15", new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top), Color.White, false, Color.Black);
@@ -113,6 +116,10 @@ namespace CastleBridge {
             return PlayerAvatar;
         }
 
+        public Image GetHorseAvatar() {
+            return HorseAvatar;
+        }
+
         public Image GetPlayerHealthBar() {
             return PlayerHealthBar;
         }
@@ -136,6 +143,7 @@ namespace CastleBridge {
             PlayerHealthBar.Draw();
             PlayerHealth.Draw();
             PlayerLevelBar.Draw();
+            HorseAvatar.Draw();
 
             foreach (Popup popup in StuckPopups)
                 popup.Draw();

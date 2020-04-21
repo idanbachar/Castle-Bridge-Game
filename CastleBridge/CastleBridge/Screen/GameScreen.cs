@@ -229,6 +229,7 @@ namespace CastleBridge {
                         IsPressedE = true;
                         team.Value.GetHorse().SetOwner(Player);
                         Player.MountHorse(team.Value.GetHorse());
+                        HUD.GetHorseAvatar().SetVisible(true);
                         break;
                     }
                 }
@@ -251,7 +252,7 @@ namespace CastleBridge {
 
                     IsPressedF = true;
                     Player.DismountHorse();
-
+                    HUD.GetHorseAvatar().SetVisible(false);
                 }
             }
 

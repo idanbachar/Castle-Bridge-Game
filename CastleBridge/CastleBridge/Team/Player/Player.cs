@@ -9,7 +9,7 @@ namespace CastleBridge {
     public class Player {
 
         private Text Name;
-        private List<Character> Characters;
+        private Dictionary<string, Character> Characters;
         public Character CurrentCharacter;
         private Rectangle Rectangle;
         private PlayerState State;
@@ -25,9 +25,12 @@ namespace CastleBridge {
             Name = new Text(FontType.Default, name, new Vector2(Rectangle.Left + Rectangle.Width / 2 - 5, Rectangle.Bottom + 5), Color.Gold, true, Color.Black);
             DefaultSpeed = 3;
             CurrentSpeed = DefaultSpeed;
-            Characters = new List<Character>();
+            Characters = new Dictionary<string, Character>();
             State = PlayerState.Afk;
-            CurrentCharacter = AddCharacter(character);
+            AddCharacter(CharacterName.Archer);
+            AddCharacter(CharacterName.Knight);
+            AddCharacter(CharacterName.Mage);
+            ChangeCharacter(character);
             Stones = 0;
             Woods = 0;
             CurrentHorse = null;
@@ -35,10 +38,10 @@ namespace CastleBridge {
 
         public void ChangeCharacter(CharacterName newCharacter) {
 
-            CurrentCharacter = AddCharacter(newCharacter);
+            CurrentCharacter = Characters [newCharacter.ToString()];
         }
 
-        private Character AddCharacter(CharacterName name) {
+        private void AddCharacter(CharacterName name) {
 
             Character character = null;
 
@@ -54,8 +57,7 @@ namespace CastleBridge {
                     break;
             }
 
-            Characters.Add(character);
-            return character;
+            Characters.Add(name.ToString(), character);
         }
 
         public void Move(Direction direction) {
@@ -98,7 +100,9 @@ namespace CastleBridge {
         public void SetState(PlayerState state) {
 
             State = state;
-            CurrentCharacter.SetCurrentAnimation(state);
+
+            foreach (KeyValuePair<string, Character> character in Characters)
+                character.Value.SetCurrentAnimation(state);
         }
 
         public void SetSpeed(int speed) {
@@ -120,7 +124,8 @@ namespace CastleBridge {
 
         public void SetDirection(Direction newDirection) {
 
-            CurrentCharacter.SetDirection(newDirection);
+            foreach (KeyValuePair<string, Character> character in Characters)
+                character.Value.SetDirection(newDirection);
 
         }
 
@@ -131,7 +136,9 @@ namespace CastleBridge {
             Rectangle.Width = newRectangle.Width;
             Rectangle.Height = newRectangle.Height;
 
-            CurrentCharacter.SetRectangle(newRectangle);
+            foreach (KeyValuePair<string, Character> character in Characters)
+                character.Value.SetRectangle(newRectangle);
+
             Name.SetPosition(new Vector2(newRectangle.Left + newRectangle.Width / 2 - 5, newRectangle.Bottom + 5));
         }
 
