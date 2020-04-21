@@ -187,10 +187,8 @@ namespace CastleBridge {
 
         public void DrawTeamsHorses(int i) {
 
-            Teams [(TeamName)TeamName.Red].DrawHorses(i);
-
-            //foreach (KeyValuePair<TeamName, Team> team in Teams)
-            //    team.Value.DrawHorses(i);
+            foreach (KeyValuePair<TeamName, Team> team in Teams)
+                team.Value.DrawHorses(i);
         }
 
         public void DrawClouds() {
