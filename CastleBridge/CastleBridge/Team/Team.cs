@@ -24,8 +24,9 @@ namespace CastleBridge {
             MapDimensionRectangle = mapDimensionRectangle;
             InitCastles(mapDimensionRectangle);
 
-            AddPlayer(CharacterName.Archer, teamName, "gleb");
-            AddPlayer(CharacterName.Knight, teamName, "alon");
+            Random rnd = new Random();
+            for (int i = 1; i < 3; i++)
+                AddPlayer((CharacterName)rnd.Next(0, 3), teamName, "Bot_" + i);
 
             InitHorses();
         }
@@ -66,11 +67,11 @@ namespace CastleBridge {
             switch (team) {
                 case TeamName.Red:
                     x = rnd.Next(MapDimensionRectangle.Left + 25, MapDimensionRectangle.Left + 500);
-                    y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 170);
+                    y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
                     break;
                 case TeamName.Yellow:
                     x = rnd.Next(MapDimensionRectangle.Right - 500, MapDimensionRectangle.Right - 100);
-                    y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 170);
+                    y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
                     break;
             }
 
