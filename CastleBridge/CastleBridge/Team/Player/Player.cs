@@ -14,25 +14,28 @@ namespace CastleBridge {
         private Rectangle Rectangle;
         private PlayerState State;
         private TeamName TeamName;
-        private int Speed;
+        private int CurrentSpeed;
+        private int DefaultSpeed;
         private int Stones;
         private int Woods;
+        private Horse CurrentHorse;
         public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height){
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
             Name = new Text(FontType.Default, name, new Vector2(Rectangle.Left + Rectangle.Width / 2 - 5, Rectangle.Bottom + 5), Color.Gold, true, Color.Black);
-            Speed = 4;
+            DefaultSpeed = 3;
+            CurrentSpeed = DefaultSpeed;
             Characters = new List<Character>();
             State = PlayerState.Afk;
             CurrentCharacter = AddCharacter(character);
             Stones = 0;
             Woods = 0;
+            CurrentHorse = null;
         }
 
         public void ChangeCharacter(CharacterName newCharacter) {
 
             CurrentCharacter = AddCharacter(newCharacter);
-
         }
 
         private Character AddCharacter(CharacterName name) {
@@ -59,23 +62,23 @@ namespace CastleBridge {
             
             switch (direction) {
                 case Direction.Up:
-                    SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y - Speed, Rectangle.Width, Rectangle.Height));
+                    SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y - CurrentSpeed, Rectangle.Width, Rectangle.Height));
                     break;
                 case Direction.Down:
-                    SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y + Speed, Rectangle.Width, Rectangle.Height));
+                    SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y + CurrentSpeed, Rectangle.Width, Rectangle.Height));
                     break;
                 case Direction.Right:
-                    SetRectangle(new Rectangle(Rectangle.X + Speed, Rectangle.Y, Rectangle.Width, Rectangle.Height));
+                    SetRectangle(new Rectangle(Rectangle.X + CurrentSpeed, Rectangle.Y, Rectangle.Width, Rectangle.Height));
                     break;
                 case Direction.Left:
-                    SetRectangle(new Rectangle(Rectangle.X - Speed, Rectangle.Y, Rectangle.Width, Rectangle.Height));
+                    SetRectangle(new Rectangle(Rectangle.X - CurrentSpeed, Rectangle.Y, Rectangle.Width, Rectangle.Height));
                     break;
             }
         }
 
         public bool IsTouchWorldEntity(MapEntity entity) {
 
-            if (Rectangle.Intersects(entity.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && entity.IsTouchable) {
+            if (Rectangle.Intersects(entity.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && entity.IsTouchable && CurrentHorse == null) {
                 entity.GetTooltip().SetVisible(true);
                 return true;
             }
@@ -84,9 +87,9 @@ namespace CastleBridge {
             return false;
         }
 
-        public bool IsTouchFallenArrow(Arrow arrow) {
-
-            if (Rectangle.Intersects(arrow.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && arrow.IsFinished)
+        public bool IsTouchHorse(Horse horse) {
+            
+            if (Rectangle.Intersects(horse.GetRectangle()) && CurrentHorse == null)
                 return true;
 
             return false;
@@ -96,6 +99,10 @@ namespace CastleBridge {
 
             State = state;
             CurrentCharacter.SetCurrentAnimation(state);
+        }
+
+        public void SetSpeed(int speed) {
+            CurrentSpeed = speed;
         }
 
         public TeamName GetTeamName() {
@@ -168,6 +175,10 @@ namespace CastleBridge {
             return Stones;
         }
 
+        public Horse GetCurrentHorse() {
+            return CurrentHorse;
+        }
+
         public void AddStones(int stones) {
             Stones += stones;
         }
@@ -178,6 +189,24 @@ namespace CastleBridge {
 
         public void SetWoods(int woods) {
             Woods += woods;
+        }
+        public void MountHorse(Horse horse) {
+            CurrentHorse = horse;
+            CurrentHorse.GetTooltip().ChangeText("Press 'F' to dismount");
+            SetSpeed(horse.GetSpeed());
+            SetRectangle(new Rectangle(horse.GetRectangle().Left + horse.GetRectangle().Width / 2 - Rectangle.Width / 2,
+                                       horse.GetRectangle().Top - Rectangle.Height / 4,
+                                       Rectangle.Width, 
+                                       Rectangle.Height));
+        }
+
+        public void DismountHorse() {
+            CurrentHorse.RemoveOwner();
+            CurrentHorse.GetTooltip().SetVisible(false);
+            CurrentHorse.GetTooltip().ChangeText("Press 'E' to mount");
+            CurrentHorse.GetTooltip().SetPosition(new Vector2(CurrentHorse.GetRectangle().X + 50, CurrentHorse.GetRectangle().Y - 65));
+            CurrentHorse = null;
+            SetSpeed(DefaultSpeed);
         }
 
         public void Draw(int i) {

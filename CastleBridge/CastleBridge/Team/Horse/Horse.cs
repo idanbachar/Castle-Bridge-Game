@@ -16,14 +16,20 @@ namespace CastleBridge {
         private Animation CurrentAnimation;
         private int Speed;
         private Direction Direction;
+        private Player Owner;
+        private Text Tooltip;
+
         public Horse(TeamName teamName, int x, int y, int width, int height) {
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
             AfkAnimation = new Animation(new Image("horse/teams/" + teamName + "/afk", "horse_afk_", x, y, width, height, Color.White), 0, 7, 7, 6, true, true);
-            WalkAnimation = new Animation(new Image("horse/teams/" + teamName + "/walk", "horse_walk_", x, y, width, height, Color.White), 0, 4, 5, 3, true, true);
-            Speed = 4;
+            WalkAnimation = new Animation(new Image("horse/teams/" + teamName + "/walk", "horse_walk_", x, y, width, height, Color.White), 0, 4, 5, 2, true, true);
+            Speed = 7;
             SetState(Horsestate.Afk);
             Direction = Direction.Left;
+            Owner = null;
+            Tooltip = new Text(FontType.Default, "Press 'E' to mount", new Vector2(x + 50, y - 65), Color.Black, true, Color.Gold);
+            Tooltip.SetVisible(false);
         }
 
         public void Move(Direction direction) {
@@ -66,9 +72,16 @@ namespace CastleBridge {
             return TeamName;
         }
 
-        public void SetDirection(Direction newDirection) {
-            Direction = newDirection;
+        public int GetSpeed() {
+            return Speed;
+        }
 
+        public void SetDirection(Direction newDirection) {
+
+            Direction = newDirection;
+            WalkAnimation.SetDirection(newDirection);
+            AfkAnimation.SetDirection(newDirection);
+            CurrentAnimation.SetDirection(newDirection);
         }
 
         public void SetRectangle(Rectangle newRectangle) {
@@ -78,6 +91,9 @@ namespace CastleBridge {
             Rectangle.Width = newRectangle.Width;
             Rectangle.Height = newRectangle.Height;
 
+            WalkAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            AfkAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+            CurrentAnimation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
         }
 
         public Rectangle GetRectangle() {
@@ -86,6 +102,19 @@ namespace CastleBridge {
 
         public Horsestate GetState() {
             return State;
+        }
+
+        public void SetOwner(Player player) {
+            Owner = player;
+        }
+
+        public void RemoveOwner() {
+            Owner = null;
+            SetState(Horsestate.Afk);
+        }
+
+        public bool IsHasOwner() {
+            return Owner != null;
         }
 
         public bool IsOnTopMap(Map map) {
@@ -115,9 +144,14 @@ namespace CastleBridge {
 
             return false;
         }
+
+        public Text GetTooltip() {
+            return Tooltip;
+        }
         public void Draw(int i) {
 
             if (CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i) {
+                Tooltip.Draw();
                 CurrentAnimation.Draw();
             }
         }

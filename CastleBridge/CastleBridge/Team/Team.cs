@@ -31,7 +31,16 @@ namespace CastleBridge {
         }
 
         private void InitHorses() {
-            Horse = new Horse(Name, 600, 600, 400, 300);
+
+            switch (Name) {
+
+                case TeamName.Red:
+                    Horse = new Horse(Name, 600, 600, 400, 300);
+                    break;
+                case TeamName.Yellow:
+                    Horse = new Horse(Name, MapDimensionRectangle.Width - 1200, 600, 400, 300);
+                    break;
+            }
         }
 
         private void InitCastles(Rectangle mapDimensionRectangle) {

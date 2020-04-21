@@ -43,6 +43,7 @@ namespace CastleBridge {
         }
 
         private void InitTeams() {
+
             Teams = new Dictionary<TeamName, Team>();
             Teams.Add(TeamName.Red, new Team(TeamName.Red, Grass.GetRectangle()));
             Teams.Add(TeamName.Yellow, new Team(TeamName.Yellow, Grass.GetRectangle()));

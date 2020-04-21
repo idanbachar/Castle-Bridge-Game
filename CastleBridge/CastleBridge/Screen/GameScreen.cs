@@ -18,6 +18,8 @@ namespace CastleBridge {
         private bool IsPressedD1;
         private bool IsPressedD2;
         private bool IsPressedD3;
+        private bool IsPressedE;
+        private bool IsPressedF;
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -49,33 +51,84 @@ namespace CastleBridge {
             if (Keyboard.GetState().IsKeyDown(Keys.D)) {
                 Player.SetDirection(Direction.Right);
 
-                if (!Player.IsOnRightMap()) {
-                    Player.SetState(PlayerState.Walk);
-                    Player.Move(Direction.Right);
+                if(Player.GetCurrentHorse() != null) {
+                    if (!Player.GetCurrentHorse().IsOnRightMap()) {
+                        Player.GetCurrentHorse().SetDirection(Direction.Right);
+                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
+                        Player.GetCurrentHorse().Move(Direction.Right);
+                        Player.SetState(PlayerState.Walk);
+                        Player.Move(Direction.Right);
+                    }
+                }
+                else {
+                    if (!Player.IsOnRightMap()) {
+                        Player.SetState(PlayerState.Walk);
+                        Player.Move(Direction.Right);
+                    }
                 }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A)) {
                 Player.SetDirection(Direction.Left);
 
-                if (!Player.IsOnLeftMap()) {
-                    Player.SetState(PlayerState.Walk);
-                    Player.Move(Direction.Left);
+                if (Player.GetCurrentHorse() != null) {
+                    if (!Player.GetCurrentHorse().IsOnLeftMap()) {
+                        Player.GetCurrentHorse().SetDirection(Direction.Left);
+                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
+                        Player.GetCurrentHorse().Move(Direction.Left);
+                        Player.SetState(PlayerState.Walk);
+                        Player.Move(Direction.Left);
+                    }
+                }
+                else {
+
+                    if (!Player.IsOnLeftMap()) {
+                        Player.SetState(PlayerState.Walk);
+                        Player.Move(Direction.Left);
+                    }
                 }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.W)) {
-                if (!Player.IsOnTopMap(Map)) {
-                    Player.Move(Direction.Up);
-                    Player.SetState(PlayerState.Walk);
+
+                if (Player.GetCurrentHorse() != null) {
+                    if (!Player.GetCurrentHorse().IsOnTopMap(Map)) {
+                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
+                        Player.GetCurrentHorse().Move(Direction.Up);
+                        Player.Move(Direction.Up);
+                        Player.SetState(PlayerState.Walk);
+                    }
+                }
+                else {
+                    if (!Player.IsOnTopMap(Map)) {
+                        Player.Move(Direction.Up);
+                        Player.SetState(PlayerState.Walk);
+                    }
+
                 }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-                if (!Player.IsOnBottomMap()) {
-                    Player.Move(Direction.Down);
-                    Player.SetState(PlayerState.Walk);
+
+                if (Player.GetCurrentHorse() != null) {
+                    if (!Player.GetCurrentHorse().IsOnBottomMap()) {
+                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
+                        Player.GetCurrentHorse().Move(Direction.Down);
+                        Player.Move(Direction.Down);
+                        Player.SetState(PlayerState.Walk);
+                    }
+                }
+                else {
+                    if (!Player.IsOnBottomMap()) {
+                        Player.Move(Direction.Down);
+                        Player.SetState(PlayerState.Walk);
+                    }
+
                 }
             }
+        }
 
-            if(Keyboard.GetState().IsKeyDown(Keys.D1) && !IsPressedD1) {
+        private void CheckChangeCharacter() {
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D1) && !IsPressedD1) {
                 IsPressedD1 = true;
                 if (Player.CurrentCharacter.GetName() != CharacterName.Archer) {
                     Player.ChangeCharacter(CharacterName.Archer);
@@ -167,9 +220,49 @@ namespace CastleBridge {
             }
         }
 
+        private void CheckMountHorse() {
+ 
+            foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
+                if (Player.IsTouchHorse(team.Value.GetHorse()) && !team.Value.GetHorse().IsHasOwner()) {
+                    team.Value.GetHorse().GetTooltip().SetVisible(true);
+                    if (Keyboard.GetState().IsKeyDown(Keys.E) && !IsPressedE) {
+                        IsPressedE = true;
+                        team.Value.GetHorse().SetOwner(Player);
+                        Player.MountHorse(team.Value.GetHorse());
+                        break;
+                    }
+                }
+                else
+                    team.Value.GetHorse().GetTooltip().SetVisible(false);
+            }
+
+            if (Player.GetCurrentHorse() != null)
+                Player.GetCurrentHorse().GetTooltip().SetVisible(true);
+
+            if (Keyboard.GetState().IsKeyUp(Keys.E)) {
+                IsPressedE = false;
+            }
+
+            if (Player.GetCurrentHorse() != null) {
+
+                Player.GetCurrentHorse().GetTooltip().SetPosition(new Vector2(Player.GetCurrentHorse().GetRectangle().X + 50, Player.GetCurrentHorse().GetRectangle().Bottom - 20));
+
+                if (Keyboard.GetState().IsKeyDown(Keys.F) && !IsPressedF) {
+
+                    IsPressedF = true;
+                    Player.DismountHorse();
+
+                }
+            }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.F)) {
+                IsPressedF = false;
+            }
+
+
+        }
+
         private void CheckLoot() {
-
-
 
             for (int i = 0; i < Map.GetWorldEntities().Count; i++) {
 
@@ -228,14 +321,20 @@ namespace CastleBridge {
  
             if (Player.GetState() != PlayerState.Attack && Player.GetState() != PlayerState.Loot) {
 
-                if (Keyboard.GetState().GetPressedKeys().Length == 0)
+                if (Keyboard.GetState().GetPressedKeys().Length == 0) {
                     Player.SetState(PlayerState.Afk);
+                    if(Player.GetCurrentHorse() != null) {
+                        Player.GetCurrentHorse().SetState(Horsestate.Afk);
+                    }
+                }
 
                 CheckMovement();
             }
 
+            CheckChangeCharacter();
             CheckAttack();
             CheckLoot();
+            CheckMountHorse();
 
         }
 
