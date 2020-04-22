@@ -469,7 +469,7 @@ namespace CastleBridge {
         public override void Draw() {
 
             CastleBridge.SpriteBatch.Begin();
-            Map.DrawStuck();
+            Map.GetWeather().DrawStuck();
             CastleBridge.SpriteBatch.End();
 
             CastleBridge.SpriteBatch.Begin(SpriteSortMode.Deferred,
@@ -482,7 +482,7 @@ namespace CastleBridge {
                             );
 
             Map.GetGrass().Draw();
-            Map.DrawClouds();
+            Map.GetWeather().DrawClouds();
             Map.DrawTeamsCastles();
 
             for (int i = Map.GetGrass().GetRectangle().Top; i < Map.GetGrass().GetRectangle().Bottom; i++) {
@@ -503,6 +503,15 @@ namespace CastleBridge {
             }
 
             HUD.DrawTile();
+
+            foreach(Cloud cloud in Map.GetWeather().GetClouds()) {
+                foreach(RainDrop rainDrop in cloud.GetRainDrops()) {
+                    if (cloud.IsRain) {
+                        rainDrop.Draw();
+                    }
+                }
+            }
+
             CastleBridge.SpriteBatch.End();
 
 

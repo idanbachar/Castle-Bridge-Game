@@ -12,33 +12,29 @@ namespace CastleBridge {
         public static int WIDTH;
         public static int HEIGHT;
         private Image Grass;
-        private Image Sun;
-        private Image Sky;
-        private List<Cloud> Clouds;
+        private Weather Weather;
         private List<MapEntity> WorldEntities;
         private Dictionary<TeamName, Team> Teams;
         private Random Rnd;
         public Map() {
-
+            Rnd = new Random();
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
-            Rnd = new Random();
             Init();
         }
 
         private void Init() {
 
             InitGrass();
-            InitClouds();
+            InitWeather();
             InitWorldEntities();
             InitTeams();
         }
 
         public void Update() {
 
-            foreach (Cloud cloud in Clouds)
-                cloud.Update();
+            Weather.Update();
 
             foreach (KeyValuePair<TeamName, Team> team in Teams)
                 team.Value.GetHorse().Update();
@@ -55,12 +51,9 @@ namespace CastleBridge {
             Grass = new Image("map/" + Name, "grass", 0, HEIGHT / 5, WIDTH, HEIGHT, Color.White);
         }
 
-        private void InitClouds() {
+        private void InitWeather() {
 
-            Clouds = new List<Cloud>();
-
-            for (int i = 0; i < 50; i++)
-                GenerateCloud();
+            Weather = new Weather(TimeType.Day, true);
         }
 
         private void InitWorldEntities() {
@@ -78,14 +71,8 @@ namespace CastleBridge {
             for (int i = 0; i < 156; i++)
                 WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false, Direction.Left, 0f));   
 
-            Sun = new Image("map/sun", "sun_0", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 75, 0, 150, 150, Color.White);
-            Sky = new Image("map/sky", "sky", 0, 0, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight, Color.White);
         }
-
-        private void GenerateCloud() {
-
-            Clouds.Add(new Cloud(Rnd.Next(0, WIDTH), Rnd.Next(0, 200), 125, 75));
-        }
+ 
 
         private void GenerateWorldEntity() {
 
@@ -142,28 +129,20 @@ namespace CastleBridge {
             WorldEntities.Add(new MapEntity(entityName, Name, x , y + height, width, height, isTouchable, direction, rotation));
         }
 
-        public Image GetSun() {
-            return Sun;
-        }
-
         public Image GetGrass() {
             return Grass;
-        }
-
-        public Image GetSky() {
-            return Sky;
         }
 
         public List<MapEntity> GetWorldEntities() {
             return WorldEntities;
         }
 
-        public List<Cloud> GetClouds() {
-            return Clouds;
-        }
-
         public Dictionary<TeamName, Team> GetTeams() {
             return Teams;
+        }
+
+        public Weather GetWeather() {
+            return Weather;
         }
 
         public void DrawTile(int i) {
@@ -189,16 +168,6 @@ namespace CastleBridge {
 
             foreach (KeyValuePair<TeamName, Team> team in Teams)
                 team.Value.DrawHorses(i);
-        }
-
-        public void DrawClouds() {
-            foreach (Cloud cloud in Clouds)
-                cloud.Draw();
-        }
-
-        public void DrawStuck() {
-            Sky.Draw();
-            Sun.Draw();
         }
     }
 }

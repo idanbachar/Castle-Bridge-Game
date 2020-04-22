@@ -236,6 +236,18 @@
 /processorParam:TextureFormat=Color
 /build:images/map/clouds/cloud_1.png
 
+#begin images/map/clouds/rain drop/drop_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/map/clouds/rain drop/drop_0.png
+
 #begin images/map/forest/arrow/arrow_0.png
 /importer:TextureImporter
 /processor:TextureProcessor

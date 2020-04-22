@@ -12,12 +12,19 @@ namespace CastleBridge {
         private bool IsOnDestination;
         private Random Rnd;
         private int Speed;
-        public Cloud(int x, int y, int width, int height) {
+        public bool IsRain;
+        private List<RainDrop> RainDrops;
+        private int GenerateRainDropTimer;
+
+        public Cloud(int x, int y, int width, int height, bool isRain) {
             Animation = new Animation("map/clouds/cloud_", new Rectangle(x, y, width, height), 0, 1, 2, 15, true, true);
             Animation.Start();
             IsOnDestination = false;
             Speed = 1;
             Rnd = new Random();
+            IsRain = isRain;
+            RainDrops = new List<RainDrop>();
+            GenerateRainDropTimer = 0;
         }
 
         public void Update() {
@@ -35,10 +42,37 @@ namespace CastleBridge {
                 ResetPosition();
                 IsOnDestination = false;
             }
+
+
+            if (IsRain) {
+
+                if (GenerateRainDropTimer < 20)
+                    GenerateRainDropTimer++;
+                else {
+                    GenerateRainDropTimer = 0;
+                    GenerateRainDrop();
+                }
+
+                for(int i = 0; i < RainDrops.Count; i++) {
+                    if (!RainDrops [i].IsFinished)
+                        RainDrops [i].Fall();
+                    else {
+                        RainDrops.RemoveAt(i);
+                    }
+                }
+            }
         }
 
         public Animation GetCurrentAnimation() {
             return Animation;
+        }
+
+        public List<RainDrop> GetRainDrops() {
+            return RainDrops;
+        }
+
+        private void GenerateRainDrop() {
+            RainDrops.Add(new RainDrop(Rnd.Next(Animation.GetCurrentSpriteImage().GetRectangle().Left, Animation.GetCurrentSpriteImage().GetRectangle().Right), Animation.GetCurrentSpriteImage().GetRectangle().Bottom));
         }
 
         public void ResetPosition() {
@@ -50,6 +84,7 @@ namespace CastleBridge {
         }
 
         public void Draw() {
+
             Animation.Draw();
         }
     }
