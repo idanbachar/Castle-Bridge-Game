@@ -16,7 +16,6 @@ namespace CastleBridge {
         private string FullPath;
         private Direction Direction;
         private float Rotation;
-        public static int Count;
 
         public Image(string imageFolderPath, string imageName, int x, int y, int width, int height, Color imageColor) {
 
@@ -27,8 +26,16 @@ namespace CastleBridge {
             Direction = Direction.Left;
             Visible = true;
             Rotation = 0f;
-            Count++;
-            Console.WriteLine(Count);
+        }
+
+        public Image(string imageFolderFullPath, int x, int y, int width, int height) {
+
+            LoadImage(imageFolderFullPath);
+            Rectangle = new Rectangle(x, y, width, height);
+            Color = Color.White;
+            Direction = Direction.Left;
+            Visible = true;
+            Rotation = 0f;
         }
 
         private void LoadImage(string fullPath) {

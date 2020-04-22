@@ -17,11 +17,13 @@ namespace CastleBridge {
         private List<Cloud> Clouds;
         private List<MapEntity> WorldEntities;
         private Dictionary<TeamName, Team> Teams;
+        private Random Rnd;
         public Map() {
 
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
+            Rnd = new Random();
             Init();
         }
 
@@ -83,9 +85,7 @@ namespace CastleBridge {
 
         private void GenerateCloud() {
 
-            Random rnd = new Random();
-
-            Clouds.Add(new Cloud(rnd.Next(0, WIDTH), rnd.Next(0, 200), 125, 75));
+            Clouds.Add(new Cloud(Rnd.Next(0, WIDTH), Rnd.Next(0, 200), 125, 75));
         }
 
         private void GenerateWorldEntity(MapEntityName name) {
@@ -93,14 +93,14 @@ namespace CastleBridge {
             int grassX = Grass.GetRectangle().Left;
             int grassY = Grass.GetRectangle().Top;
 
-            Random rnd = new Random();
-            int x = rnd.Next(grassX, WIDTH);
-            int y = rnd.Next(grassY, HEIGHT);
+
+            int x = Rnd.Next(grassX, WIDTH);
+            int y = Rnd.Next(grassY, HEIGHT);
 
             AddEntity(name, x, y, Direction.Left, 0f);
         }
  
-        public void AddEntity(MapEntityName name, int x, int y, Direction direction, float rotation) {
+        public void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation) {
 
             int width = 0;
             int height = 0;
@@ -111,7 +111,7 @@ namespace CastleBridge {
                 direction = Direction.Left;
 
 
-            switch (name) {
+            switch (entityName) {
                 case MapEntityName.Bush:
                     width = 100;
                     height = 45;
@@ -139,7 +139,7 @@ namespace CastleBridge {
                     break;
             }
 
-            WorldEntities.Add(new MapEntity(name, Name, x , y + height, width, height, isTouchable, direction, rotation));
+            WorldEntities.Add(new MapEntity(entityName, Name, x , y + height, width, height, isTouchable, direction, rotation));
         }
 
         public Image GetSun() {

@@ -19,7 +19,7 @@ namespace CastleBridge {
             Name = entityName;
             Direction = direction;
             IsTouchable = isTouchable;
-            Animation = new Animation(new Image("map/" + mapName + "/" + entityName, entityName + "_", x, y, width, height, Color.White), 0, 0, 1, 5, true, true);
+            Animation = new Animation("map/" + mapName + "/" + entityName.ToString().Replace("_", " ") + "/" + entityName + "_", new Rectangle(x, y, width, height), 0, 0, 1, 5, true, true);
             Animation.SetDirection(direction);
             Animation.SetRotation(rotation);
 

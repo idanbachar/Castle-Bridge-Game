@@ -25,12 +25,11 @@ namespace CastleBridge {
         public Character(CharacterName name, TeamName teamName, int x, int y, int width, int height) {
 
             Name = name;
-            AfkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 5, true, true);
-            WalkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
-            AttackAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
-            DefenceAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/defence/", name + "_defence_", x, y, width, height, Color.White), 0, 5, 5, 3, true, false);
-            LootAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 5, 5, 2, true, false);
- 
+            AfkAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/afk/" + name + "_afk_", new Rectangle(x, y, width, height), 0, 6, 6, 5, true, true);
+            WalkAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/walk/" + name + "_walk_", new Rectangle(x, y, width, height), 0, 4, 4, 3, true, true);
+            AttackAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/attack/" + name + "_attack_", new Rectangle(x, y, width, height), 0, 7, 7, 4, false, false);
+            DefenceAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/defence/" + name + "_defence_", new Rectangle(x, y, width, height), 0, 5, 5, 3, true, false);
+            LootAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/loot/" + name + "_loot_", new Rectangle(x, y, width, height), 0, 5, 5, 2, true, false);
             Health = 100;
             MaxHealth = 100;
             State = PlayerState.Afk;

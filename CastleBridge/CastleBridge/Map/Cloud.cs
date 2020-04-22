@@ -13,7 +13,7 @@ namespace CastleBridge {
         private Random Rnd;
         private int Speed;
         public Cloud(int x, int y, int width, int height) {
-            Animation = new Animation(new Image("map/clouds", "cloud_", x, y, width, height, Color.White), 0, 1, 2, 15, true, true);
+            Animation = new Animation("map/clouds/cloud_", new Rectangle(x, y, width, height), 0, 1, 2, 15, true, true);
             Animation.Start();
             IsOnDestination = false;
             Speed = 1;

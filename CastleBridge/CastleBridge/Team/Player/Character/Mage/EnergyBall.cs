@@ -21,7 +21,7 @@ namespace CastleBridge {
             IsFinished = false;
             Speed = 20;
             Direction = direction;
-            Animation = new Animation(new Image("player/characters/teams/red/mage/weapons/energy ball", "energy_ball_", startX, startY, 44, 21, Color.White), 0, 0, 1, 3, false, false);
+            Animation = new Animation("player/characters/teams/red/mage/weapons/energy ball/energy_ball_", new Rectangle(startX, startY, 44, 21), 0, 0, 1, 3, false, false);
             Animation.SetDirection(direction);
             ShootUpDownDirection = shootUpDownDirection;
         }

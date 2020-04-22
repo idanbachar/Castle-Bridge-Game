@@ -20,8 +20,9 @@ namespace CastleBridge {
         private bool IsReverse;
         private AnimationState AnimationState;
         public bool IsFinished;
+        private Rectangle Rectangle;
 
-        public Animation(Image image, int startAnimationFromIndex, int endAnimationInIndex, int spritesLength, int nextFrameDelay, bool isReverse, bool isLoop) {
+        public Animation(string fullPath, Rectangle rectangle, int startAnimationFromIndex, int endAnimationInIndex, int spritesLength, int nextFrameDelay, bool isReverse, bool isLoop) {
 
             Sprites = new Image [spritesLength];
             StartAnimationFromIndex = startAnimationFromIndex;
@@ -35,7 +36,8 @@ namespace CastleBridge {
             IsReverse = isReverse;
             AnimationState = AnimationState.Forward;
             IsFinished = false;
-            LoadSprites(image);
+            Rectangle = rectangle;
+            LoadSprites(fullPath);
         }
 
         public void SetRectangle(int x, int y, int width, int height) {
@@ -68,18 +70,15 @@ namespace CastleBridge {
             IsReverse = value;
         }
 
-        private void LoadSprites(Image image) {
+        private void LoadSprites(string fullPath) {
 
-            string path = image.GetFullPath();
+            for (int i = 0; i < Sprites.Length; i++) {
 
-            for(int i = 0; i < Sprites.Length; i++) {
-                
-                Sprites[i] = new Image(string.Empty, "default", 
-                                                     image.GetRectangle().X,
-                                                     image.GetRectangle().Y,
-                                                     image.GetRectangle().Width,
-                                                     image.GetRectangle().Height, Color.White);
-                Sprites [i].ChangeImage(path + i);
+                Sprites [i] = new Image(fullPath + i,
+                                        Rectangle.X,
+                                        Rectangle.Y,
+                                        Rectangle.Width,
+                                        Rectangle.Height);
             }
         }
 

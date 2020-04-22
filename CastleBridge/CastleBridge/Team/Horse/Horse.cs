@@ -22,8 +22,8 @@ namespace CastleBridge {
         public Horse(TeamName teamName, int x, int y, int width, int height) {
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
-            AfkAnimation = new Animation(new Image("horse/teams/" + teamName + "/afk", "horse_afk_", x, y, width, height, Color.White), 0, 7, 7, 6, true, true);
-            WalkAnimation = new Animation(new Image("horse/teams/" + teamName + "/walk", "horse_walk_", x, y, width, height, Color.White), 0, 4, 5, 2, true, true);
+            AfkAnimation = new Animation("horse/teams/" + teamName + "/afk/horse_afk_", new Rectangle(x, y, width, height), 0, 7, 7, 6, true, true);
+            WalkAnimation = new Animation("horse/teams/" + teamName + "/walk/horse_walk_", new Rectangle(x, y, width, height), 0, 4, 5, 2, true, true);
             Speed = 7;
             SetState(Horsestate.Afk);
             Direction = Direction.Left;
