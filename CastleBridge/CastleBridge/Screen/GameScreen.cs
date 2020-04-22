@@ -263,6 +263,18 @@ namespace CastleBridge {
 
         }
 
+        private void CheckDefence() {
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftControl) && Player.GetState() != PlayerState.Defence) {
+                Player.SetState(PlayerState.Defence);
+            }
+
+            if (Player.GetState() == PlayerState.Defence && Player.CurrentCharacter.DefenceAnimation.IsFinished) {
+                Player.CurrentCharacter.DefenceAnimation.Reset();
+
+                Player.SetState(PlayerState.Afk);
+            }
+        }
+
         private void CheckLoot() {
 
             for (int i = 0; i < Map.GetWorldEntities().Count; i++) {
@@ -320,7 +332,7 @@ namespace CastleBridge {
 
         private void CheckKeyboard() {
  
-            if (Player.GetState() != PlayerState.Attack && Player.GetState() != PlayerState.Loot) {
+            if (Player.GetState() != PlayerState.Attack && Player.GetState() != PlayerState.Defence && Player.GetState() != PlayerState.Loot) {
 
                 if (Keyboard.GetState().GetPressedKeys().Length == 0) {
                     Player.SetState(PlayerState.Afk);
@@ -334,6 +346,7 @@ namespace CastleBridge {
 
             CheckChangeCharacter();
             CheckAttack();
+            CheckDefence();
             CheckLoot();
             CheckMountHorse();
 
@@ -341,7 +354,7 @@ namespace CastleBridge {
 
         private void InitPlayer() {
 
-            Player = new Player(CharacterName.Mage, TeamName.Red, "Idan", Map.GetGrass().GetRectangle().X + 25, Map.GetGrass().GetRectangle().Top - 75, 125, 175);
+            Player = new Player(CharacterName.Knight, TeamName.Red, "Idan", Map.GetGrass().GetRectangle().X + 25, Map.GetGrass().GetRectangle().Top - 75, 125, 175);
         }
 
         private void InitMap() {

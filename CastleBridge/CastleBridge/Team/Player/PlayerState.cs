@@ -10,7 +10,6 @@ namespace CastleBridge {
         Walk,
         Attack,
         Defence,
-        Loot,
-        RideHorse
+        Loot
     }
 }

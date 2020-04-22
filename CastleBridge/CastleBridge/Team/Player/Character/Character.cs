@@ -19,20 +19,18 @@ namespace CastleBridge {
         public Animation AttackAnimation;
         public Animation DefenceAnimation;
         public Animation LootAnimation;
-        public Animation HorseRidingAnimation;
         protected Direction Direction;
         protected PlayerState State;
         protected TeamName TeamName;
         public Character(CharacterName name, TeamName teamName, int x, int y, int width, int height) {
 
             Name = name;
-            AfkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 6, true, true);
+            AfkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/afk/", name + "_afk_", x, y, width, height, Color.White), 0, 6, 6, 5, true, true);
             WalkAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/walk/", name + "_walk_", x, y, width, height, Color.White), 0, 4, 4, 3, true, true);
             AttackAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/attack/", name + "_attack_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
-            DefenceAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/defence/", name + "_defence_", x, y, width, height, Color.White), 0, 7, 7, 4, false, false);
-            LootAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 5, 5, 4, true, false);
-            HorseRidingAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/horse ride/", name + "_horse_ride_", x, y, width, height, Color.White), 0, 5, 5, 4, true, false);
-            
+            DefenceAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/defence/", name + "_defence_", x, y, width, height, Color.White), 0, 5, 5, 3, true, false);
+            LootAnimation = new Animation(new Image("player/characters/teams/" + teamName + "/" + name + "/loot/", name + "_loot_", x, y, width, height, Color.White), 0, 5, 5, 2, true, false);
+ 
             Health = 100;
             MaxHealth = 100;
             State = PlayerState.Afk;
@@ -59,9 +57,6 @@ namespace CastleBridge {
                     break;
                 case PlayerState.Loot:
                     CurrentAnimation = LootAnimation;
-                    break;
-                case PlayerState.RideHorse:
-                    CurrentAnimation = HorseRidingAnimation;
                     break;
             }
             CurrentAnimation.Start();
