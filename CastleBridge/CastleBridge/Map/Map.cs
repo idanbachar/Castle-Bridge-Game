@@ -69,8 +69,7 @@ namespace CastleBridge {
             
             Random rnd = new Random();
             for (int i = 1; i < 100; i++) {
-                MapEntityName entity = (MapEntityName)rnd.Next(0, 5);
-                GenerateWorldEntity(entity);
+                GenerateWorldEntity();
             }
  
             for (int i = 0; i < 60; i++)
@@ -88,16 +87,17 @@ namespace CastleBridge {
             Clouds.Add(new Cloud(Rnd.Next(0, WIDTH), Rnd.Next(0, 200), 125, 75));
         }
 
-        private void GenerateWorldEntity(MapEntityName name) {
+        private void GenerateWorldEntity() {
 
             int grassX = Grass.GetRectangle().Left;
             int grassY = Grass.GetRectangle().Top;
 
-
             int x = Rnd.Next(grassX, WIDTH);
             int y = Rnd.Next(grassY, HEIGHT);
 
-            AddEntity(name, x, y, Direction.Left, 0f);
+            MapEntityName entity = (MapEntityName)Rnd.Next(0, 5);
+
+            AddEntity(entity, x, y, Direction.Left, 0f);
         }
  
         public void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation) {
