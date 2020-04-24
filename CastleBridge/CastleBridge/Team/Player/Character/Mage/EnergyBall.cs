@@ -14,8 +14,9 @@ namespace CastleBridge {
         private int Speed;
         private Direction Direction;
         private Direction ShootUpDownDirection;
+        private Location CurrentLocation;
 
-        public EnergyBall(int startX, int startY, Direction direction, Direction shootUpDownDirection) {
+        public EnergyBall(int startX, int startY, Direction direction, Direction shootUpDownDirection, Location location) {
 
             ShootTime = 0;
             IsFinished = false;
@@ -24,6 +25,7 @@ namespace CastleBridge {
             Animation = new Animation("player/characters/teams/red/mage/weapons/energy ball/energy_ball_", new Rectangle(startX, startY, 44, 21), 0, 0, 1, 3, false, false);
             Animation.SetDirection(direction);
             ShootUpDownDirection = shootUpDownDirection;
+            CurrentLocation = location;
         }
 
         public void Move() {
@@ -71,6 +73,9 @@ namespace CastleBridge {
             }
         }
 
+        public Location GetCurrentLocation() {
+            return CurrentLocation;
+        }
         public void Draw() {
             Animation.Draw();
         }

@@ -46,6 +46,7 @@
     <Compile Include="Components\Animation\AnimationState.cs" />
     <Compile Include="Components\Camera\Camera.cs" />
     <Compile Include="Components\Popup\Popup.cs" />
+    <Compile Include="Map\Location.cs" />
     <Compile Include="Map\Weather\Cloud\Rain Drop\RainDrop.cs" />
     <Compile Include="Map\Weather\TimeType.cs" />
     <Compile Include="Map\Weather\Weather.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Map\Weather\Cloud\Cloud.cs" />
     <Compile Include="Map\MapEntity.cs" />
     <Compile Include="Map\MapEntityName.cs" />
+    <Compile Include="Team\Castle\Door\Door.cs" />
     <Compile Include="Team\Horse\Horse.cs" />
     <Compile Include="Team\Horse\Horsestate.cs" />
     <Compile Include="Team\Player\Character\Archer\Archer.cs" />

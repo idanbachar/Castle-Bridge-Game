@@ -90,8 +90,9 @@ namespace CastleBridge {
             return Castle;
         }
 
-        public void DrawCastle() {
-            Castle.Draw();
+        public void DrawCastle(Location playerLocation) {
+            if (Castle.GetCurrentLocation() == playerLocation || Castle.GetCurrentLocation() == Location.All)
+                Castle.Draw();
         }
 
         public int GetMaxPlayers() {
@@ -106,24 +107,27 @@ namespace CastleBridge {
             return Horse;
         }
 
-        public void DrawPlayers(int i) {
+        public void DrawPlayers(int i, Location playerLocation) {
 
             foreach (KeyValuePair<string, Player> player in Players) {
-                player.Value.Draw(i);
+
+                if (player.Value.GetCurrentLocation() == playerLocation || playerLocation == Location.All)
+                    player.Value.Draw(i);
 
                 if (player.Value.CurrentCharacter is Archer) {
                     Archer archer = player.Value.CurrentCharacter as Archer;
-                    archer.DrawArrows(i);
+                    archer.DrawArrows(i, playerLocation);
                 }
                 else if (player.Value.CurrentCharacter is Mage) {
                     Mage mage = player.Value.CurrentCharacter as Mage;
-                    mage.DrawSpells(i);
+                    mage.DrawSpells(i, playerLocation);
                 }
             }
         }
 
-        public void DrawHorses(int i) {
-            Horse.Draw(i);
+        public void DrawHorses(int i, Location playerLocation) {
+            if (Horse.GetCurrentLocation() == playerLocation || Horse.GetCurrentLocation() == Location.All)
+                Horse.Draw(i);
         }
     }
 }

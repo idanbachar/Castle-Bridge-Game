@@ -20,10 +20,10 @@ namespace CastleBridge {
         }
 
 
-        public void ShootSpell(Direction shootDirection) {
+        public void ShootSpell(Direction shootDirection, Location currentLocation) {
 
             Spells.Add(new EnergyBall(CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Left + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Width / 2,
-                                    CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Top + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height / 2, Direction, shootDirection));
+                                    CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Top + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height / 2, Direction, shootDirection, currentLocation));
 
             CurrentSpells--;
         }
@@ -36,11 +36,12 @@ namespace CastleBridge {
             CurrentSpells++;
         }
 
-        public void DrawSpells(int i) {
+        public void DrawSpells(int i, Location playerLocation) {
 
             foreach (EnergyBall spell in Spells)
                 if (spell.Animation.GetCurrentSpriteImage().GetRectangle().Bottom == i)
-                    spell.Draw();
+                    if (spell.GetCurrentLocation() == playerLocation || spell.GetCurrentLocation() == Location.All)
+                        spell.Draw();
         }
 
 

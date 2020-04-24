@@ -19,10 +19,10 @@ namespace CastleBridge {
             Health = 110;
         }
 
-        public void ShootArrow(Direction shootDirection) {
+        public void ShootArrow(Direction shootDirection, Location currentLocation) {
 
             Arrows.Add(new Arrow(CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Left + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Width / 2,
-                                    CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Top + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height / 2, Direction, shootDirection));
+                                    CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Top + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height / 2, Direction, shootDirection, currentLocation));
 
             CurrentArrows--;
         }
@@ -35,11 +35,12 @@ namespace CastleBridge {
             CurrentArrows++;
         }
  
-        public void DrawArrows(int i) {
+        public void DrawArrows(int i, Location playerLocation) {
 
             foreach (Arrow arrow in Arrows)
                 if (arrow.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
-                    arrow.Draw();
+                    if (arrow.GetCurrentLocation() == playerLocation || arrow.GetCurrentLocation() == Location.All)
+                        arrow.Draw();
         }
  
 

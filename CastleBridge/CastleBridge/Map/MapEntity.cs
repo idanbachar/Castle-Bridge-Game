@@ -13,6 +13,7 @@ namespace CastleBridge {
         private Text Tooltip;
         public bool IsTouchable;
         private Direction Direction;
+        private Location CurrentLocation;
 
         public MapEntity(MapEntityName entityName, MapName mapName, int x, int y, int width, int height, bool isTouchable, Direction direction, float rotation) {
             
@@ -49,6 +50,8 @@ namespace CastleBridge {
                     break;
             }
 
+            CurrentLocation = Location.Outside;
+
         }
 
         public void Update() {
@@ -69,6 +72,10 @@ namespace CastleBridge {
 
         public Text GetTooltip() {
             return Tooltip;
+        }
+
+        public Location GetCurrentLocation() {
+            return CurrentLocation;
         }
 
         public void Draw() {

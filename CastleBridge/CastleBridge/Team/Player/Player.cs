@@ -19,6 +19,7 @@ namespace CastleBridge {
         private int Stones;
         private int Woods;
         private Horse CurrentHorse;
+        private Location CurrentLocation;
         public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height){
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
@@ -34,11 +35,16 @@ namespace CastleBridge {
             Stones = 0;
             Woods = 0;
             CurrentHorse = null;
+            CurrentLocation = Location.Outside;
         }
 
         public void ChangeCharacter(CharacterName newCharacter) {
 
             CurrentCharacter = Characters [newCharacter.ToString()];
+        }
+
+        public void ChangeLocationTo(Location newLocation) {
+            CurrentLocation = newLocation;
         }
 
         private void AddCharacter(CharacterName name) {
@@ -80,7 +86,10 @@ namespace CastleBridge {
 
         public bool IsTouchWorldEntity(MapEntity entity) {
 
-            if (Rectangle.Intersects(entity.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && entity.IsTouchable && CurrentHorse == null) {
+            if (Rectangle.Intersects(entity.GetAnimation().GetCurrentSpriteImage().GetRectangle()) &&
+                                     entity.IsTouchable &&
+                                     CurrentHorse == null &&
+                                     (CurrentLocation == entity.GetCurrentLocation() || entity.GetCurrentLocation() == Location.All)) {
                 entity.GetTooltip().SetVisible(true);
                 return true;
             }
@@ -89,9 +98,22 @@ namespace CastleBridge {
             return false;
         }
 
+        public bool IsTouchCastleDoor(Door door) {
+
+            if (Rectangle.Intersects(door.GetImage().GetRectangle()) && (CurrentLocation == door.GetCurrentLocation() || door.GetCurrentLocation() == Location.All)) {
+                door.GetTooltip().SetVisible(true);
+                return true;
+            }
+
+            door.GetTooltip().SetVisible(false);
+            return false;
+        }
+
         public bool IsTouchHorse(Horse horse) {
-            
-            if (Rectangle.Intersects(horse.GetRectangle()) && CurrentHorse == null)
+
+            if (Rectangle.Intersects(horse.GetRectangle()) &&
+                CurrentHorse == null &&
+                (CurrentLocation == horse.GetCurrentLocation() || horse.GetCurrentLocation() == Location.All))
                 return true;
 
             return false;
@@ -192,6 +214,10 @@ namespace CastleBridge {
 
         public int GetWoods() {
             return Woods;
+        }
+
+        public Location GetCurrentLocation() {
+            return CurrentLocation;
         }
 
         public void SetWoods(int woods) {

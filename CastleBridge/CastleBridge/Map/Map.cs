@@ -145,29 +145,30 @@ namespace CastleBridge {
             return Weather;
         }
 
-        public void DrawTile(int i) {
+        public void DrawTile(int i, Location playerLocation) {
 
             foreach (MapEntity mapEntity in WorldEntities)
                 if (mapEntity.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
-                    mapEntity.Draw();
+                    if (mapEntity.GetCurrentLocation() == playerLocation || mapEntity.GetCurrentLocation() == Location.All)
+                        mapEntity.Draw();
         }
 
-        public void DrawTeamsPlayers(int i) {
+        public void DrawTeamsPlayers(int i, Location playerLocation) {
 
             foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.DrawPlayers(i);
+                team.Value.DrawPlayers(i, playerLocation);
         }
 
-        public void DrawTeamsCastles() {
+        public void DrawTeamsCastles(Location playerLocation) {
 
             foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.DrawCastle();
+                team.Value.DrawCastle(playerLocation);
         }
 
-        public void DrawTeamsHorses(int i) {
+        public void DrawTeamsHorses(int i, Location playerLocation) {
 
             foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.DrawHorses(i);
+                team.Value.DrawHorses(i, playerLocation);
         }
     }
 }

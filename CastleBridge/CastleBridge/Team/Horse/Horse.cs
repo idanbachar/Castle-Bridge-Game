@@ -18,6 +18,7 @@ namespace CastleBridge {
         private Direction Direction;
         private Player Owner;
         private Text Tooltip;
+        private Location CurrentLocation;
 
         public Horse(TeamName teamName, int x, int y, int width, int height) {
             TeamName = teamName;
@@ -30,6 +31,7 @@ namespace CastleBridge {
             Owner = null;
             Tooltip = new Text(FontType.Default, "Press 'E' to mount", new Vector2(x + 50, y - 65), Color.Black, true, Color.Gold);
             Tooltip.SetVisible(false);
+            CurrentLocation = Location.Outside;
         }
 
         public void Move(Direction direction) {
@@ -143,6 +145,10 @@ namespace CastleBridge {
                 return true;
 
             return false;
+        }
+
+        public Location GetCurrentLocation() {
+            return CurrentLocation;
         }
 
         public Text GetTooltip() {

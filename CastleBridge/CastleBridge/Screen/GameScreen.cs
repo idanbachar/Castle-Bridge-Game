@@ -127,7 +127,6 @@ namespace CastleBridge {
 
         private void CheckChangeCharacter() {
 
-
             if (Keyboard.GetState().IsKeyDown(Keys.D1) && !IsPressedD1) {
                 IsPressedD1 = true;
                 if (Player.CurrentCharacter.GetName() != CharacterName.Archer) {
@@ -184,7 +183,7 @@ namespace CastleBridge {
 
                     if (archer.IsCanShoot()) {
                         archer.GetCurrentAnimation().SetReverse(false);
-                        archer.ShootArrow(shootDirection);
+                        archer.ShootArrow(shootDirection, Player.GetCurrentLocation());
                     }
                     else {
                         archer.GetCurrentAnimation().SetReverse(true);
@@ -205,7 +204,7 @@ namespace CastleBridge {
 
                     if (mage.IsCanShoot()) {
                         mage.GetCurrentAnimation().SetReverse(false);
-                        mage.ShootSpell(shootDirection);
+                        mage.ShootSpell(shootDirection, Player.GetCurrentLocation());
                     }
                     else {
                         mage.GetCurrentAnimation().SetReverse(true);
@@ -330,6 +329,26 @@ namespace CastleBridge {
             }
         }
 
+        private void CheckEnterCastles() {
+
+            foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
+                if (Player.IsTouchCastleDoor(team.Value.GetCastle().GetDoor())) {
+                    if (Keyboard.GetState().IsKeyDown(Keys.E) && !IsPressedE) {
+                        IsPressedE = true;
+                        switch (team.Value.GetName()) {
+                            case TeamName.Red:
+                                Player.ChangeLocationTo(Location.Inside_Red_Castle);
+                                break;
+                            case TeamName.Yellow:
+                                Player.ChangeLocationTo(Location.Inside_Yellow_Castle);
+                                break;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
         private void CheckKeyboard() {
  
             if (Player.GetState() != PlayerState.Attack && Player.GetState() != PlayerState.Defence && Player.GetState() != PlayerState.Loot) {
@@ -349,6 +368,7 @@ namespace CastleBridge {
             CheckDefence();
             CheckLoot();
             CheckMountHorse();
+            CheckEnterCastles();
 
         }
 
@@ -483,23 +503,25 @@ namespace CastleBridge {
 
             Map.GetGrass().Draw();
             Map.GetWeather().DrawClouds();
-            Map.DrawTeamsCastles();
+
+            Map.DrawTeamsCastles(Player.GetCurrentLocation());
 
             for (int i = Map.GetGrass().GetRectangle().Top; i < Map.GetGrass().GetRectangle().Bottom; i++) {
-                Map.DrawTile(i);
+
+                Map.DrawTile(i, Player.GetCurrentLocation());
                 Player.Draw(i);
 
                 if (Player.CurrentCharacter is Archer) {
                     Archer archer = Player.CurrentCharacter as Archer;
-                    archer.DrawArrows(i);
+                    archer.DrawArrows(i, Player.GetCurrentLocation());
                 }
                 else if (Player.CurrentCharacter is Mage) {
                     Mage mage = Player.CurrentCharacter as Mage;
-                    mage.DrawSpells(i);
+                    mage.DrawSpells(i, Player.GetCurrentLocation());
                 }
 
-                Map.DrawTeamsPlayers(i);
-                Map.DrawTeamsHorses(i);
+                Map.DrawTeamsPlayers(i, Player.GetCurrentLocation());
+                Map.DrawTeamsHorses(i, Player.GetCurrentLocation());
             }
 
             HUD.DrawTile();
