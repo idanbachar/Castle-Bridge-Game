@@ -11,16 +11,18 @@ namespace CastleBridge {
         private TimeType TimeType;
         private Image Sun;
         private Image Moon;
+        private Image DaySky;
+        private Image NightSky;
         private Image CurrentPlanet;
-        private Image Sky;
+        private Image CurrentSky;
         private List<Cloud> Clouds;
         private Random Rnd;
         private bool IsRain;
         public Weather(TimeType timeType, bool isRain) {
 
-            TimeType = timeType;
             IsRain = isRain;
             Init();
+            SetTime(timeType);
         }
 
         public void Update() {
@@ -49,16 +51,24 @@ namespace CastleBridge {
             Sun = new Image("map/sun", "sun_0", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 75, 0, 150, 150, Color.White);
             Moon = new Image("map/moon", "moon_0", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 75, 0, 150, 150, Color.White);
 
+            DaySky = new Image("map/sky", "day", 0, 0, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight, Color.White);
+            NightSky = new Image("map/sky", "night", 0, 0, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight, Color.White);
+        }
+
+        public void SetTime(TimeType timeType) {
+
+            TimeType = timeType;
+
             switch (TimeType) {
                 case TimeType.Day:
                     CurrentPlanet = Sun;
+                    CurrentSky = DaySky;
                     break;
                 case TimeType.Night:
                     CurrentPlanet = Moon;
+                    CurrentSky = NightSky;
                     break;
             }
-
-            Sky = new Image("map/sky", "sky", 0, 0, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight, Color.White);
         }
 
 
@@ -66,7 +76,7 @@ namespace CastleBridge {
             return Clouds;
         }
         public Image GetSky() {
-            return Sky;
+            return CurrentSky;
         }
         public Image GetSun() {
             return Sun;
@@ -78,7 +88,7 @@ namespace CastleBridge {
                 cloud.Draw();
         }
         public void DrawStuck() {
-            Sky.Draw();
+            CurrentSky.Draw();
             CurrentPlanet.Draw();
         }
     }
