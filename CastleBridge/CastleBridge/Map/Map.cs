@@ -137,7 +137,7 @@ namespace CastleBridge {
             switch (newLocation) {
                 case Location.Outside:
                     WIDTH = 10000;
-                    HEIGHT = 20000;
+                    HEIGHT = 2000;
                     break;
                 case Location.Inside_Red_Castle:
                 case Location.Inside_Yellow_Castle:
