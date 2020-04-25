@@ -51,7 +51,7 @@
     <Compile Include="Map\Weather\TimeType.cs" />
     <Compile Include="Map\Weather\Weather.cs" />
     <Compile Include="Team\Castle\Castle.cs" />
-    <Compile Include="Team\Castle\Chest.cs" />
+    <Compile Include="Team\Castle\Diamond.cs" />
     <Compile Include="Map\Weather\Cloud\Cloud.cs" />
     <Compile Include="Map\MapEntity.cs" />
     <Compile Include="Map\MapEntityName.cs" />

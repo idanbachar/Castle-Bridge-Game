@@ -320,7 +320,22 @@ namespace CastleBridge {
                         break;
                     }
                 }
+            }
 
+            foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
+                for(int i = 0; i < team.Value.GetCastle().GetDiamonds().Count; i++) {
+                    Diamond diamond = team.Value.GetCastle().GetDiamonds() [i];
+
+                    if (Player.IsTouchDiamond(diamond)) {
+                        if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
+                            Player.SetState(PlayerState.Loot);
+                            diamond.SetOwner(Player);
+                            Player.AddRedDiamond(diamond);
+                            team.Value.GetCastle().GetDiamonds().RemoveAt(i);
+                            break;
+                        }
+                    }
+                }
             }
 
             if (Player.GetState() == PlayerState.Loot && Player.CurrentCharacter.LootAnimation.IsFinished) {
@@ -376,13 +391,35 @@ namespace CastleBridge {
             }
         }
 
+        private void CheckDiamondsDrops() {
+
+            if (Keyboard.GetState().IsKeyDown(Keys.F)) {
+                if (Player.GetCollectedRedDiamonds().Count > 0) {
+
+                    List<Diamond> droppedRedDiamonds = Player.DropAllRedDiamonds();
+
+                    foreach(Diamond diamond in droppedRedDiamonds) {
+                        Map.GetTeams() [((TeamName)TeamName.Red)].GetCastle().GetDiamonds().Add(diamond);
+                    }
+                }
+                if (Player.GetCollectedYellowDiamonds().Count > 0) {
+
+                    List<Diamond> droppedYellowDiamonds = Player.DropAllYellowDiamonds();
+
+                    foreach (Diamond diamond in droppedYellowDiamonds) {
+                        Map.GetTeams() [((TeamName)TeamName.Yellow)].GetCastle().GetDiamonds().Add(diamond);
+                    }
+                }
+            }
+        }
+
         private void CheckKeyboard() {
- 
+
             if (Player.GetState() != PlayerState.Attack && Player.GetState() != PlayerState.Defence && Player.GetState() != PlayerState.Loot) {
 
                 if (Keyboard.GetState().GetPressedKeys().Length == 0) {
                     Player.SetState(PlayerState.Afk);
-                    if(Player.GetCurrentHorse() != null) {
+                    if (Player.GetCurrentHorse() != null) {
                         Player.GetCurrentHorse().SetState(Horsestate.Afk);
                     }
                 }
@@ -396,6 +433,7 @@ namespace CastleBridge {
             CheckLoot();
             CheckMountHorse();
             CheckEnterExitCastleDoors();
+            CheckDiamondsDrops();
 
         }
 

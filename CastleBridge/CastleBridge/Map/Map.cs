@@ -198,6 +198,12 @@ namespace CastleBridge {
                         if (player.Value.GetCurrentLocation() == playerLocation || player.Value.GetCurrentLocation() == Location.All)
                             player.Value.Draw();
 
+                    foreach(Diamond diamond in team.Value.GetCastle().GetDiamonds()) {
+                        if (diamond.GetImage().GetRectangle().Bottom == i)
+                            if (diamond.GetCurrentLocation() == playerLocation || diamond.GetCurrentLocation() == Location.All)
+                                diamond.Draw();
+                    }
+
                     if (player.Value.CurrentCharacter is Archer) {
                         Archer archer = player.Value.CurrentCharacter as Archer;
                         foreach (Arrow arrow in archer.GetArrows()) {

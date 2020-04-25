@@ -20,6 +20,8 @@ namespace CastleBridge {
         private int Woods;
         private Horse CurrentHorse;
         private Location CurrentLocation;
+        private List<Diamond> CollectedRedDiamonds;
+        private List<Diamond> CollectedYellowDiamonds;
         public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height){
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
@@ -34,13 +36,62 @@ namespace CastleBridge {
             ChangeCharacter(character);
             Stones = 0;
             Woods = 0;
+            CollectedRedDiamonds = new List<Diamond>();
+            CollectedYellowDiamonds = new List<Diamond>();
             CurrentHorse = null;
             CurrentLocation = Location.Outside;
         }
 
         public void ChangeCharacter(CharacterName newCharacter) {
-
             CurrentCharacter = Characters [newCharacter.ToString()];
+        }
+
+   
+        public void AddRedDiamond(Diamond diamond) {
+            CollectedRedDiamonds.Add(diamond);
+        }
+
+        public List<Diamond> DropAllRedDiamonds() {
+
+            Random rnd = new Random();
+
+            List<Diamond> diamondsToDrop = new List<Diamond>();
+
+            foreach (Diamond diamond in CollectedRedDiamonds) {
+                diamond.ChangeLocationTo(CurrentLocation);
+                diamond.RemoveOwner();
+                diamond.SetRectangle(new Rectangle(Rectangle.X + rnd.Next(0, 200),
+                                                   Rectangle.Bottom,
+                                                   diamond.GetImage().GetRectangle().Width,
+                                                   diamond.GetImage().GetRectangle().Height));
+                diamondsToDrop.Add(diamond);
+            }
+
+            CollectedRedDiamonds.Clear();
+
+            return diamondsToDrop;
+        }
+
+        public List<Diamond> DropAllYellowDiamonds() {
+
+            Random rnd = new Random();
+
+            List<Diamond> diamondsToDrop = new List<Diamond>();
+
+            foreach (Diamond diamond in CollectedYellowDiamonds) {
+                diamond.ChangeLocationTo(CurrentLocation);
+                diamond.RemoveOwner();
+                diamond.SetRectangle(new Rectangle(Rectangle.X + rnd.Next(0, 200),
+                                                   Rectangle.Bottom,
+                                                   diamond.GetImage().GetRectangle().Width,
+                                                   diamond.GetImage().GetRectangle().Height));
+
+                diamondsToDrop.Add(diamond);
+            }
+
+            CollectedYellowDiamonds.Clear();
+
+            return diamondsToDrop;
         }
 
         private void AddCharacter(CharacterName name) {
@@ -102,6 +153,17 @@ namespace CastleBridge {
             }
 
             door.GetTooltip().SetVisible(false);
+            return false;
+        }
+
+        public bool IsTouchDiamond(Diamond diamond) {
+
+            if (Rectangle.Intersects(diamond.GetImage().GetRectangle()) &&
+                CurrentHorse == null &&
+                diamond.GetOwner() == null &&
+                (CurrentLocation == diamond.GetCurrentLocation() || diamond.GetCurrentLocation() == Location.All))
+                return true;
+
             return false;
         }
 
@@ -244,6 +306,14 @@ namespace CastleBridge {
 
         public Animation GetCurrentAnimation() {
             return CurrentCharacter.GetCurrentAnimation();
+        }
+ 
+        public List<Diamond> GetCollectedRedDiamonds() {
+            return CollectedRedDiamonds;
+        }
+
+        public List<Diamond> GetCollectedYellowDiamonds() {
+            return CollectedYellowDiamonds;
         }
 
         public void Draw() {

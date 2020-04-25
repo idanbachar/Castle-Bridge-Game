@@ -10,7 +10,7 @@ namespace CastleBridge {
 
         private Image Image;
         private TeamName TeamName;
-        private List<Chest> Chests;
+        private List<Diamond> Diamonds;
         private Door OutsideDoor;
         private Door InsideDoor;
         private Location CurrentLocation;
@@ -24,17 +24,34 @@ namespace CastleBridge {
             InsideWall = new Image("map/castles/teams/" + teamName + "/inside/castle_wall", 0, y, 1400, 431);
             InsideDoor = new Door(614, 303, 188, 107, teamName, teamName == TeamName.Red ? Location.Inside_Red_Castle : Location.Inside_Yellow_Castle);
             InsideFloor = new Image("map/castles/teams/" + teamName + "/inside/floor/castle_floor", 0, CastleBridge.Graphics.PreferredBackBufferHeight / 2, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight);
-            Chests = new List<Chest>();
-
+            InitDiamonds();
             CurrentLocation = Location.Outside;
+        }
+
+        private void AddDiamond(int x, int y) {
+            switch (TeamName) {
+                case TeamName.Red:
+                    Diamonds.Add(new Diamond(TeamName, x, y, Location.Inside_Red_Castle));
+                    break;
+                case TeamName.Yellow:
+                    Diamonds.Add(new Diamond(TeamName, x, y, Location.Inside_Yellow_Castle));
+                    break;
+            }
+        }
+
+        private void InitDiamonds() {
+
+            Diamonds = new List<Diamond>();
+            for(int i = 1; i <= 3; i++)
+                AddDiamond(100, InsideFloor.GetRectangle().Top - 10 + (i * 100));
         }
 
         public TeamName GetTeam() {
             return TeamName;
         }
 
-        public List<Chest> GetChests() {
-            return Chests;
+        public List<Diamond> GetDiamonds() {
+            return Diamonds;
         }
 
         public Door GetOutsideDoor() {
