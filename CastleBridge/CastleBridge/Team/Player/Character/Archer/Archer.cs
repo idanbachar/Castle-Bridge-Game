@@ -34,15 +34,6 @@ namespace CastleBridge {
         public void AddArrow() {
             CurrentArrows++;
         }
- 
-        public void DrawArrows(int i, Location playerLocation) {
-
-            foreach (Arrow arrow in Arrows)
-                if (arrow.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
-                    if (arrow.GetCurrentLocation() == playerLocation || arrow.GetCurrentLocation() == Location.All)
-                        arrow.Draw();
-        }
- 
 
         public List<Arrow> GetArrows() {
             return Arrows;

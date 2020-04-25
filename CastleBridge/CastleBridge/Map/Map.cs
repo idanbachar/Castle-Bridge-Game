@@ -16,6 +16,7 @@ namespace CastleBridge {
         private List<MapEntity> WorldEntities;
         private Dictionary<TeamName, Team> Teams;
         private Random Rnd;
+
         public Map() {
             Rnd = new Random();
             Name = MapName.Forest;
@@ -59,20 +60,19 @@ namespace CastleBridge {
         private void InitWorldEntities() {
 
             WorldEntities = new List<MapEntity>();
-            
-            Random rnd = new Random();
+
             for (int i = 1; i < 100; i++) {
                 GenerateWorldEntity();
             }
- 
+
             for (int i = 0; i < 60; i++)
-                WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false, Direction.Left, 0f));
+                WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false, Direction.Left, 0f, Location.Outside));
 
             for (int i = 0; i < 156; i++)
-                WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false, Direction.Left, 0f));   
+                WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false, Direction.Left, 0f, Location.Outside));
 
         }
- 
+
 
         private void GenerateWorldEntity() {
 
@@ -84,10 +84,10 @@ namespace CastleBridge {
 
             MapEntityName entity = (MapEntityName)Rnd.Next(0, 5);
 
-            AddEntity(entity, x, y, Direction.Left, 0f);
+            AddEntity(entity, x, y, Direction.Left, 0f, Location.Outside);
         }
- 
-        public void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation) {
+
+        public void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location) {
 
             int width = 0;
             int height = 0;
@@ -126,7 +126,25 @@ namespace CastleBridge {
                     break;
             }
 
-            WorldEntities.Add(new MapEntity(entityName, Name, x , y + height, width, height, isTouchable, direction, rotation));
+            WorldEntities.Add(new MapEntity(entityName, Name, x, y + height, width, height, isTouchable, direction, rotation, location));
+        }
+
+        public void UpdateLocationsTo(Location newLocation) {
+
+            foreach (KeyValuePair<TeamName, Team> team in Teams)
+                team.Value.GetCastle().ChangeLocationTo(newLocation);
+
+            switch (newLocation) {
+                case Location.Outside:
+                    WIDTH = 10000;
+                    HEIGHT = 20000;
+                    break;
+                case Location.Inside_Red_Castle:
+                case Location.Inside_Yellow_Castle:
+                    WIDTH = CastleBridge.Graphics.PreferredBackBufferWidth;
+                    HEIGHT = CastleBridge.Graphics.PreferredBackBufferHeight;
+                    break;
+            }
         }
 
         public Image GetGrass() {
@@ -145,30 +163,64 @@ namespace CastleBridge {
             return Weather;
         }
 
+        public void DrawCastles(Location playerLocation) {
+            foreach (KeyValuePair<TeamName, Team> team in Teams)
+                if (team.Value.GetCastle().GetCurrentLocation() == playerLocation || team.Value.GetCastle().GetCurrentLocation() == Location.All) {
+                    switch (team.Value.GetName()) {
+                        case TeamName.Red:
+                            if (playerLocation == Location.Inside_Red_Castle)
+                                team.Value.GetCastle().DrawInside();
+                            else if (playerLocation == Location.Outside)
+                                team.Value.GetCastle().DrawOutside();
+                            break;
+                        case TeamName.Yellow:
+                            if (playerLocation == Location.Inside_Yellow_Castle)
+                                team.Value.GetCastle().DrawInside();
+                            else if (playerLocation == Location.Outside)
+                                team.Value.GetCastle().DrawOutside();
+                            break;
+                    }
+                }
+        }
+
         public void DrawTile(int i, Location playerLocation) {
 
-            foreach (MapEntity mapEntity in WorldEntities)
+            foreach (MapEntity mapEntity in WorldEntities) {
                 if (mapEntity.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
                     if (mapEntity.GetCurrentLocation() == playerLocation || mapEntity.GetCurrentLocation() == Location.All)
                         mapEntity.Draw();
-        }
+            }
 
-        public void DrawTeamsPlayers(int i, Location playerLocation) {
+            foreach (KeyValuePair<TeamName, Team> team in Teams) {
 
-            foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.DrawPlayers(i, playerLocation);
-        }
+                foreach (KeyValuePair<string, Player> player in team.Value.GetPlayers()) {
+                    if (player.Value.GetCurrentAnimation().GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i)
+                        if (player.Value.GetCurrentLocation() == playerLocation || player.Value.GetCurrentLocation() == Location.All)
+                            player.Value.Draw();
 
-        public void DrawTeamsCastles(Location playerLocation) {
+                    if (player.Value.CurrentCharacter is Archer) {
+                        Archer archer = player.Value.CurrentCharacter as Archer;
+                        foreach (Arrow arrow in archer.GetArrows()) {
+                            if (arrow.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
+                                if (arrow.GetCurrentLocation() == playerLocation || arrow.GetCurrentLocation() == Location.All)
+                                    arrow.Draw();
+                        }
+                    }
+                    else if (player.Value.CurrentCharacter is Mage) {
+                        Mage mage = player.Value.CurrentCharacter as Mage;
+                        foreach (EnergyBall energyBall in mage.GetSpells()) {
+                            if (energyBall.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
+                                if (energyBall.GetCurrentLocation() == playerLocation || energyBall.GetCurrentLocation() == Location.All)
+                                    energyBall.Draw();
+                        }
+                    }
 
-            foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.DrawCastle(playerLocation);
-        }
-
-        public void DrawTeamsHorses(int i, Location playerLocation) {
-
-            foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.DrawHorses(i, playerLocation);
+                    if (team.Value.GetHorse().GetCurrentAnimation().GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i) {
+                        if (team.Value.GetHorse().GetCurrentLocation() == playerLocation || team.Value.GetHorse().GetCurrentLocation() == Location.All)
+                            team.Value.GetHorse().Draw();
+                    }
+                }
+            }
         }
     }
 }

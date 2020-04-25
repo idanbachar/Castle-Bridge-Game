@@ -11,14 +11,20 @@ namespace CastleBridge {
         private Image Image;
         private TeamName TeamName;
         private List<Chest> Chests;
-        private Door Door;
+        private Door OutsideDoor;
+        private Door InsideDoor;
         private Location CurrentLocation;
+        private Image InsideWall;
+        private Image InsideFloor;
 
         public Castle(TeamName teamName, int x, int y) {
             TeamName = teamName;
             Image = new Image("map/castles/teams/" + teamName + "/outside", "castle", x, y, 1400, 431, Color.White);
+            OutsideDoor = new Door(x + 639, y + 288, 120, 120, teamName, Location.Outside);
+            InsideWall = new Image("map/castles/teams/" + teamName + "/inside/castle_wall", 0, y, 1400, 431);
+            InsideDoor = new Door(614, 303, 188, 107, teamName, teamName == TeamName.Red ? Location.Inside_Red_Castle : Location.Inside_Yellow_Castle);
+            InsideFloor = new Image("map/castles/teams/" + teamName + "/inside/floor/castle_floor", 0, CastleBridge.Graphics.PreferredBackBufferHeight / 2, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight);
             Chests = new List<Chest>();
-            Door = new Door(x + 639, y + 288, 120, 120, teamName);
 
             CurrentLocation = Location.Outside;
         }
@@ -31,17 +37,31 @@ namespace CastleBridge {
             return Chests;
         }
 
-        public Door GetDoor() {
-            return Door;
+        public Door GetOutsideDoor() {
+            return OutsideDoor;
+        }
+
+        public Door GetInsideDoor() {
+            return InsideDoor;
         }
 
         public Location GetCurrentLocation() {
             return CurrentLocation;
         }
 
-        public void Draw() {
+        public void ChangeLocationTo(Location newLocation) {
+            CurrentLocation = newLocation;
+        }
+
+        public void DrawOutside() {
             Image.Draw();
-            Door.Draw();
+            OutsideDoor.Draw();
+        }
+ 
+        public void DrawInside() {
+            InsideFloor.Draw();
+            InsideWall.Draw();
+            InsideDoor.Draw();
         }
     }
 }

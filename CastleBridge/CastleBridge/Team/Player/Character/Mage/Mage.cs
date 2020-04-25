@@ -19,7 +19,6 @@ namespace CastleBridge {
             Health = 110;
         }
 
-
         public void ShootSpell(Direction shootDirection, Location currentLocation) {
 
             Spells.Add(new EnergyBall(CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Left + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Width / 2,
@@ -35,15 +34,6 @@ namespace CastleBridge {
         public void AddSpell() {
             CurrentSpells++;
         }
-
-        public void DrawSpells(int i, Location playerLocation) {
-
-            foreach (EnergyBall spell in Spells)
-                if (spell.Animation.GetCurrentSpriteImage().GetRectangle().Bottom == i)
-                    if (spell.GetCurrentLocation() == playerLocation || spell.GetCurrentLocation() == Location.All)
-                        spell.Draw();
-        }
-
 
         public List<EnergyBall> GetSpells() {
             return Spells;

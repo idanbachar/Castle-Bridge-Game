@@ -76,6 +76,10 @@ namespace CastleBridge {
         public Location GetCurrentLocation() {
             return CurrentLocation;
         }
+
+        public Animation GetAnimation() {
+            return Animation;
+        }
         public void Draw() {
             Animation.Draw();
         }

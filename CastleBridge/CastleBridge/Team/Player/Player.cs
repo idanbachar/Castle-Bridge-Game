@@ -43,10 +43,6 @@ namespace CastleBridge {
             CurrentCharacter = Characters [newCharacter.ToString()];
         }
 
-        public void ChangeLocationTo(Location newLocation) {
-            CurrentLocation = newLocation;
-        }
-
         private void AddCharacter(CharacterName name) {
 
             Character character = null;
@@ -100,7 +96,7 @@ namespace CastleBridge {
 
         public bool IsTouchCastleDoor(Door door) {
 
-            if (Rectangle.Intersects(door.GetImage().GetRectangle()) && (CurrentLocation == door.GetCurrentLocation() || door.GetCurrentLocation() == Location.All)) {
+            if (Rectangle.Intersects(door.GetImage().GetRectangle()) && CurrentHorse == null && (CurrentLocation == door.GetCurrentLocation() || door.GetCurrentLocation() == Location.All)) {
                 door.GetTooltip().SetVisible(true);
                 return true;
             }
@@ -220,6 +216,10 @@ namespace CastleBridge {
             return CurrentLocation;
         }
 
+        public void ChangeLocationTo(Location newLocation) {
+            CurrentLocation = newLocation;
+        }
+
         public void SetWoods(int woods) {
             Woods += woods;
         }
@@ -242,12 +242,14 @@ namespace CastleBridge {
             SetSpeed(DefaultSpeed);
         }
 
-        public void Draw(int i) {
+        public Animation GetCurrentAnimation() {
+            return CurrentCharacter.GetCurrentAnimation();
+        }
 
-            if (CurrentCharacter.GetCurrentAnimation().GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i) {
-                Name.Draw();
-                CurrentCharacter.Draw();
-            }
+        public void Draw() {
+
+            Name.Draw();
+            CurrentCharacter.Draw();
         }
     }
 }

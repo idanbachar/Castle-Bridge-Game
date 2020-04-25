@@ -15,7 +15,7 @@ namespace CastleBridge {
         private Direction Direction;
         private Location CurrentLocation;
 
-        public MapEntity(MapEntityName entityName, MapName mapName, int x, int y, int width, int height, bool isTouchable, Direction direction, float rotation) {
+        public MapEntity(MapEntityName entityName, MapName mapName, int x, int y, int width, int height, bool isTouchable, Direction direction, float rotation, Location location) {
             
             Name = entityName;
             Direction = direction;
@@ -50,7 +50,7 @@ namespace CastleBridge {
                     break;
             }
 
-            CurrentLocation = Location.Outside;
+            CurrentLocation = location;
 
         }
 
@@ -78,6 +78,9 @@ namespace CastleBridge {
             return CurrentLocation;
         }
 
+        public void ChangeLocationTo(Location newLocation) {
+            CurrentLocation = newLocation;
+        }
         public void Draw() {
 
             Animation.Draw();

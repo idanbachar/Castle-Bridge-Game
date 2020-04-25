@@ -329,18 +329,45 @@ namespace CastleBridge {
             }
         }
 
-        private void CheckEnterCastles() {
+        private void CheckEnterExitCastleDoors() {
 
             foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
-                if (Player.IsTouchCastleDoor(team.Value.GetCastle().GetDoor())) {
+                if (Player.IsTouchCastleDoor(team.Value.GetCastle().GetOutsideDoor())) {
                     if (Keyboard.GetState().IsKeyDown(Keys.E) && !IsPressedE) {
                         IsPressedE = true;
                         switch (team.Value.GetName()) {
                             case TeamName.Red:
                                 Player.ChangeLocationTo(Location.Inside_Red_Castle);
+                                Map.UpdateLocationsTo(Location.Inside_Red_Castle);
+                                Player.SetRectangle(new Rectangle(team.Value.GetCastle().GetInsideDoor().GetImage().GetRectangle().Left,
+                                                                  team.Value.GetCastle().GetInsideDoor().GetImage().GetRectangle().Bottom - 50,
+                                                                  Player.GetRectangle().Width,
+                                                                  Player.GetRectangle().Height));
                                 break;
                             case TeamName.Yellow:
                                 Player.ChangeLocationTo(Location.Inside_Yellow_Castle);
+                                Map.UpdateLocationsTo(Location.Inside_Yellow_Castle);
+                                Player.SetRectangle(new Rectangle(team.Value.GetCastle().GetInsideDoor().GetImage().GetRectangle().Left,
+                                                                  team.Value.GetCastle().GetInsideDoor().GetImage().GetRectangle().Bottom - 50,
+                                                                  Player.GetRectangle().Width,
+                                                                  Player.GetRectangle().Height));
+                                break;
+                        }
+                        break;
+                    }
+                }
+                else if (Player.IsTouchCastleDoor(team.Value.GetCastle().GetInsideDoor())) {
+                    if (Keyboard.GetState().IsKeyDown(Keys.E) && !IsPressedE) {
+                        IsPressedE = true;
+                        switch (team.Value.GetName()) {
+                            case TeamName.Red:
+                            case TeamName.Yellow:
+                                Player.ChangeLocationTo(Location.Outside);
+                                Map.UpdateLocationsTo(Location.Outside);
+                                Player.SetRectangle(new Rectangle(team.Value.GetCastle().GetOutsideDoor().GetImage().GetRectangle().Left,
+                                                                  team.Value.GetCastle().GetOutsideDoor().GetImage().GetRectangle().Bottom - 50,
+                                                                  Player.GetRectangle().Width,
+                                                                  Player.GetRectangle().Height));
                                 break;
                         }
                         break;
@@ -368,7 +395,7 @@ namespace CastleBridge {
             CheckDefence();
             CheckLoot();
             CheckMountHorse();
-            CheckEnterCastles();
+            CheckEnterExitCastleDoors();
 
         }
 
@@ -418,7 +445,7 @@ namespace CastleBridge {
                         Map.AddEntity(MapEntityName.Arrow,
                                       archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
                                       archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
-                                      archer.GetArrows() [i].GetDirection(), archer.GetArrows() [i].GetDirection() == Direction.Right ? 0.7f : -0.7f);
+                                      archer.GetArrows() [i].GetDirection(), archer.GetArrows() [i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
                         archer.GetArrows().RemoveAt(i);
                     }
                 }
@@ -455,7 +482,7 @@ namespace CastleBridge {
                                 Map.AddEntity(MapEntityName.Arrow,
                                               archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
                                               archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
-                                              archer.GetArrows() [i].GetDirection(), archer.GetArrows() [i].GetDirection() == Direction.Right ? 0.7f : -0.7f);
+                                              archer.GetArrows() [i].GetDirection(), archer.GetArrows() [i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
                                 archer.GetArrows().RemoveAt(i);
                             }
                         }
@@ -504,24 +531,31 @@ namespace CastleBridge {
             Map.GetGrass().Draw();
             Map.GetWeather().DrawClouds();
 
-            Map.DrawTeamsCastles(Player.GetCurrentLocation());
+            Map.DrawCastles(Player.GetCurrentLocation());
 
             for (int i = Map.GetGrass().GetRectangle().Top; i < Map.GetGrass().GetRectangle().Bottom; i++) {
 
                 Map.DrawTile(i, Player.GetCurrentLocation());
-                Player.Draw(i);
+
+                if (Player.GetCurrentAnimation().GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i)
+                    Player.Draw();
 
                 if (Player.CurrentCharacter is Archer) {
                     Archer archer = Player.CurrentCharacter as Archer;
-                    archer.DrawArrows(i, Player.GetCurrentLocation());
+                    foreach (Arrow arrow in archer.GetArrows()) {
+                        if (arrow.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
+                            arrow.Draw();
+                    }
                 }
                 else if (Player.CurrentCharacter is Mage) {
                     Mage mage = Player.CurrentCharacter as Mage;
-                    mage.DrawSpells(i, Player.GetCurrentLocation());
+                    foreach (EnergyBall energyBall in mage.GetSpells()) {
+                        if (energyBall.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
+                            energyBall.Draw();
+                    }
                 }
 
-                Map.DrawTeamsPlayers(i, Player.GetCurrentLocation());
-                Map.DrawTeamsHorses(i, Player.GetCurrentLocation());
+
             }
 
             HUD.DrawTile();

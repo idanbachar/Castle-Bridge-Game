@@ -151,15 +151,22 @@ namespace CastleBridge {
             return CurrentLocation;
         }
 
+        public void ChangeLocationTo(Location newLocation) {
+            CurrentLocation = newLocation;
+        }
+
+        public Animation GetCurrentAnimation() {
+            return CurrentAnimation;
+        }
+
         public Text GetTooltip() {
             return Tooltip;
         }
-        public void Draw(int i) {
+        public void Draw() {
 
-            if (CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i) {
-                Tooltip.Draw();
-                CurrentAnimation.Draw();
-            }
+            Tooltip.Draw();
+            CurrentAnimation.Draw();
+
         }
     }
 }
