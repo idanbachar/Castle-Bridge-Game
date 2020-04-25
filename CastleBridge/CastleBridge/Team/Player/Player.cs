@@ -22,7 +22,7 @@ namespace CastleBridge {
         private Location CurrentLocation;
         private List<Diamond> CollectedRedDiamonds;
         private List<Diamond> CollectedYellowDiamonds;
-        public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height){
+        public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height) {
             TeamName = teamName;
             Rectangle = new Rectangle(x, y, width, height);
             Name = new Text(FontType.Default, name, new Vector2(Rectangle.Left + Rectangle.Width / 2 - 5, Rectangle.Bottom + 5), Color.Gold, true, Color.Black);
@@ -43,10 +43,10 @@ namespace CastleBridge {
         }
 
         public void ChangeCharacter(CharacterName newCharacter) {
-            CurrentCharacter = Characters [newCharacter.ToString()];
+            CurrentCharacter = Characters[newCharacter.ToString()];
         }
 
-   
+
         public void AddRedDiamond(Diamond diamond) {
             CollectedRedDiamonds.Add(diamond);
         }
@@ -114,7 +114,7 @@ namespace CastleBridge {
         }
 
         public void Move(Direction direction) {
-            
+
             switch (direction) {
                 case Direction.Up:
                     SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y - CurrentSpeed, Rectangle.Width, Rectangle.Height));
@@ -291,7 +291,7 @@ namespace CastleBridge {
             SetSpeed(horse.GetSpeed());
             SetRectangle(new Rectangle(horse.GetRectangle().Left + horse.GetRectangle().Width / 2 - Rectangle.Width / 2,
                                        horse.GetRectangle().Top - Rectangle.Height / 4,
-                                       Rectangle.Width, 
+                                       Rectangle.Width,
                                        Rectangle.Height));
         }
 
@@ -307,7 +307,7 @@ namespace CastleBridge {
         public Animation GetCurrentAnimation() {
             return CurrentCharacter.GetCurrentAnimation();
         }
- 
+
         public List<Diamond> GetCollectedRedDiamonds() {
             return CollectedRedDiamonds;
         }

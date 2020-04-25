@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class Animation {
 
-        private Image [] Sprites;
+        private Image[] Sprites;
         private int StartAnimationFromIndex;
         private int EndAnimationInIndex;
         private int CurrentFrame;
@@ -24,7 +24,7 @@ namespace CastleBridge {
 
         public Animation(string fullPath, Rectangle rectangle, int startAnimationFromIndex, int endAnimationInIndex, int spritesLength, int nextFrameDelay, bool isReverse, bool isLoop) {
 
-            Sprites = new Image [spritesLength];
+            Sprites = new Image[spritesLength];
             StartAnimationFromIndex = startAnimationFromIndex;
             EndAnimationInIndex = endAnimationInIndex;
             CurrentFrame = StartAnimationFromIndex;
@@ -74,7 +74,7 @@ namespace CastleBridge {
 
             for (int i = 0; i < Sprites.Length; i++) {
 
-                Sprites [i] = new Image(fullPath + i,
+                Sprites[i] = new Image(fullPath + i,
                                         Rectangle.X,
                                         Rectangle.Y,
                                         Rectangle.Width,
@@ -149,7 +149,7 @@ namespace CastleBridge {
                             AnimationState = AnimationState.Backward;
                         }
                     }
-                    
+
                     else if (AnimationState == AnimationState.Backward) {
                         if (CurrentFrame > StartAnimationFromIndex)
                             CurrentFrame--;
@@ -173,7 +173,7 @@ namespace CastleBridge {
                 if (IsLoop) {
                     RunInLoop();
                 }
-                else if(!IsLoop) {
+                else if (!IsLoop) {
                     RunInOneTime();
                 }
             }
@@ -193,7 +193,7 @@ namespace CastleBridge {
         }
 
         public Image GetCurrentSpriteImage() {
-            return Sprites [CurrentFrame];
+            return Sprites[CurrentFrame];
         }
 
         public void Draw() {

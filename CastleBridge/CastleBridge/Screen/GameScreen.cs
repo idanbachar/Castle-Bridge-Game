@@ -278,7 +278,7 @@ namespace CastleBridge {
 
             for (int i = 0; i < Map.GetWorldEntities().Count; i++) {
 
-                MapEntity currentEntity = Map.GetWorldEntities() [i];
+                MapEntity currentEntity = Map.GetWorldEntities()[i];
 
                 if (Player.IsTouchWorldEntity(currentEntity)) {
 
@@ -323,8 +323,8 @@ namespace CastleBridge {
             }
 
             foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
-                for(int i = 0; i < team.Value.GetCastle().GetDiamonds().Count; i++) {
-                    Diamond diamond = team.Value.GetCastle().GetDiamonds() [i];
+                for (int i = 0; i < team.Value.GetCastle().GetDiamonds().Count; i++) {
+                    Diamond diamond = team.Value.GetCastle().GetDiamonds()[i];
 
                     if (Player.IsTouchDiamond(diamond)) {
                         if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
@@ -332,6 +332,9 @@ namespace CastleBridge {
                             diamond.SetOwner(Player);
                             Player.AddRedDiamond(diamond);
                             team.Value.GetCastle().GetDiamonds().RemoveAt(i);
+                            HUD.AddPopup(new Popup("+1 Diamond", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                            Player.CurrentCharacter.AddXp(50);
+                            HUD.AddPopup(new Popup("+50xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
                             break;
                         }
                     }
@@ -393,13 +396,13 @@ namespace CastleBridge {
 
         private void CheckDiamondsDrops() {
 
-            if (Keyboard.GetState().IsKeyDown(Keys.F)) {
+            if (Keyboard.GetState().IsKeyDown(Keys.X)) {
                 if (Player.GetCollectedRedDiamonds().Count > 0) {
 
                     List<Diamond> droppedRedDiamonds = Player.DropAllRedDiamonds();
 
-                    foreach(Diamond diamond in droppedRedDiamonds) {
-                        Map.GetTeams() [((TeamName)TeamName.Red)].GetCastle().GetDiamonds().Add(diamond);
+                    foreach (Diamond diamond in droppedRedDiamonds) {
+                        Map.GetTeams()[((TeamName)TeamName.Red)].GetCastle().GetDiamonds().Add(diamond);
                     }
                 }
                 if (Player.GetCollectedYellowDiamonds().Count > 0) {
@@ -407,7 +410,7 @@ namespace CastleBridge {
                     List<Diamond> droppedYellowDiamonds = Player.DropAllYellowDiamonds();
 
                     foreach (Diamond diamond in droppedYellowDiamonds) {
-                        Map.GetTeams() [((TeamName)TeamName.Yellow)].GetCastle().GetDiamonds().Add(diamond);
+                        Map.GetTeams()[((TeamName)TeamName.Yellow)].GetCastle().GetDiamonds().Add(diamond);
                     }
                 }
             }
@@ -477,13 +480,13 @@ namespace CastleBridge {
                 Archer archer = Player.CurrentCharacter as Archer;
 
                 for (int i = 0; i < archer.GetArrows().Count; i++) {
-                    if (!archer.GetArrows() [i].IsFinished)
-                        archer.GetArrows() [i].Move();
+                    if (!archer.GetArrows()[i].IsFinished)
+                        archer.GetArrows()[i].Move();
                     else {
                         Map.AddEntity(MapEntityName.Arrow,
-                                      archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
-                                      archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
-                                      archer.GetArrows() [i].GetDirection(), archer.GetArrows() [i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
+                                      archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
+                                      archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
+                                      archer.GetArrows()[i].GetDirection(), archer.GetArrows()[i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
                         archer.GetArrows().RemoveAt(i);
                     }
                 }
@@ -493,8 +496,8 @@ namespace CastleBridge {
                 Mage mage = Player.CurrentCharacter as Mage;
 
                 for (int i = 0; i < mage.GetSpells().Count; i++) {
-                    if (!mage.GetSpells() [i].IsFinished)
-                        mage.GetSpells() [i].Move();
+                    if (!mage.GetSpells()[i].IsFinished)
+                        mage.GetSpells()[i].Move();
                     else {
                         mage.GetSpells().RemoveAt(i);
                     }
@@ -514,13 +517,13 @@ namespace CastleBridge {
                         Archer archer = onlinePlayer.Value.CurrentCharacter as Archer;
 
                         for (int i = 0; i < archer.GetArrows().Count; i++) {
-                            if (!archer.GetArrows() [i].IsFinished)
-                                archer.GetArrows() [i].Move();
+                            if (!archer.GetArrows()[i].IsFinished)
+                                archer.GetArrows()[i].Move();
                             else {
                                 Map.AddEntity(MapEntityName.Arrow,
-                                              archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
-                                              archer.GetArrows() [i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
-                                              archer.GetArrows() [i].GetDirection(), archer.GetArrows() [i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
+                                              archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
+                                              archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
+                                              archer.GetArrows()[i].GetDirection(), archer.GetArrows()[i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
                                 archer.GetArrows().RemoveAt(i);
                             }
                         }
@@ -530,8 +533,8 @@ namespace CastleBridge {
                         Mage mage = onlinePlayer.Value.CurrentCharacter as Mage;
 
                         for (int i = 0; i < mage.GetSpells().Count; i++) {
-                            if (!mage.GetSpells() [i].IsFinished)
-                                mage.GetSpells() [i].Move();
+                            if (!mage.GetSpells()[i].IsFinished)
+                                mage.GetSpells()[i].Move();
                             else {
                                 mage.GetSpells().RemoveAt(i);
                             }

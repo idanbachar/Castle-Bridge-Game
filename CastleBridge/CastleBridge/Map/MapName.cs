@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace CastleBridge {
     public enum MapName {
-        Forest,
-        Idan
+        Forest
     }
 }
