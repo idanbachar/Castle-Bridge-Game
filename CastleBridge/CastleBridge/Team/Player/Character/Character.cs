@@ -25,6 +25,7 @@ namespace CastleBridge {
         public Character(CharacterName name, TeamName teamName, int x, int y, int width, int height) {
 
             Name = name;
+            TeamName = teamName;
             AfkAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/afk/" + name + "_afk_", new Rectangle(x, y, width, height), 0, 6, 6, 5, true, true);
             WalkAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/walk/" + name + "_walk_", new Rectangle(x, y, width, height), 0, 4, 4, 3, true, true);
             AttackAnimation = new Animation("player/characters/teams/" + teamName + "/" + name + "/attack/" + name + "_attack_", new Rectangle(x, y, width, height), 0, 7, 7, 4, false, false);

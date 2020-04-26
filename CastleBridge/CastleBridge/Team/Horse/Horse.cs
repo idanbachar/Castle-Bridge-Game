@@ -120,8 +120,9 @@ namespace CastleBridge {
         }
 
         public bool IsOnTopMap(Map map) {
-            if (Rectangle.Bottom - Rectangle.Height / 2 < map.GetGrass().GetRectangle().Top)
-                return true;
+            if (Owner != null)
+                if (Rectangle.Bottom - Rectangle.Height / 2 < map.GetGrass().GetRectangle().Top + Owner.GetRectangle().Height / 3)
+                    return true;
 
             return false;
         }
