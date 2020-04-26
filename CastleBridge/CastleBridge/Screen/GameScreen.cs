@@ -40,9 +40,9 @@ namespace CastleBridge {
             }
             else {
                 GenerateXpTimer = 0;
-                Player.CurrentCharacter.AddXp(1);
+                Player.GetCurrentCharacter().AddXp(1);
                 HUD.AddPopup(new Popup("+1xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
-                HUD.SetPlayerLevel(1);
+                HUD.AddPlayerXp(1, Player.GetCurrentCharacter().GetMaxXp());
             }
         }
 
@@ -288,36 +288,46 @@ namespace CastleBridge {
 
                         switch (currentEntity.GetName()) {
                             case MapEntityName.Red_Flower:
-                                Player.CurrentCharacter.IncreaseHp(15);
-                                HUD.SetPlayerHealth(15);
-                                HUD.AddPopup(new Popup("+15hp", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Red), true);
-                                HUD.AddPopup(new Popup("+15", HUD.GetPlayerHealthBar().GetRectangle().Left + 3, HUD.GetPlayerHealthBar().GetRectangle().Top, Color.White, Color.Red), false);
+                                if (Player.GetCurrentCharacter().GetHealth() < Player.GetCurrentCharacter().GetMaxHealth()) {
+                                    Player.GetCurrentCharacter().IncreaseHp(15);
+                                    HUD.AddPlayerHealth(15, Player.GetCurrentCharacter().GetMaxHealth());
+                                    HUD.AddPopup(new Popup("+15hp", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Red), true);
+                                    HUD.AddPopup(new Popup("+15", HUD.GetPlayerHealthBar().GetRectangle().Left + 3, HUD.GetPlayerHealthBar().GetRectangle().Top, Color.White, Color.Red), false);
+                                    Map.GetWorldEntities().RemoveAt(i);
+                                }
+                                else {
+                                    HUD.AddPopup(new Popup("You have enough health!", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.Red, Color.Black), true);
+                                }
                                 break;
                             case MapEntityName.Stone:
                                 Player.AddStones(1);
                                 HUD.AddPopup(new Popup("+1 Stone", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-                                Player.CurrentCharacter.AddXp(3);
+                                Player.GetCurrentCharacter().AddXp(3);
+                                HUD.AddPlayerXp(3, Player.GetCurrentCharacter().GetMaxXp());
                                 HUD.AddPopup(new Popup("+3xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
+                                Map.GetWorldEntities().RemoveAt(i);
                                 break;
                             case MapEntityName.Tree:
                                 Player.SetWoods(5);
                                 HUD.AddPopup(new Popup("+5 Woods", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-                                Player.CurrentCharacter.AddXp(20);
+                                Player.GetCurrentCharacter().AddXp(20);
+                                HUD.AddPlayerXp(20, Player.GetCurrentCharacter().GetMaxXp());
                                 HUD.AddPopup(new Popup("+20xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
+                                Map.GetWorldEntities().RemoveAt(i);
                                 break;
                             case MapEntityName.Arrow:
 
-                                if (Player.CurrentCharacter is Archer) {
+                                if (Player.GetCurrentCharacter() is Archer) {
                                     Archer archer = Player.CurrentCharacter as Archer;
                                     HUD.AddPopup(new Popup("+1 Arrow", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
                                     HUD.AddPopup(new Popup("+1", (int)HUD.GetPlayerWeaponAmmo().GetPosition().X, (int)HUD.GetPlayerWeaponAmmo().GetPosition().Y - 10, Color.White, Color.Black), false);
                                     archer.AddArrow();
                                     HUD.SetPlayerWeaponAmmo(archer.CurrentArrows + "/" + archer.MaxArrows);
+                                    Map.GetWorldEntities().RemoveAt(i);
                                 }
                                 break;
                         }
 
-                        Map.GetWorldEntities().RemoveAt(i);
                         break;
                     }
                 }
@@ -334,7 +344,8 @@ namespace CastleBridge {
                             Player.AddRedDiamond(diamond);
                             team.Value.GetCastle().GetDiamonds().RemoveAt(i);
                             HUD.AddPopup(new Popup("+1 Diamond", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-                            Player.CurrentCharacter.AddXp(50);
+                            Player.GetCurrentCharacter().AddXp(50);
+                            HUD.AddPlayerXp(50, Player.GetCurrentCharacter().GetMaxXp());
                             HUD.AddPopup(new Popup("+50xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
                             break;
                         }

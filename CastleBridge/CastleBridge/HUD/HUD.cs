@@ -16,6 +16,7 @@ namespace CastleBridge {
         private Image PlayerLevelBar;
         private Text PlayerWeaponAmmo;
         private Text PlayerHealth;
+        private Text PlayerLevel;
         private List<Popup> TilePopups;
         private List<Popup> StuckPopups;
         public HUD() {
@@ -25,12 +26,13 @@ namespace CastleBridge {
             StuckPopups = new List<Popup>();
             PlayerAvatar = new Image(string.Empty, string.Empty, 30, CastleBridge.Graphics.PreferredBackBufferHeight - 135, 100, 100, Color.White);
             PlayerWeapon = new Image(string.Empty, string.Empty, PlayerAvatar.GetRectangle().Right, PlayerAvatar.GetRectangle().Top, 50, 50, Color.White);
-            PlayerHealthBar = new Image("player/health", "health_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Top - 50, 15, 25, Color.White);
+            PlayerHealthBar = new Image("player/health", "health_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Top - 50, 100, 25, Color.White);
             HorseAvatar = new Image("horse/teams/red/avatar", "horse_avatar", PlayerHealthBar.GetRectangle().Left, PlayerHealthBar.GetRectangle().Top - 100, 100, 100, Color.White);
             HorseAvatar.SetVisible(false);
-            PlayerLevelBar = new Image("player/level", "level_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Bottom, 5, 25, Color.White);
+            PlayerLevelBar = new Image("player/level", "level_bar", PlayerAvatar.GetRectangle().Left, PlayerAvatar.GetRectangle().Bottom, 0, 25, Color.White);
             PlayerWeaponAmmo = new Text(FontType.Default, "0", new Vector2(PlayerWeapon.GetRectangle().Left, PlayerWeapon.GetRectangle().Bottom + 5), Color.White, true, Color.Black);
-            PlayerHealth = new Text(FontType.Default, "15", new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top), Color.White, false, Color.Black);
+            PlayerHealth = new Text(FontType.Default, "100/100", new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top), Color.White, false, Color.Black);
+            PlayerLevel = new Text(FontType.Default, "0/100", new Vector2(PlayerLevelBar.GetRectangle().Left + PlayerLevelBar.GetRectangle().Width / 2, PlayerLevelBar.GetRectangle().Top), Color.White, false, Color.Black);
         }
 
         public void AddLabel(Text text) {
@@ -62,17 +64,27 @@ namespace CastleBridge {
             HorseAvatar.ChangeImage("horse/teams/" + teamName + "/avatar/horse_avatar");
         }
 
-        public void SetPlayerHealth(int health) {
-            if (PlayerHealthBar.GetRectangle().Width < 100) {
+        public void AddPlayerHealth(int health, int maxHealth) {
+            if (PlayerHealthBar.GetRectangle().Width <= maxHealth) {
                 PlayerHealthBar.SetRectangle(PlayerHealthBar.GetRectangle().X, PlayerHealthBar.GetRectangle().Y, PlayerHealthBar.GetRectangle().Width + health, PlayerHealthBar.GetRectangle().Height);
-                PlayerHealth.ChangeText(PlayerHealthBar.GetRectangle().Width.ToString());
+                PlayerHealth.ChangeText(PlayerHealthBar.GetRectangle().Width.ToString() + "/" + maxHealth + "hp");
                 PlayerHealth.SetPosition(new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top));
             }
         }
 
-        public void SetPlayerLevel(int levelXp) {
-            if (PlayerLevelBar.GetRectangle().Width < 100)
+        private void SetPlayerXp(int levelXp, int maxLevelXp) {
+            PlayerLevelBar.SetRectangle(PlayerLevelBar.GetRectangle().X, PlayerLevelBar.GetRectangle().Y, levelXp, PlayerLevelBar.GetRectangle().Height);
+            PlayerLevel.ChangeText(PlayerLevelBar.GetRectangle().Width.ToString() + "/" + maxLevelXp + "xp");
+        }
+
+        public void AddPlayerXp(int levelXp, int maxLevelXp) {
+            if (PlayerLevelBar.GetRectangle().Width + levelXp < maxLevelXp) {
                 PlayerLevelBar.SetRectangle(PlayerLevelBar.GetRectangle().X, PlayerLevelBar.GetRectangle().Y, PlayerLevelBar.GetRectangle().Width + levelXp, PlayerLevelBar.GetRectangle().Height);
+                PlayerLevel.ChangeText(PlayerLevelBar.GetRectangle().Width.ToString() + "/" + maxLevelXp + "xp");
+            }
+            else {
+                SetPlayerXp(0, maxLevelXp + 100);
+            }
         }
 
         private void UpdateTilePopups() {
@@ -147,6 +159,7 @@ namespace CastleBridge {
             PlayerHealthBar.Draw();
             PlayerHealth.Draw();
             PlayerLevelBar.Draw();
+            PlayerLevel.Draw();
             HorseAvatar.Draw();
 
             foreach (Popup popup in StuckPopups)
