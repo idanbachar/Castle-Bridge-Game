@@ -37,9 +37,11 @@ namespace CastleBridge {
 
                 case TeamName.Red:
                     Horse = new Horse(Name, 600, 600, 400, 300);
+                    Horse.SetDirection(Direction.Right);
                     break;
                 case TeamName.Yellow:
                     Horse = new Horse(Name, MapDimensionRectangle.Width - 1200, 600, 400, 300);
+                    Horse.SetDirection(Direction.Left);
                     break;
             }
         }
@@ -63,19 +65,24 @@ namespace CastleBridge {
             int y = 0;
             int width = 125;
             int height = 175;
+            Direction direction = Direction.Right;
 
             switch (team) {
                 case TeamName.Red:
                     x = rnd.Next(MapDimensionRectangle.Left + 25, MapDimensionRectangle.Left + 500);
                     y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
+                    direction = Direction.Right;
                     break;
                 case TeamName.Yellow:
                     x = rnd.Next(MapDimensionRectangle.Right - 500, MapDimensionRectangle.Right - 100);
                     y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
+                    direction = Direction.Left;
                     break;
             }
 
-            Players.Add(name, new Player(character, team, name, x, y, width, height));
+            Player player = new Player(character, team, name, x, y, width, height);
+            player.SetDirection(direction);
+            Players.Add(name, player);
         }
 
         public Dictionary<string, Player> GetPlayers() {

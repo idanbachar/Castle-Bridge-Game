@@ -32,18 +32,6 @@
 /processorParam:TextureFormat=Color
 /build:images/colors/empty.png
 
-#begin images/horse/avatar/horse_avatar.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/horse/avatar/horse_avatar.png
-
 #begin images/horse/teams/red/afk/horse_afk_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -127,6 +115,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/horse/teams/red/afk/horse_afk_6.png
+
+#begin images/horse/teams/red/avatar/horse_avatar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/horse/teams/red/avatar/horse_avatar.png
 
 #begin images/horse/teams/red/walk/horse_walk_0.png
 /importer:TextureImporter
@@ -271,6 +271,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/horse/teams/yellow/afk/horse_afk_6.png
+
+#begin images/horse/teams/yellow/avatar/horse_avatar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/horse/teams/yellow/avatar/horse_avatar.png
 
 #begin images/horse/teams/yellow/walk/horse_walk_0.png
 /importer:TextureImporter

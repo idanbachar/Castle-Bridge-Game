@@ -28,7 +28,7 @@ namespace CastleBridge {
         private void Init(Viewport viewPort) {
 
             InitMap();
-            InitPlayer();
+            InitPlayer(CharacterName.Knight, TeamName.Red);
             InitHUD();
             Camera = new Camera(viewPort);
         }
@@ -228,6 +228,7 @@ namespace CastleBridge {
                         IsPressedE = true;
                         team.Value.GetHorse().SetOwner(Player);
                         Player.MountHorse(team.Value.GetHorse());
+                        HUD.SetHorseAvatar(Player.GetTeamName());
                         HUD.GetHorseAvatar().SetVisible(true);
                         break;
                     }
@@ -440,9 +441,25 @@ namespace CastleBridge {
 
         }
 
-        private void InitPlayer() {
+        private void InitPlayer(CharacterName characterName, TeamName team) {
 
-            Player = new Player(CharacterName.Knight, TeamName.Red, "Idan", Map.GetGrass().GetRectangle().X + 25, Map.GetGrass().GetRectangle().Top - 75, 125, 175);
+            int x = 0;
+            int y = Map.GetGrass().GetRectangle().Top - 75;
+            Direction direction = Direction.Right;
+
+            switch (team) {
+                case TeamName.Red:
+                    x = Map.GetGrass().GetRectangle().Left + 150;
+                    direction = Direction.Right;
+                    break;
+                case TeamName.Yellow:
+                    x = Map.GetGrass().GetRectangle().Right - 125;
+                    direction = Direction.Left;
+                    break;
+            }
+
+            Player = new Player(characterName, team, "Idan", x, y, 125, 175);
+            Player.SetDirection(direction);
         }
 
         private void InitMap() {
