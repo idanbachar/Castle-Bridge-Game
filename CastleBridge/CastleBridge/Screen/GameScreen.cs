@@ -442,7 +442,7 @@ namespace CastleBridge {
 
         private void InitPlayer() {
 
-            Player = new Player(CharacterName.Knight, TeamName.Yellow, "Idan", Map.GetGrass().GetRectangle().X + 25, Map.GetGrass().GetRectangle().Top - 75, 125, 175);
+            Player = new Player(CharacterName.Knight, TeamName.Red, "Idan", Map.GetGrass().GetRectangle().X + 25, Map.GetGrass().GetRectangle().Top - 75, 125, 175);
         }
 
         private void InitMap() {

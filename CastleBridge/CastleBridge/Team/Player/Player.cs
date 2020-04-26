@@ -171,6 +171,7 @@ namespace CastleBridge {
 
             if (Rectangle.Intersects(horse.GetRectangle()) &&
                 CurrentHorse == null &&
+                TeamName == horse.GetTeamName() &&
                 (CurrentLocation == horse.GetCurrentLocation() || horse.GetCurrentLocation() == Location.All))
                 return true;
 
