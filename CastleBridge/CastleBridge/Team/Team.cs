@@ -15,6 +15,7 @@ namespace CastleBridge {
         private int MaxPlayers;
         private int MinPlayers;
         private Horse Horse;
+        private Random Rnd;
 
         public Team(TeamName teamName, Rectangle mapDimensionRectangle) {
             Name = teamName;
@@ -24,9 +25,10 @@ namespace CastleBridge {
             MapDimensionRectangle = mapDimensionRectangle;
             InitCastles(mapDimensionRectangle);
 
-            Random rnd = new Random();
-            for (int i = 1; i < 3; i++)
-                AddPlayer((CharacterName)rnd.Next(0, 3), teamName, "Bot_" + i);
+            Rnd = new Random();
+
+            for (int i = 1; i <= 3; i++)
+                AddPlayer((CharacterName)Rnd.Next(0, 3), teamName, "Bot_" + i);
 
             InitHorses();
         }
@@ -60,7 +62,6 @@ namespace CastleBridge {
 
         public void AddPlayer(CharacterName character, TeamName team, string name) {
 
-            Random rnd = new Random();
             int x = 0;
             int y = 0;
             int width = 125;
@@ -69,13 +70,13 @@ namespace CastleBridge {
 
             switch (team) {
                 case TeamName.Red:
-                    x = rnd.Next(MapDimensionRectangle.Left + 25, MapDimensionRectangle.Left + 500);
-                    y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
+                    x = Rnd.Next(MapDimensionRectangle.Left + 25, MapDimensionRectangle.Left + 500);
+                    y = Rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
                     direction = Direction.Right;
                     break;
                 case TeamName.Yellow:
-                    x = rnd.Next(MapDimensionRectangle.Right - 500, MapDimensionRectangle.Right - 100);
-                    y = rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
+                    x = Rnd.Next(MapDimensionRectangle.Right - 500, MapDimensionRectangle.Right - 100);
+                    y = Rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
                     direction = Direction.Left;
                     break;
             }
