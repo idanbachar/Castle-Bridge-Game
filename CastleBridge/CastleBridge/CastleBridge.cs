@@ -23,7 +23,7 @@ namespace CastleBridge
         public CastleBridge()
         {
             Graphics = new GraphicsDeviceManager(this);
-            Graphics.PreferredBackBufferWidth = 1365;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Graphics.PreferredBackBufferWidth = 1366;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = 728;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
  
 
@@ -33,7 +33,7 @@ namespace CastleBridge
             IsMouseVisible = true;
 
             Screens = new Dictionary<ScreenType, Screen>();
-            CurrentScreen = ScreenType.Game;
+            CurrentScreen = ScreenType.Menu;
         }
 
         /// <summary>

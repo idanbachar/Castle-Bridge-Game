@@ -89,6 +89,10 @@ namespace CastleBridge {
             return FullPath;
         }
 
+        public void SetColor(Color color) {
+            Color = color;
+        }
+
         public void Draw() {
 
             if (Visible) {

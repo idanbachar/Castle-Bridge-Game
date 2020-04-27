@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CastleBridge {
-    public enum TeamName {
-        None,
-        Red,
-        Yellow
+    public enum MenuPage {
+
+        MainMenu,
+        TeamSelection,
+        CharacterSelection,
+        NameSelection
     }
 }
