@@ -471,6 +471,7 @@ namespace CastleBridge {
 
             Player = new Player(characterName, team, name, x, y, 125, 175);
             Player.SetDirection(direction);
+
         }
 
         private void InitMap() {
@@ -483,7 +484,7 @@ namespace CastleBridge {
             UpdateHud();
         }
 
-        private void UpdateHud() {
+        public void UpdateHud() {
             HUD.SetPlayerAvatar(Player.CurrentCharacter.GetName(), Player.CurrentCharacter.GetTeamName());
 
             if (Player.CurrentCharacter is Archer) {
