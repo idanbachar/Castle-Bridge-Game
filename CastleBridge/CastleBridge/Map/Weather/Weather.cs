@@ -18,8 +18,12 @@ namespace CastleBridge {
         private List<Cloud> Clouds;
         private Random Rnd;
         private bool IsRain;
-        public Weather(TimeType timeType, bool isRain) {
+        private int ScreenWidth;
+        private int NumberClouds;
+        public Weather(TimeType timeType, bool isRain, int screenWidth, int numberClouds) {
 
+            ScreenWidth = screenWidth;
+            NumberClouds = numberClouds;
             IsRain = isRain;
             Init();
             SetTime(timeType);
@@ -42,8 +46,8 @@ namespace CastleBridge {
 
             Clouds = new List<Cloud>();
 
-            for (int i = 0; i < 50; i++)
-                Clouds.Add(new Cloud(Rnd.Next(0, Map.WIDTH), Rnd.Next(0, 200), 125, 75, IsRain));
+            for (int i = 0; i < NumberClouds; i++)
+                Clouds.Add(new Cloud(Rnd.Next(0, ScreenWidth), Rnd.Next(0, 200), 125, 75, IsRain, ScreenWidth));
         }
 
         private void InitPlanets() {

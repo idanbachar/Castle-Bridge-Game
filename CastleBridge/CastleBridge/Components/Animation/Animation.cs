@@ -46,6 +46,12 @@ namespace CastleBridge {
                 sprite.SetRectangle(x, y, width, height);
         }
 
+        public void SetColor(Color color) {
+
+            foreach (Image sprite in Sprites)
+                sprite.SetColor(color);
+        }
+
         public void SetVisible(bool value) {
 
             foreach (Image sprite in Sprites)

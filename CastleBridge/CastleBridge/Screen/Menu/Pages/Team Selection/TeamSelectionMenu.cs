@@ -12,14 +12,13 @@ namespace CastleBridge {
         private Button RedCastle;
         private Button YellowCastle;
         private Button OkButton;
-        private TeamName SelectedTeam;
         public bool IsSelected;
 
         public TeamSelectionMenu(string title): base(title) {
 
             RedCastle = new Button(new Image("menu/castles selection/castle_left_side_noteam", 0, 100, 700, 431), new Image("menu/castles selection/castle_left_side_redteam", 0, 100, 700, 431), string.Empty, Color.White);
             YellowCastle = new Button(new Image("menu/castles selection/castle_right_side_noteam", RedCastle.GetCurrentImage().GetRectangle().Right, 100, 700, 431), new Image("menu/castles selection/castle_right_side_yellowteam", RedCastle.GetCurrentImage().GetRectangle().Right, 100, 700, 431), string.Empty, Color.White);
-            OkButton = new Button(new Image("menu/button backgrounds/empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100 , CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35), new Image("menu/button backgrounds" ,"empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35, Color.Red), "Ok", Color.Black);
+            OkButton = new Button(new Image("menu/button backgrounds/empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100 , CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35), new Image("menu/button backgrounds" ,"empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35, Color.Red), "Next", Color.Black);
 
             IsSelected = false;
             SelectedTeam = TeamName.None;
@@ -27,17 +26,15 @@ namespace CastleBridge {
 
         public override void Update() {
 
-
-
             RedCastle.Update();
             YellowCastle.Update();
 
-            if (RedCastle.IsClick()) {
+            if (RedCastle.IsClicking()) {
                 IsSelected = true;
                 SelectedTeam = TeamName.Red;
                 YellowCastle.Reset();
             }
-            if (YellowCastle.IsClick()) {
+            if (YellowCastle.IsClicking()) {
                 IsSelected = true;
                 SelectedTeam = TeamName.Yellow;
                 RedCastle.Reset();
@@ -46,7 +43,8 @@ namespace CastleBridge {
                 IsSelected = false;
                 SelectedTeam = TeamName.None;
             }
- 
+
+            Weather.Update();
 
             OkButton.Update();
         }
@@ -69,7 +67,8 @@ namespace CastleBridge {
             RedCastle.Draw();
             YellowCastle.Draw();
 
-            OkButton.Draw();
+            if (IsSelected)
+                OkButton.Draw();
         }
     }
 }

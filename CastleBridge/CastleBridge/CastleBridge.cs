@@ -23,7 +23,7 @@ namespace CastleBridge
         public CastleBridge()
         {
             Graphics = new GraphicsDeviceManager(this);
-            Graphics.PreferredBackBufferWidth = 1366;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Graphics.PreferredBackBufferWidth = 1400;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = 728;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
  
 
@@ -59,9 +59,16 @@ namespace CastleBridge
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             Screens.Add(ScreenType.Menu, new MenuScreen(GraphicsDevice.Viewport));
+            ((MenuScreen)Screens[ScreenType.Menu]).OnStartGame += StartGame;
+
             Screens.Add(ScreenType.Game, new GameScreen(GraphicsDevice.Viewport));
 
             // TODO: use this.Content to load your game content here
+        }
+
+        private void StartGame(TeamName team, CharacterName characterName) {
+            ((GameScreen)Screens[ScreenType.Game]).InitPlayer(characterName, team);
+            CurrentScreen = ScreenType.Game;
         }
 
         /// <summary>

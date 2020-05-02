@@ -15,8 +15,9 @@ namespace CastleBridge {
         public bool IsRain;
         private List<RainDrop> RainDrops;
         private int GenerateRainDropTimer;
+        private int ScreenWidth;
 
-        public Cloud(int x, int y, int width, int height, bool isRain) {
+        public Cloud(int x, int y, int width, int height, bool isRain, int screenWidth) {
             Animation = new Animation("map/clouds/cloud_", new Rectangle(x, y, width, height), 0, 1, 2, 15, true, true);
             Animation.Start();
             IsOnDestination = false;
@@ -25,6 +26,7 @@ namespace CastleBridge {
             IsRain = isRain;
             RainDrops = new List<RainDrop>();
             GenerateRainDropTimer = 0;
+            ScreenWidth = screenWidth;
         }
 
         public void Update() {
@@ -76,7 +78,7 @@ namespace CastleBridge {
         }
 
         public void ResetPosition() {
-            Animation.SetRectangle(Map.WIDTH * 2, Rnd.Next(0, 200), 125, 75);
+            Animation.SetRectangle(ScreenWidth + 100, Rnd.Next(0, 200), 125, 75);
         }
 
         public void Move() {

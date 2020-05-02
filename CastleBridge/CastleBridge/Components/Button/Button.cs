@@ -22,7 +22,7 @@ namespace CastleBridge {
             DefaultImage = defaultImage;
             OverImage = overImage;
             CurrentImage = defaultImage;
-            Text = new Text(FontType.Default, text, new Vector2(CurrentImage.GetRectangle().Left + CurrentImage.GetRectangle().Width / 2 - 5, CurrentImage.GetRectangle().Top + 5), textColor, false, Color.Black);
+            Text = new Text(FontType.Default, text, new Vector2(CurrentImage.GetRectangle().Left + 5, CurrentImage.GetRectangle().Top + 5), textColor, false, Color.Black);
             IsMouseOver = false;
             IsClicked = false;
             IsPressedLeftButton = false;
@@ -58,7 +58,7 @@ namespace CastleBridge {
                 IsPressedLeftButton = false;
         }
 
-        public bool IsClick() {
+        public bool IsClicking() {
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton) {
 
@@ -76,7 +76,7 @@ namespace CastleBridge {
 
             IsClicked = false;
             CurrentImage = DefaultImage;
-            CurrentImage.SetColor(Color.White);
+            //CurrentImage.SetColor(Color.White);
         }
 
         public Image GetCurrentImage() {

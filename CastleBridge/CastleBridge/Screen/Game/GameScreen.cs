@@ -452,7 +452,7 @@ namespace CastleBridge {
 
         }
 
-        private void InitPlayer(CharacterName characterName, TeamName team) {
+        public void InitPlayer(CharacterName characterName, TeamName team) {
 
             int x = 0;
             int y = Map.GetGrass().GetRectangle().Top - 75;

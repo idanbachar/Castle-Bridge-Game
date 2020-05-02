@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,6 +75,29 @@ namespace CastleBridge {
             LootAnimation.SetDirection(newDirection);
             DefenceAnimation.SetDirection(newDirection);
 
+        }
+
+        public void SetColor(Color color) {
+
+            AfkAnimation.SetColor(color);
+            WalkAnimation.SetColor(color);
+            AttackAnimation.SetColor(color);
+            LootAnimation.SetColor(color);
+            DefenceAnimation.SetColor(color);
+        }
+
+
+        public bool IsMouseOver() {
+
+            Rectangle mouseRectangle = new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 20, 20);
+
+            if (mouseRectangle.Intersects(CurrentAnimation.GetCurrentSpriteImage().GetRectangle())) {
+                SetColor(Color.DarkGray);
+                return true;
+            }
+
+            SetColor(Color.White);
+            return false;
         }
 
         public Animation GetCurrentAnimation() {

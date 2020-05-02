@@ -54,7 +54,7 @@ namespace CastleBridge {
 
         private void InitWeather() {
 
-            Weather = new Weather(TimeType.Day, true);
+            Weather = new Weather(TimeType.Day, true, WIDTH, 50);
         }
 
         private void InitWorldEntities() {
