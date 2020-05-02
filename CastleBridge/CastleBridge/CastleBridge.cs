@@ -66,8 +66,9 @@ namespace CastleBridge
             // TODO: use this.Content to load your game content here
         }
 
-        private void StartGame(TeamName team, CharacterName characterName) {
-            ((GameScreen)Screens[ScreenType.Game]).InitPlayer(characterName, team);
+        private void StartGame(CharacterName characterName, TeamName team, string name) {
+
+            ((GameScreen)Screens[ScreenType.Game]).InitPlayer(characterName, team, name);
             CurrentScreen = ScreenType.Game;
         }
 

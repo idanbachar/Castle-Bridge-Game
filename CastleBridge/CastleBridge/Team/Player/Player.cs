@@ -46,6 +46,16 @@ namespace CastleBridge {
             CurrentCharacter = Characters[newCharacter.ToString()];
         }
 
+        public void ChangeTeam(TeamName newTeam) {
+
+            TeamName = newTeam;
+          
+            foreach(KeyValuePair<string, Character> character in Characters) {
+                character.Value.ChangeTeam(newTeam);
+            }
+
+        }
+
 
         public void AddRedDiamond(Diamond diamond) {
             CollectedRedDiamonds.Add(diamond);

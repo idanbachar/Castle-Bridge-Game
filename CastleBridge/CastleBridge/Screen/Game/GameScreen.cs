@@ -28,7 +28,7 @@ namespace CastleBridge {
         private void Init(Viewport viewPort) {
 
             InitMap();
-            InitPlayer(CharacterName.Knight, TeamName.Red);
+            InitPlayer(CharacterName.Knight, TeamName.Red, "Idan");
             InitHUD();
             Camera = new Camera(viewPort);
         }
@@ -452,7 +452,7 @@ namespace CastleBridge {
 
         }
 
-        public void InitPlayer(CharacterName characterName, TeamName team) {
+        public void InitPlayer(CharacterName characterName, TeamName team, string name) {
 
             int x = 0;
             int y = Map.GetGrass().GetRectangle().Top - 75;
@@ -469,7 +469,7 @@ namespace CastleBridge {
                     break;
             }
 
-            Player = new Player(characterName, team, "Idan", x, y, 125, 175);
+            Player = new Player(characterName, team, name, x, y, 125, 175);
             Player.SetDirection(direction);
         }
 

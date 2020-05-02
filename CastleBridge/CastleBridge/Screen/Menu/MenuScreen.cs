@@ -13,15 +13,17 @@ namespace CastleBridge {
         private Dictionary<MenuPage, Menu> Menus;
         private TeamName SelectedTeam;
         private CharacterName SelectedCharacter;
+        private string SelectedName;
         private bool IsPressedLeftButton;
 
-        public delegate void StartGame(TeamName team, CharacterName characterName);
+        public delegate void StartGame(CharacterName characterName, TeamName team, string selectedName);
         public event StartGame OnStartGame;
 
         public MenuScreen(Viewport viewPort) : base(viewPort) {
             Menus = new Dictionary<MenuPage, Menu>();
             SelectedTeam = TeamName.None;
             SelectedCharacter = CharacterName.None;
+            SelectedName = "Idan";
             IsPressedLeftButton = false;
             Init();
         }
@@ -31,6 +33,7 @@ namespace CastleBridge {
             Menus.Add(MenuPage.MainMenu, new MainMenu("Main Menu"));
             Menus.Add(MenuPage.TeamSelection, new TeamSelectionMenu("Select team by pressing castle sides"));
             Menus.Add(MenuPage.CharacterSelection, new CharacterSelectionMenu("Select a character to play with"));
+            Menus.Add(MenuPage.NameSelection, new NameSelectionMenu("Select a name for your character"));
             CurrentPage = MenuPage.TeamSelection;
         }
  
@@ -53,8 +56,10 @@ namespace CastleBridge {
                     break;
                 case MenuPage.CharacterSelection:
                     CharacterSelectionMenu characterSelectionMenu = Menus[CurrentPage] as CharacterSelectionMenu;
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && characterSelectionMenu.GetBackButton().IsMouseOver) {
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton && characterSelectionMenu.GetBackButton().IsMouseOver) {
+                        IsPressedLeftButton = true;
                         GoToPage(MenuPage.TeamSelection);
+                        break;
                     }
                     foreach (Character character in characterSelectionMenu.GetCurrentCharacters()) {
 
@@ -69,8 +74,27 @@ namespace CastleBridge {
                     }
 
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed && characterSelectionMenu.GetOkButton().IsMouseOver) {
+
                         if (SelectedCharacter != CharacterName.None)
-                            OnStartGame(SelectedTeam, SelectedCharacter);
+                            GoToPage(MenuPage.NameSelection);
+
+                    }
+                    break;
+                case MenuPage.NameSelection:
+                    NameSelectionMenu nameSelectionMenu = Menus[CurrentPage] as NameSelectionMenu;
+                    nameSelectionMenu.SelectTeamAndCharacter(SelectedCharacter, SelectedTeam);
+
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton && nameSelectionMenu.GetBackButton().IsMouseOver) {
+                        IsPressedLeftButton = true;
+                        GoToPage(MenuPage.CharacterSelection);
+                        break;
+                    }
+
+                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && nameSelectionMenu.GetOkButton().IsMouseOver) {
+                        if (nameSelectionMenu.IsSelected) {
+                            SelectedName = nameSelectionMenu.GetSelectedName();
+                            OnStartGame(SelectedCharacter, SelectedTeam, SelectedName);
+                        }
                     }
                     break;
             }

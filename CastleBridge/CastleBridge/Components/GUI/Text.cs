@@ -90,6 +90,10 @@ namespace CastleBridge {
             return BackgroundColor;
         }
 
+        public int GetLength() {
+            return Value.Length;
+        }
+
         public void Draw() {
 
             if (Visible) {

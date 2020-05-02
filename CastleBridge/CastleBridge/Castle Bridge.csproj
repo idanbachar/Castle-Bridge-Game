@@ -55,6 +55,7 @@
     <Compile Include="Screen\Menu\MenuPage.cs" />
     <Compile Include="Screen\Menu\Pages\Character Selection\CharacterSelectionMenu.cs" />
     <Compile Include="Screen\Menu\Pages\Main Menu\MainMenu.cs" />
+    <Compile Include="Screen\Menu\Pages\Name Selection\NameSelectionMenu.cs" />
     <Compile Include="Screen\Menu\Pages\Team Selection\TeamSelectionMenu.cs" />
     <Compile Include="Team\Castle\Castle.cs" />
     <Compile Include="Team\Castle\Diamond.cs" />
