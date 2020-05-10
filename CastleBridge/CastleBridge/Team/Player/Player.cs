@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CastleBridge.OnlineLibraries;
 
 namespace CastleBridge {
     public class Player {
@@ -325,6 +326,10 @@ namespace CastleBridge {
 
         public List<Diamond> GetCollectedYellowDiamonds() {
             return CollectedYellowDiamonds;
+        }
+
+        public string GetName() {
+            return Name.GetValue();
         }
 
         public void Draw() {

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CastleBridge {
@@ -20,6 +21,7 @@ namespace CastleBridge {
         private bool IsPressedD3;
         private bool IsPressedE;
         private bool IsPressedF;
+        private GameClient GameClient;
 
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
@@ -28,7 +30,6 @@ namespace CastleBridge {
         private void Init(Viewport viewPort) {
 
             InitMap();
-            InitPlayer(CharacterName.Knight, TeamName.Red, "Idan");
             InitHUD();
             Camera = new Camera(viewPort);
         }
@@ -472,7 +473,14 @@ namespace CastleBridge {
             Player = new Player(characterName, team, name, x, y, 125, 175);
             Player.SetDirection(direction);
 
+            GameClient = new GameClient();
+            GameClient.Connect();
+            GameClient.SendPlayerJoinData(Player);
+            GameClient.StartSendingPlayerData(Player);
+            
         }
+
+ 
 
         private void InitMap() {
             Map = new Map();
@@ -481,7 +489,9 @@ namespace CastleBridge {
         private void InitHUD() {
 
             HUD = new HUD();
-            UpdateHud();
+
+            if (Player != null)
+                UpdateHud();
         }
 
         public void UpdateHud() {
@@ -646,6 +656,10 @@ namespace CastleBridge {
             HUD.DrawStuck();
             CastleBridge.SpriteBatch.End();
 
+        }
+
+        public Player GetPlayer() {
+            return Player;
         }
     }
 }

@@ -94,6 +94,10 @@ namespace CastleBridge {
             return Value.Length;
         }
 
+        public string GetValue() {
+            return Value;
+        }
+
         public void Draw() {
 
             if (Visible) {

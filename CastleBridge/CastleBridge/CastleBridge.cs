@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace CastleBridge
 {
@@ -18,6 +19,7 @@ namespace CastleBridge
         public ScreenType CurrentScreen;
 
         public static ContentManager PublicContent;
+
 
  
         public CastleBridge()
@@ -57,6 +59,8 @@ namespace CastleBridge
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+
 
             Screens.Add(ScreenType.Menu, new MenuScreen(GraphicsDevice.Viewport));
             ((MenuScreen)Screens[ScreenType.Menu]).OnStartGame += StartGame;
