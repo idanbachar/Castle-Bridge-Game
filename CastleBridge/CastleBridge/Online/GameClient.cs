@@ -31,7 +31,7 @@ namespace CastleBridge {
         public delegate void AddPopup(Popup popup, bool isTile);
         public event AddPopup OnAddPopup;
 
-        private const int ThreadSleep = 50;
+        private const int ThreadSleep = 100;
         public GameClient() {
 
             Client = new TcpClient();
@@ -52,19 +52,6 @@ namespace CastleBridge {
             byte[] bytes = Encoding.ASCII.GetBytes(text);
             netStream.Write(bytes, 0, bytes.Length);
 
-        }
-
-        public void SendPlayerJoinData(Player player) {
-
-            PlayerPacket playerPacket = new PlayerPacket();
-
-            playerPacket.Name = player.GetName().ToString();
-            playerPacket.CharacterName = player.CurrentCharacter.GetName().ToString();
-            playerPacket.TeamName = player.GetTeamName().ToString();
-            playerPacket.PacketType = PacketType.PlayerJoined;
-            playerPacket.Rectangle = new RectanglePacket(player.GetRectangle().X, player.GetRectangle().Y, player.GetRectangle().Width, player.GetRectangle().Height);
-
-            SendObject(playerPacket);
         }
 
         public void StartSendingPlayerData() {
@@ -94,9 +81,17 @@ namespace CastleBridge {
                 playerPacket.Direction = player.GetDirection().ToString();
                 playerPacket.PlayerState = player.GetState().ToString();
                 playerPacket.CurrentLocation = player.GetCurrentLocation().ToString();
-                
 
-                SendObject(playerPacket);
+                try {
+
+                    byte[] bytes = ObjectToByteArray(playerPacket);
+                    NetworkStream netStream = Client.GetStream();
+                    netStream.Write(bytes, 0, bytes.Length);
+
+                }
+                catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                }
 
                 Thread.Sleep(ThreadSleep);
             }
@@ -139,21 +134,25 @@ namespace CastleBridge {
 
                                     switch (team) {
                                         case TeamName.Red:
-                                            OnGetRedPlayers()[name].ChangeTeam(team);
-                                            OnGetRedPlayers()[name].ChangeCharacter(character);
-                                            OnGetRedPlayers()[name].SetRectangle(rectangle);
-                                            OnGetRedPlayers()[name].SetDirection(direction);
-                                            OnGetRedPlayers()[name].SetState(playerState);
-                                            OnGetRedPlayers()[name].ChangeLocationTo(currentLocation);
+                                            lock (OnGetRedPlayers()) {
+                                                OnGetRedPlayers()[name].ChangeTeam(team);
+                                                OnGetRedPlayers()[name].ChangeCharacter(character);
+                                                OnGetRedPlayers()[name].SetRectangle(rectangle);
+                                                OnGetRedPlayers()[name].SetDirection(direction);
+                                                OnGetRedPlayers()[name].SetState(playerState);
+                                                OnGetRedPlayers()[name].ChangeLocationTo(currentLocation);
+                                            }
                                             //OnGetRedPlayers()[name].Update();
                                             break;
                                         case TeamName.Yellow:
-                                            OnGetYellowPlayers()[name].ChangeTeam(team);
-                                            OnGetYellowPlayers()[name].ChangeCharacter(character);
-                                            OnGetYellowPlayers()[name].SetRectangle(rectangle);
-                                            OnGetYellowPlayers()[name].SetDirection(direction);
-                                            OnGetYellowPlayers()[name].SetState(playerState);
-                                            OnGetYellowPlayers()[name].ChangeLocationTo(currentLocation);
+                                            lock (OnGetYellowPlayers()) {
+                                                OnGetYellowPlayers()[name].ChangeTeam(team);
+                                                OnGetYellowPlayers()[name].ChangeCharacter(character);
+                                                OnGetYellowPlayers()[name].SetRectangle(rectangle);
+                                                OnGetYellowPlayers()[name].SetDirection(direction);
+                                                OnGetYellowPlayers()[name].SetState(playerState);
+                                                OnGetYellowPlayers()[name].ChangeLocationTo(currentLocation);
+                                            }
                                             //OnGetYellowPlayers()[name].Update();
                                             break;
                                     }
@@ -164,6 +163,7 @@ namespace CastleBridge {
 
                 }catch(Exception e) {
                     Console.WriteLine(e.Message);
+
                 }
 
                 Thread.Sleep(ThreadSleep);
@@ -171,13 +171,7 @@ namespace CastleBridge {
 
 
         }
-
-        private void SendObject(object obj) {
-
-            byte[] bytes = ObjectToByteArray(obj);
-            NetworkStream netStream = Client.GetStream();
-            netStream.Write(bytes, 0, bytes.Length);
-        }
+ 
 
         public byte[] ObjectToByteArray<T>(T obj) {
             if (obj == null)

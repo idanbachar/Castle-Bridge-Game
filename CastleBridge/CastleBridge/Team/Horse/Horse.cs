@@ -68,6 +68,7 @@ namespace CastleBridge {
 
         public void Update() {
             CurrentAnimation.Play();
+            CurrentAnimation.Start();
         }
 
         public TeamName GetTeamName() {

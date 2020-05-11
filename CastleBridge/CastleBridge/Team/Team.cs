@@ -24,12 +24,7 @@ namespace CastleBridge {
             MinPlayers = 2;
             MapDimensionRectangle = mapDimensionRectangle;
             InitCastles(mapDimensionRectangle);
-
             Rnd = new Random();
-
-            //for (int i = 1; i <= 3; i++)
-            //    AddPlayer((CharacterName)Rnd.Next(0, 3), teamName, "Bot_" + i);
-
             InitHorses();
         }
 
@@ -83,7 +78,10 @@ namespace CastleBridge {
 
             Player player = new Player(character, team, name, x, y, width, height);
             player.SetDirection(direction);
-            Players.Add(name, player);
+
+            lock (Players) {
+                Players.Add(name, player);
+            }
         }
 
         public Dictionary<string, Player> GetPlayers() {

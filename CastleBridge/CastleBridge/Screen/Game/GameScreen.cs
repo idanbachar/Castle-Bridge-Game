@@ -480,7 +480,6 @@ namespace CastleBridge {
             GameClient.OnJoinPlayer += Map.AddPlayer;
             GameClient.OnAddPopup += HUD.AddPopup;
             GameClient.Connect("192.168.1.17", 4441);
-            GameClient.SendPlayerJoinData(Player);
             GameClient.StartSendingPlayerData();
             GameClient.StartReceivingPlayersData();
 
