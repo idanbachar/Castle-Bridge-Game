@@ -242,6 +242,10 @@ namespace CastleBridge {
             return State;
         }
 
+        public Direction GetDirection() {
+            return CurrentCharacter.GetDirection();
+        }
+
         public bool IsOnTopMap(Map map) {
             if (Rectangle.Bottom - Rectangle.Height / 2 < map.GetGrass().GetRectangle().Top)
                 return true;

@@ -9,20 +9,38 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using CastleBridge.OnlineLibraries;
 using System.Threading;
+using Microsoft.Xna.Framework;
 
 namespace CastleBridge {
     public class GameClient {
 
-        private int port;
         private TcpClient Client;
+
+        public delegate Player GetThePlayer();
+        public event GetThePlayer OnGetThePlayer;
+
+        public delegate Dictionary<string, Player> GetRedPlayers();
+        public event GetRedPlayers OnGetRedPlayers;
+
+        public delegate Dictionary<string, Player> GetYellowPlayers();
+        public event GetYellowPlayers OnGetYellowPlayers;
+
+        public delegate void JoinPlayer(CharacterName character, TeamName team, string name);
+        public event JoinPlayer OnJoinPlayer;
+
+        public delegate void AddPopup(Popup popup, bool isTile);
+        public event AddPopup OnAddPopup;
+
+        private const int ThreadSleep = 50;
         public GameClient() {
 
             Client = new TcpClient();
         }
 
-        public void Connect() {
+        public void Connect(string ip, int port) {
             try {
-                Client.Connect("192.168.1.17", 4441);
+                Client.Connect(ip, port);
+               
             }catch(Exception e) {
                 Console.WriteLine(e.Message);
             }
@@ -49,9 +67,9 @@ namespace CastleBridge {
             SendObject(playerPacket);
         }
 
-        public void StartSendingPlayerData(Player player) {
+        public void StartSendingPlayerData() {
 
-            new Thread(() => SendAllPlayerData(player)).Start();
+            new Thread(SendAllPlayerData).Start();
 
         }
 
@@ -61,46 +79,94 @@ namespace CastleBridge {
 
         }
 
-        private void SendAllPlayerData(Player player) {
+        private void SendAllPlayerData() {
 
             while (true) {
 
+                Player player = OnGetThePlayer();
                 PlayerPacket playerPacket = new PlayerPacket();
 
                 playerPacket.Name = player.GetName().ToString();
                 playerPacket.CharacterName = player.CurrentCharacter.GetName().ToString();
                 playerPacket.TeamName = player.GetTeamName().ToString();
+                playerPacket.Rectangle = new RectanglePacket(player.GetRectangle().X, player.GetRectangle().Y, player.GetRectangle().Width, player.GetRectangle().Height);
                 playerPacket.PacketType = PacketType.PlayerData;
+                playerPacket.Direction = player.GetDirection().ToString();
+                playerPacket.PlayerState = player.GetState().ToString();
+                playerPacket.CurrentLocation = player.GetCurrentLocation().ToString();
+                
 
                 SendObject(playerPacket);
 
-                Thread.Sleep(100);
+                Thread.Sleep(ThreadSleep);
             }
         }
 
         private void ReceiveDataFromServer() {
 
+            NetworkStream netStream = null;
+
             while (true) {
 
-                NetworkStream netStream = Client.GetStream();
-                byte[] bytes = new byte[1024];
-                netStream.Read(bytes, 0, bytes.Length);
-                object obj = ByteArrayToObject(bytes);
+                try {
+                    netStream = Client.GetStream();
+                    byte[] bytes = new byte[1024];
+                    netStream.Read(bytes, 0, bytes.Length);
+                    object obj = ByteArrayToObject(bytes);
 
-                if (obj is PlayerPacket) {
+                    if (obj is PlayerPacket) {
 
-                    PlayerPacket playerPacket = obj as PlayerPacket;
-                    switch (playerPacket.PacketType) {
-                        case PacketType.PlayerData:
-    
-                            Console.WriteLine("<Server>: Receiving data from " + playerPacket.Name);
-                            break;
+                        PlayerPacket playerPacket = obj as PlayerPacket;
+                        switch (playerPacket.PacketType) {
+                            case PacketType.PlayerData:
+
+                                TeamName team = (TeamName)Enum.Parse(typeof(TeamName), playerPacket.TeamName);
+                                CharacterName character = (CharacterName)Enum.Parse(typeof(CharacterName), playerPacket.CharacterName);
+                                Direction direction = (Direction)Enum.Parse(typeof(Direction), playerPacket.Direction);
+                                PlayerState playerState = (PlayerState)Enum.Parse(typeof(PlayerState), playerPacket.PlayerState);
+                                Rectangle rectangle = new Rectangle(playerPacket.Rectangle.X, playerPacket.Rectangle.Y, playerPacket.Rectangle.Width, playerPacket.Rectangle.Height);
+                                Location currentLocation = (Location)Enum.Parse(typeof(Location), playerPacket.CurrentLocation);
+                                string name = playerPacket.Name;
+
+
+                                if (!OnGetRedPlayers().ContainsKey(playerPacket.Name) && !OnGetYellowPlayers().ContainsKey(playerPacket.Name)) {
+                                    OnJoinPlayer(character, team, name);
+
+                                    OnAddPopup(new Popup(name + " has joined to the " + team + " team!", 100, 100, Color.Red, Color.Black), false);
+                                }
+                                else {
+
+
+                                    switch (team) {
+                                        case TeamName.Red:
+                                            OnGetRedPlayers()[name].ChangeTeam(team);
+                                            OnGetRedPlayers()[name].ChangeCharacter(character);
+                                            OnGetRedPlayers()[name].SetRectangle(rectangle);
+                                            OnGetRedPlayers()[name].SetDirection(direction);
+                                            OnGetRedPlayers()[name].SetState(playerState);
+                                            OnGetRedPlayers()[name].ChangeLocationTo(currentLocation);
+                                            //OnGetRedPlayers()[name].Update();
+                                            break;
+                                        case TeamName.Yellow:
+                                            OnGetYellowPlayers()[name].ChangeTeam(team);
+                                            OnGetYellowPlayers()[name].ChangeCharacter(character);
+                                            OnGetYellowPlayers()[name].SetRectangle(rectangle);
+                                            OnGetYellowPlayers()[name].SetDirection(direction);
+                                            OnGetYellowPlayers()[name].SetState(playerState);
+                                            OnGetYellowPlayers()[name].ChangeLocationTo(currentLocation);
+                                            //OnGetYellowPlayers()[name].Update();
+                                            break;
+                                    }
+                                }
+                                break;
+                        }
                     }
 
-
+                }catch(Exception e) {
+                    Console.WriteLine(e.Message);
                 }
 
-                Thread.Sleep(100);
+                Thread.Sleep(ThreadSleep);
             }
 
 

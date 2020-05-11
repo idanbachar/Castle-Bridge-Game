@@ -453,7 +453,7 @@ namespace CastleBridge {
 
         }
 
-        public void InitPlayer(CharacterName characterName, TeamName team, string name) {
+        public void JoinGame(CharacterName characterName, TeamName team, string name) {
 
             int x = 0;
             int y = Map.GetGrass().GetRectangle().Top - 75;
@@ -474,10 +474,17 @@ namespace CastleBridge {
             Player.SetDirection(direction);
 
             GameClient = new GameClient();
-            GameClient.Connect();
+            GameClient.OnGetThePlayer += GetPlayer;
+            GameClient.OnGetRedPlayers += Map.GetTeams()[TeamName.Red].GetPlayers;
+            GameClient.OnGetYellowPlayers += Map.GetTeams()[TeamName.Yellow].GetPlayers;
+            GameClient.OnJoinPlayer += Map.AddPlayer;
+            GameClient.OnAddPopup += HUD.AddPopup;
+            GameClient.Connect("192.168.1.17", 4441);
             GameClient.SendPlayerJoinData(Player);
-            GameClient.StartSendingPlayerData(Player);
-            
+            GameClient.StartSendingPlayerData();
+            GameClient.StartReceivingPlayersData();
+
+
         }
 
  

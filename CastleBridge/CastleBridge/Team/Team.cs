@@ -27,8 +27,8 @@ namespace CastleBridge {
 
             Rnd = new Random();
 
-            for (int i = 1; i <= 3; i++)
-                AddPlayer((CharacterName)Rnd.Next(0, 3), teamName, "Bot_" + i);
+            //for (int i = 1; i <= 3; i++)
+            //    AddPlayer((CharacterName)Rnd.Next(0, 3), teamName, "Bot_" + i);
 
             InitHorses();
         }

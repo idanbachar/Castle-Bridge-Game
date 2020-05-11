@@ -67,7 +67,6 @@ namespace CastleBridge {
                     CurrentAnimation = LootAnimation;
                     break;
             }
-            CurrentAnimation.Start();
         }
 
         public void SetDirection(Direction newDirection) {
@@ -93,7 +92,7 @@ namespace CastleBridge {
 
         public void ChangeTeam(TeamName team) {
             TeamName = team;
-            InitAnimations();
+            //InitAnimations();
         }
 
         public bool IsMouseOver() {
@@ -115,6 +114,7 @@ namespace CastleBridge {
 
         public virtual void Update() {
             CurrentAnimation.Play();
+            CurrentAnimation.Start();
         }
 
         public void SetHealth(int hp) {
@@ -168,6 +168,10 @@ namespace CastleBridge {
 
         public TeamName GetTeamName() {
             return TeamName;
+        }
+
+        public Direction GetDirection() {
+            return Direction;
         }
 
         public void SetRectangle(Rectangle newRectangle) {

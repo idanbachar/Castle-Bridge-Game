@@ -73,6 +73,9 @@ namespace CastleBridge {
 
         }
 
+        public void AddPlayer(CharacterName character, TeamName team, string name) {
+            Teams[team].AddPlayer(character, team, name);
+        }
 
         private void GenerateWorldEntity() {
 

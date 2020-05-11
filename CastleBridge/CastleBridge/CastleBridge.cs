@@ -72,7 +72,7 @@ namespace CastleBridge
 
         private void StartGame(CharacterName characterName, TeamName team, string name) {
 
-            ((GameScreen)Screens[ScreenType.Game]).InitPlayer(characterName, team, name);
+            ((GameScreen)Screens[ScreenType.Game]).JoinGame(characterName, team, name);
             ((GameScreen)Screens[ScreenType.Game]).UpdateHud();
             CurrentScreen = ScreenType.Game;
         }
