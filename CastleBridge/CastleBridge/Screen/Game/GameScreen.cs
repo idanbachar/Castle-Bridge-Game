@@ -25,6 +25,10 @@ namespace CastleBridge {
 
         private int PlayerRespawnTimer;
 
+
+        public delegate void StartGameAfterLoading();
+        public event StartGameAfterLoading OnStartGameAfterLoading;
+
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
         }
@@ -474,12 +478,16 @@ namespace CastleBridge {
             GameClient.OnJoinPlayer += Map.AddPlayer;
             GameClient.OnGetTeams += Map.GetTeams;
             GameClient.OnAddPopup += HUD.AddPopup;
+            GameClient.OnAddEntity += Map.AddEntity;
+            GameClient.OnFinishedLoading += StartGame;
             GameClient.Connect("192.168.1.17", 4441);
-            GameClient.StartSendingPlayerData();
             GameClient.StartReceivingPlayersData();
         }
 
-
+        private void StartGame() {
+            OnStartGameAfterLoading();
+        }
+        
 
         private void InitMap() {
             Map = new Map();

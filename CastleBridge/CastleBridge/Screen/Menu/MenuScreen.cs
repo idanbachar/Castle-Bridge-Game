@@ -34,10 +34,10 @@ namespace CastleBridge {
             Menus.Add(MenuPage.TeamSelection, new TeamSelectionMenu("Select team by pressing castle sides"));
             Menus.Add(MenuPage.CharacterSelection, new CharacterSelectionMenu("Select a character to play with"));
             Menus.Add(MenuPage.NameSelection, new NameSelectionMenu("Select a name for your character"));
+            Menus.Add(MenuPage.Loading, new LoadingMenu("Loading. Please wait.."));
             CurrentPage = MenuPage.TeamSelection;
         }
  
-
         public override void Update() {
 
             Menus[CurrentPage].Update();
@@ -102,7 +102,7 @@ namespace CastleBridge {
                 IsPressedLeftButton = false;
         }
 
-        private void GoToPage(MenuPage page) {
+        public void GoToPage(MenuPage page) {
             CurrentPage = page;
         }
 

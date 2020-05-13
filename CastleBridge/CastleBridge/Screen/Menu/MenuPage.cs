@@ -10,6 +10,7 @@ namespace CastleBridge {
         MainMenu,
         TeamSelection,
         CharacterSelection,
-        NameSelection
+        NameSelection,
+        Loading
     }
 }

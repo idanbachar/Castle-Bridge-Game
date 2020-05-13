@@ -62,6 +62,10 @@ namespace CastleBridge {
             return Name;
         }
 
+        public void SetRectangle(Rectangle newRectangle) {
+            Animation.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
+        }
+
         public Animation GetAnimation() {
             return Animation;
         }

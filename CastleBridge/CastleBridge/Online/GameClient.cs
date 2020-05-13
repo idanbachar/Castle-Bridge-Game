@@ -34,6 +34,13 @@ namespace CastleBridge {
         public delegate Dictionary<TeamName, Team> GetTeams();
         public event GetTeams OnGetTeams;
 
+        public delegate void FinishedLoading();
+        public event FinishedLoading OnFinishedLoading;
+
+
+        public delegate void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location);
+        public event AddEntity OnAddEntity;
+
         private const int ThreadSleep = 100;
         public GameClient() {
 
@@ -43,8 +50,10 @@ namespace CastleBridge {
         public void Connect(string ip, int port) {
             try {
                 Client.Connect(ip, port);
-               
-            }catch(Exception e) {
+                SendAllPlayerData(false);
+
+            }
+            catch(Exception e) {
                 Console.WriteLine(e.Message);
             }
         }
@@ -57,9 +66,9 @@ namespace CastleBridge {
 
         }
 
-        public void StartSendingPlayerData() {
+        public void StartSendingPlayerData(bool isFinishedLoad) {
 
-            new Thread(SendAllPlayerData).Start();
+            new Thread(() => SendAllPlayerData(isFinishedLoad)).Start();
 
         }
 
@@ -69,7 +78,7 @@ namespace CastleBridge {
 
         }
 
-        private void SendAllPlayerData() {
+        private void SendAllPlayerData(bool isFinishedLoad) {
 
             while (true) {
 
@@ -88,6 +97,7 @@ namespace CastleBridge {
                 playerPacket.IsAttackAnimationFinished = player.GetCurrentAnimation().IsFinished;
                 playerPacket.CurrentCharacterIsDead = player.CurrentCharacter.IsDead;
                 playerPacket.IsHorseOwner = player.GetCurrentHorse() != null;
+                playerPacket.IsAllMapEntitiesLoaded = isFinishedLoad;
 
                 try {
 
@@ -100,9 +110,14 @@ namespace CastleBridge {
                     Console.WriteLine(e.Message);
                 }
 
+                if (!isFinishedLoad)
+                    break;
+
                 Thread.Sleep(ThreadSleep);
             }
+ 
         }
+ 
 
         private void ReceiveDataFromServer() {
 
@@ -114,82 +129,101 @@ namespace CastleBridge {
                     netStream = Client.GetStream();
                     byte[] bytes = new byte[1024];
                     netStream.Read(bytes, 0, bytes.Length);
-                    object obj = ByteArrayToObject(bytes);
+                    object obj = null;
+                    try {
+                        obj = ByteArrayToObject(bytes);
 
-                    if (obj is PlayerPacket) {
+                        if (obj is PlayerPacket) {
 
-                        PlayerPacket playerPacket = obj as PlayerPacket;
-                        switch (playerPacket.PacketType) {
-                            case PacketType.PlayerData:
+                            PlayerPacket playerPacket = obj as PlayerPacket;
+                            switch (playerPacket.PacketType) {
+                                case PacketType.PlayerData:
 
-                                TeamName team = (TeamName)Enum.Parse(typeof(TeamName), playerPacket.TeamName);
-                                CharacterName character = (CharacterName)Enum.Parse(typeof(CharacterName), playerPacket.CharacterName);
-                                Direction direction = (Direction)Enum.Parse(typeof(Direction), playerPacket.Direction);
-                                PlayerState playerState = (PlayerState)Enum.Parse(typeof(PlayerState), playerPacket.PlayerState);
-                                Rectangle rectangle = new Rectangle(playerPacket.Rectangle.X, playerPacket.Rectangle.Y, playerPacket.Rectangle.Width, playerPacket.Rectangle.Height);
-                                Location currentLocation = (Location)Enum.Parse(typeof(Location), playerPacket.CurrentLocation);
-                                int currentCharacterHp = playerPacket.CurrentCharacterHp;
-                                string name = playerPacket.Name;
-                                bool isAttackAnimationFinished = playerPacket.IsAttackAnimationFinished;
-                                bool currentCharacterIsDead = playerPacket.CurrentCharacterIsDead;
-                                bool isHorseOwner = playerPacket.IsHorseOwner;
-                                bool isMount = false;
- 
+                                    TeamName team = (TeamName)Enum.Parse(typeof(TeamName), playerPacket.TeamName);
+                                    CharacterName character = (CharacterName)Enum.Parse(typeof(CharacterName), playerPacket.CharacterName);
+                                    Direction direction = (Direction)Enum.Parse(typeof(Direction), playerPacket.Direction);
+                                    PlayerState playerState = (PlayerState)Enum.Parse(typeof(PlayerState), playerPacket.PlayerState);
+                                    Rectangle rectangle = new Rectangle(playerPacket.Rectangle.X, playerPacket.Rectangle.Y, playerPacket.Rectangle.Width, playerPacket.Rectangle.Height);
+                                    Location currentLocation = (Location)Enum.Parse(typeof(Location), playerPacket.CurrentLocation);
+                                    int currentCharacterHp = playerPacket.CurrentCharacterHp;
+                                    string name = playerPacket.Name;
+                                    bool isAttackAnimationFinished = playerPacket.IsAttackAnimationFinished;
+                                    bool currentCharacterIsDead = playerPacket.CurrentCharacterIsDead;
+                                    bool isHorseOwner = playerPacket.IsHorseOwner;
 
+                                    if (!OnGetRedPlayers().ContainsKey(playerPacket.Name) && !OnGetYellowPlayers().ContainsKey(playerPacket.Name)) {
+                                        OnJoinPlayer(character, team, name);
 
-                                if (!OnGetRedPlayers().ContainsKey(playerPacket.Name) && !OnGetYellowPlayers().ContainsKey(playerPacket.Name)) {
-                                    OnJoinPlayer(character, team, name);
-
-                                    OnAddPopup(new Popup(name + " has joined to the " + team + " team!", 100, 100, Color.Red, Color.Black), false);
-                                }
-                                else {
-
-
-                                    switch (team) {
-                                        case TeamName.Red:
-                                            lock (OnGetRedPlayers()) {
-                                                OnGetRedPlayers()[name].ChangeTeam(team);
-                                                OnGetRedPlayers()[name].ChangeCharacter(character);
-                                                OnGetRedPlayers()[name].SetRectangle(rectangle);
-                                                OnGetRedPlayers()[name].SetDirection(direction);
-                                                OnGetRedPlayers()[name].SetState(playerState);
-                                                OnGetRedPlayers()[name].ChangeLocationTo(currentLocation);
-                                                OnGetRedPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
-                                                OnGetRedPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
-                                                OnGetRedPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
-                                                if (isHorseOwner) {
-                                                    Horse currentHorse = OnGetTeams()[team].GetHorse();
-                                                    OnGetRedPlayers()[name].MountHorse(currentHorse);
-                                                }
-                                                else {
-                                                    OnGetRedPlayers()[name].DismountHorse();
-                                                }
-                                            }
-                                            break;
-                                        case TeamName.Yellow:
-                                            lock (OnGetYellowPlayers()) {
-                                                OnGetYellowPlayers()[name].ChangeTeam(team);
-                                                OnGetYellowPlayers()[name].ChangeCharacter(character);
-                                                OnGetYellowPlayers()[name].SetRectangle(rectangle);
-                                                OnGetYellowPlayers()[name].SetDirection(direction);
-                                                OnGetYellowPlayers()[name].SetState(playerState);
-                                                OnGetYellowPlayers()[name].ChangeLocationTo(currentLocation);
-                                                OnGetYellowPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
-                                                OnGetYellowPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
-                                                OnGetYellowPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
-                                                if (isHorseOwner) {
-                                                    Horse currentHorse = OnGetTeams()[team].GetHorse();
-                                                    OnGetYellowPlayers()[name].MountHorse(currentHorse);
-                                                }
-                                                else {
-                                                    OnGetYellowPlayers()[name].DismountHorse();
-                                                }
-                                            }
-
-                                            break;
+                                        OnAddPopup(new Popup(name + " has joined to the " + team + " team!", 100, 100, Color.Red, Color.Black), false);
                                     }
-                                }
-                                break;
+                                    else {
+
+                                        switch (team) {
+                                            case TeamName.Red:
+                                                lock (OnGetRedPlayers()) {
+                                                    OnGetRedPlayers()[name].ChangeTeam(team);
+                                                    OnGetRedPlayers()[name].ChangeCharacter(character);
+                                                    OnGetRedPlayers()[name].SetRectangle(rectangle);
+                                                    OnGetRedPlayers()[name].SetDirection(direction);
+                                                    OnGetRedPlayers()[name].SetState(playerState);
+                                                    OnGetRedPlayers()[name].ChangeLocationTo(currentLocation);
+                                                    OnGetRedPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
+                                                    OnGetRedPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
+                                                    OnGetRedPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
+                                                    if (isHorseOwner) {
+                                                        Horse currentHorse = OnGetTeams()[team].GetHorse();
+                                                        OnGetRedPlayers()[name].MountHorse(currentHorse);
+                                                    }
+                                                    else {
+                                                        OnGetRedPlayers()[name].DismountHorse();
+                                                    }
+                                                }
+                                                break;
+                                            case TeamName.Yellow:
+                                                lock (OnGetYellowPlayers()) {
+                                                    OnGetYellowPlayers()[name].ChangeTeam(team);
+                                                    OnGetYellowPlayers()[name].ChangeCharacter(character);
+                                                    OnGetYellowPlayers()[name].SetRectangle(rectangle);
+                                                    OnGetYellowPlayers()[name].SetDirection(direction);
+                                                    OnGetYellowPlayers()[name].SetState(playerState);
+                                                    OnGetYellowPlayers()[name].ChangeLocationTo(currentLocation);
+                                                    OnGetYellowPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
+                                                    OnGetYellowPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
+                                                    OnGetYellowPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
+                                                    if (isHorseOwner) {
+                                                        Horse currentHorse = OnGetTeams()[team].GetHorse();
+                                                        OnGetYellowPlayers()[name].MountHorse(currentHorse);
+                                                    }
+                                                    else {
+                                                        OnGetYellowPlayers()[name].DismountHorse();
+                                                    }
+                                                }
+
+                                                break;
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                        else if (obj is MapEntityPacket) {
+
+                            MapEntityPacket MapEntityPacket = obj as MapEntityPacket;
+
+                            MapEntityName entityName = (MapEntityName)Enum.Parse(typeof(MapEntityName), MapEntityPacket.Name);
+                            int entityX = MapEntityPacket.X;
+                            int entityY = MapEntityPacket.Y;
+                            Direction entityDirection = (Direction)Enum.Parse(typeof(Direction), MapEntityPacket.Direction);
+                            Location entityLocation = (Location)Enum.Parse(typeof(Location), MapEntityPacket.CurrentLocation);
+                            OnAddEntity(entityName, entityX, entityX, entityDirection, 0f, entityLocation);
+                        }
+
+                    }
+                    catch(Exception) {
+                        string data = Encoding.ASCII.GetString(bytes).Split('\0')[0];
+                        if (data.Equals("Completed Map Entities")) {
+
+                            OnFinishedLoading();
+                            StartSendingPlayerData(true);
                         }
                     }
 

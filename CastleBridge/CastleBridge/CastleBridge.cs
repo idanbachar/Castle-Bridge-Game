@@ -64,9 +64,10 @@ namespace CastleBridge
 
 
             Screens.Add(ScreenType.Menu, new MenuScreen(GraphicsDevice.Viewport));
-            ((MenuScreen)Screens[ScreenType.Menu]).OnStartGame += StartGame;
-
             Screens.Add(ScreenType.Game, new GameScreen(GraphicsDevice.Viewport));
+            ((MenuScreen)Screens[ScreenType.Menu]).OnStartGame += StartGame;
+            ((GameScreen)Screens[ScreenType.Game]).OnStartGameAfterLoading += StartGame;
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -74,7 +75,11 @@ namespace CastleBridge
         private void StartGame(CharacterName characterName, TeamName team, string name) {
 
             ((GameScreen)Screens[ScreenType.Game]).JoinGame(characterName, team, name);
+            ((MenuScreen)Screens[ScreenType.Menu]).GoToPage(MenuPage.Loading);
             ((GameScreen)Screens[ScreenType.Game]).UpdateHud();
+        }
+
+        private void StartGame() {
             CurrentScreen = ScreenType.Game;
         }
 

@@ -22,6 +22,7 @@ namespace CastleBridge {
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
+            WorldEntities = new List<MapEntity>();
             Init();
         }
 
@@ -29,7 +30,7 @@ namespace CastleBridge {
 
             InitGrass();
             InitWeather();
-            InitWorldEntities();
+            InitBackgroundWorldEntities();
             InitTeams();
         }
 
@@ -56,14 +57,9 @@ namespace CastleBridge {
 
             Weather = new Weather(TimeType.Day, true, WIDTH, 50);
         }
+ 
 
-        private void InitWorldEntities() {
-
-            WorldEntities = new List<MapEntity>();
-
-            for (int i = 1; i < 100; i++) {
-                GenerateWorldEntity();
-            }
+        private void InitBackgroundWorldEntities() {
 
             for (int i = 0; i < 60; i++)
                 WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false, Direction.Left, 0f, Location.Outside));
@@ -129,7 +125,9 @@ namespace CastleBridge {
                     break;
             }
 
-            WorldEntities.Add(new MapEntity(entityName, Name, x, y + height, width, height, isTouchable, direction, rotation, location));
+            lock (WorldEntities) {
+                WorldEntities.Add(new MapEntity(entityName, Name, x, y + height, width, height, isTouchable, direction, rotation, location));
+            }
         }
 
         public void UpdateLocationsTo(Location newLocation) {
@@ -187,6 +185,8 @@ namespace CastleBridge {
         }
 
         public void DrawTile(int i, Location playerLocation) {
+
+
 
             foreach (MapEntity mapEntity in WorldEntities) {
                 if (mapEntity.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
