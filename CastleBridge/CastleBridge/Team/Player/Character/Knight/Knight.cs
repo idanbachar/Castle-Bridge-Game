@@ -7,10 +7,16 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class Knight: Character {
 
+        private int AttackDamage;
   
         public Knight(CharacterName name, TeamName teamName, int x, int y, int width, int height) : base(name, teamName, x, y, width, height) {
  
-            Health = 110;
+            Health = 100;
+            AttackDamage = 15;
+        }
+
+        public int GetAttackDamage() {
+            return AttackDamage;
         }
  
     }

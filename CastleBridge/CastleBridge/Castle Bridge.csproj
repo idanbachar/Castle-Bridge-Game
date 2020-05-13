@@ -65,7 +65,7 @@
     <Compile Include="Map\MapEntityName.cs" />
     <Compile Include="Team\Castle\Door\Door.cs" />
     <Compile Include="Team\Horse\Horse.cs" />
-    <Compile Include="Team\Horse\Horsestate.cs" />
+    <Compile Include="Team\Horse\HorseState.cs" />
     <Compile Include="Team\Player\Character\Archer\Archer.cs" />
     <Compile Include="Team\Player\Character\Archer\Arrow.cs" />
     <Compile Include="Team\Player\Character\Character.cs" />

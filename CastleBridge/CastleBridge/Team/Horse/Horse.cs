@@ -9,7 +9,7 @@ namespace CastleBridge {
     public class Horse {
  
         private Rectangle Rectangle;
-        private Horsestate State;
+        private HorseState State;
         private TeamName TeamName;
         public Animation AfkAnimation;
         public Animation WalkAnimation;
@@ -26,7 +26,7 @@ namespace CastleBridge {
             AfkAnimation = new Animation("horse/teams/" + teamName + "/afk/horse_afk_", new Rectangle(x, y, width, height), 0, 7, 7, 6, true, true);
             WalkAnimation = new Animation("horse/teams/" + teamName + "/walk/horse_walk_", new Rectangle(x, y, width, height), 0, 4, 5, 2, true, true);
             Speed = 7;
-            SetState(Horsestate.Afk);
+            SetState(HorseState.Afk);
             Direction = Direction.Left;
             Owner = null;
             Tooltip = new Text(FontType.Default, "Press 'E' to mount", new Vector2(x + 50, y - 65), Color.Black, true, Color.Gold);
@@ -52,14 +52,14 @@ namespace CastleBridge {
             }
         }
 
-        public void SetState(Horsestate state) {
+        public void SetState(HorseState state) {
 
             State = state;
             switch (State) {
-                case Horsestate.Afk:
+                case HorseState.Afk:
                     CurrentAnimation = AfkAnimation;
                     break;
-                case Horsestate.Walk:
+                case HorseState.Walk:
                     CurrentAnimation = WalkAnimation;
                     break;
             }
@@ -69,6 +69,25 @@ namespace CastleBridge {
         public void Update() {
             CurrentAnimation.Play();
             CurrentAnimation.Start();
+
+            if (Owner != null)
+                CheckOwnerRiding();
+        }
+
+        private void CheckOwnerRiding() {
+
+            if (Owner.GetState() == PlayerState.Afk)
+                SetState(HorseState.Afk);
+            else if (Owner.GetState() == PlayerState.Walk)
+                SetState(HorseState.Walk);
+
+            SetDirection(Owner.GetDirection());
+
+            SetRectangle(new Rectangle(Owner.GetRectangle().Left + Owner.GetRectangle().Width / 2 - Rectangle.Width / 2,
+                                       Owner.GetRectangle().Top + Owner.GetRectangle().Height / 3 - 10,
+                                       Rectangle.Width,
+                                       Rectangle.Height));
+
         }
 
         public TeamName GetTeamName() {
@@ -103,7 +122,7 @@ namespace CastleBridge {
             return Rectangle;
         }
 
-        public Horsestate GetState() {
+        public HorseState GetState() {
             return State;
         }
 
@@ -113,7 +132,7 @@ namespace CastleBridge {
 
         public void RemoveOwner() {
             Owner = null;
-            SetState(Horsestate.Afk);
+            SetState(HorseState.Afk);
         }
 
         public bool IsHasOwner() {

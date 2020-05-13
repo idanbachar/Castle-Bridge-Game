@@ -31,6 +31,9 @@ namespace CastleBridge {
         public delegate void AddPopup(Popup popup, bool isTile);
         public event AddPopup OnAddPopup;
 
+        public delegate Dictionary<TeamName, Team> GetTeams();
+        public event GetTeams OnGetTeams;
+
         private const int ThreadSleep = 100;
         public GameClient() {
 
@@ -81,6 +84,10 @@ namespace CastleBridge {
                 playerPacket.Direction = player.GetDirection().ToString();
                 playerPacket.PlayerState = player.GetState().ToString();
                 playerPacket.CurrentLocation = player.GetCurrentLocation().ToString();
+                playerPacket.CurrentCharacterHp = player.GetCurrentCharacter().GetHealth();
+                playerPacket.IsAttackAnimationFinished = player.GetCurrentAnimation().IsFinished;
+                playerPacket.CurrentCharacterIsDead = player.CurrentCharacter.IsDead;
+                playerPacket.IsHorseOwner = player.GetCurrentHorse() != null;
 
                 try {
 
@@ -121,7 +128,13 @@ namespace CastleBridge {
                                 PlayerState playerState = (PlayerState)Enum.Parse(typeof(PlayerState), playerPacket.PlayerState);
                                 Rectangle rectangle = new Rectangle(playerPacket.Rectangle.X, playerPacket.Rectangle.Y, playerPacket.Rectangle.Width, playerPacket.Rectangle.Height);
                                 Location currentLocation = (Location)Enum.Parse(typeof(Location), playerPacket.CurrentLocation);
+                                int currentCharacterHp = playerPacket.CurrentCharacterHp;
                                 string name = playerPacket.Name;
+                                bool isAttackAnimationFinished = playerPacket.IsAttackAnimationFinished;
+                                bool currentCharacterIsDead = playerPacket.CurrentCharacterIsDead;
+                                bool isHorseOwner = playerPacket.IsHorseOwner;
+                                bool isMount = false;
+ 
 
 
                                 if (!OnGetRedPlayers().ContainsKey(playerPacket.Name) && !OnGetYellowPlayers().ContainsKey(playerPacket.Name)) {
@@ -141,8 +154,17 @@ namespace CastleBridge {
                                                 OnGetRedPlayers()[name].SetDirection(direction);
                                                 OnGetRedPlayers()[name].SetState(playerState);
                                                 OnGetRedPlayers()[name].ChangeLocationTo(currentLocation);
+                                                OnGetRedPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
+                                                OnGetRedPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
+                                                OnGetRedPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
+                                                if (isHorseOwner) {
+                                                    Horse currentHorse = OnGetTeams()[team].GetHorse();
+                                                    OnGetRedPlayers()[name].MountHorse(currentHorse);
+                                                }
+                                                else {
+                                                    OnGetRedPlayers()[name].DismountHorse();
+                                                }
                                             }
-                                            //OnGetRedPlayers()[name].Update();
                                             break;
                                         case TeamName.Yellow:
                                             lock (OnGetYellowPlayers()) {
@@ -152,8 +174,18 @@ namespace CastleBridge {
                                                 OnGetYellowPlayers()[name].SetDirection(direction);
                                                 OnGetYellowPlayers()[name].SetState(playerState);
                                                 OnGetYellowPlayers()[name].ChangeLocationTo(currentLocation);
+                                                OnGetYellowPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
+                                                OnGetYellowPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
+                                                OnGetYellowPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
+                                                if (isHorseOwner) {
+                                                    Horse currentHorse = OnGetTeams()[team].GetHorse();
+                                                    OnGetYellowPlayers()[name].MountHorse(currentHorse);
+                                                }
+                                                else {
+                                                    OnGetYellowPlayers()[name].DismountHorse();
+                                                }
                                             }
-                                            //OnGetYellowPlayers()[name].Update();
+
                                             break;
                                     }
                                 }

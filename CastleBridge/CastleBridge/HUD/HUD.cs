@@ -69,6 +69,18 @@ namespace CastleBridge {
                 PlayerHealthBar.SetRectangle(PlayerHealthBar.GetRectangle().X, PlayerHealthBar.GetRectangle().Y, PlayerHealthBar.GetRectangle().Width + health, PlayerHealthBar.GetRectangle().Height);
                 PlayerHealth.ChangeText(PlayerHealthBar.GetRectangle().Width.ToString() + "/" + maxHealth + "hp");
                 PlayerHealth.SetPosition(new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top));
+
+                AddPopup(new Popup("+" + health, PlayerHealthBar.GetRectangle().Left + 3, PlayerHealthBar.GetRectangle().Top, Color.White, Color.Green), false);
+            }
+        }
+
+        public void MinusPlayerHealth(int health, int maxHealth) {
+            if (PlayerHealthBar.GetRectangle().Width >= 0) {
+                PlayerHealthBar.SetRectangle(PlayerHealthBar.GetRectangle().X, PlayerHealthBar.GetRectangle().Y, PlayerHealthBar.GetRectangle().Width - health, PlayerHealthBar.GetRectangle().Height);
+                PlayerHealth.ChangeText(PlayerHealthBar.GetRectangle().Width.ToString() + "/" + maxHealth + "hp");
+                PlayerHealth.SetPosition(new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top));
+
+                AddPopup(new Popup("-" + health, PlayerHealthBar.GetRectangle().Left + 3, PlayerHealthBar.GetRectangle().Top, Color.White, Color.Red), false);
             }
         }
 

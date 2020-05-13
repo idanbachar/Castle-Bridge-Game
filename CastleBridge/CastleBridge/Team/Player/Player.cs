@@ -9,7 +9,7 @@ using CastleBridge.OnlineLibraries;
 namespace CastleBridge {
     public class Player {
 
-        private Text Name;
+        private Text NameLabel;
         private Dictionary<string, Character> Characters;
         public Character CurrentCharacter;
         private Rectangle Rectangle;
@@ -23,27 +23,44 @@ namespace CastleBridge {
         private Location CurrentLocation;
         private List<Diamond> CollectedRedDiamonds;
         private List<Diamond> CollectedYellowDiamonds;
-        public Player(CharacterName character, TeamName teamName, string name, int x, int y, int width, int height) {
+        private CharacterName CharacterName;
+        private string Name;
+        public bool IsDead;
+
+        public bool CanStartRespawnTimer;
+
+        private Random Rnd;
+
+        public delegate void AddHealth(int health, int maxHealth);
+        public event AddHealth OnAddHealth;
+
+        public delegate void MinusHealth(int health, int maxHealth);
+        public event MinusHealth OnMinusHealth;
+
+        private Rectangle FloorRectangle;
+
+        public Player(CharacterName character, TeamName teamName, string name, Rectangle floorRectangle) {
             TeamName = teamName;
-            Rectangle = new Rectangle(x, y, width, height);
-            Name = new Text(FontType.Default, name, new Vector2(Rectangle.Left + Rectangle.Width / 2 - 5, Rectangle.Bottom + 5), Color.Gold, true, Color.Black);
+            Name = name;
             DefaultSpeed = 3;
             CurrentSpeed = DefaultSpeed;
             Characters = new Dictionary<string, Character>();
             State = PlayerState.Afk;
-            AddCharacter(CharacterName.Archer);
-            AddCharacter(CharacterName.Knight);
-            AddCharacter(CharacterName.Mage);
-            ChangeCharacter(character);
             Stones = 0;
             Woods = 0;
             CollectedRedDiamonds = new List<Diamond>();
             CollectedYellowDiamonds = new List<Diamond>();
             CurrentHorse = null;
             CurrentLocation = Location.Outside;
+            FloorRectangle = floorRectangle;
+            CharacterName = character;
+            Rnd = new Random();
+            CanStartRespawnTimer = false;
+            IsDead = false;
         }
 
         public void ChangeCharacter(CharacterName newCharacter) {
+            CharacterName = newCharacter;
             CurrentCharacter = Characters[newCharacter.ToString()];
         }
 
@@ -189,6 +206,14 @@ namespace CastleBridge {
             return false;
         }
 
+        public bool IsTouchOnlinePlayer(Player onlinePlayer) {
+
+            if (Rectangle.Intersects(onlinePlayer.GetRectangle()) && CurrentLocation == onlinePlayer.GetCurrentLocation())
+                return true;
+
+            return false;
+        }
+
         public void SetState(PlayerState state) {
 
             State = state;
@@ -207,7 +232,62 @@ namespace CastleBridge {
 
         public void Update() {
 
-            CurrentCharacter.Update();
+            if (CurrentCharacter != null)
+                CurrentCharacter.Update();
+
+            IsDead = CurrentCharacter.IsDead;
+            if (IsDead) {
+                Dead();
+            }
+        }
+
+        public void Hit(int damage) {
+
+            CurrentCharacter.DecreaseHp(damage);
+            OnMinusHealth(damage, CurrentCharacter.GetMaxHealth());
+        }
+
+        public void Dead() {
+            CanStartRespawnTimer = true;
+        }
+
+        public void Respawn() {
+
+            int x = 0;
+            int y = FloorRectangle.Top - 75 + Rnd.Next(250);
+            SetDirection(Direction.Right);
+
+            switch (TeamName) {
+                case TeamName.Red:
+                    x = FloorRectangle.Left + 150 + Rnd.Next(150);
+                    SetDirection(Direction.Right);
+                    break;
+                case TeamName.Yellow:
+                    x = FloorRectangle.Right - 125 - Rnd.Next(150);
+                    SetDirection(Direction.Left);
+                    break;
+            }
+
+            Rectangle = new Rectangle(x, y, 125, 175);
+            NameLabel = new Text(FontType.Default, Name, new Vector2(Rectangle.Left + Rectangle.Width / 2 - 5, Rectangle.Bottom + 5), Color.Gold, true, Color.Black);
+
+            Characters.Clear();
+            AddCharacter(CharacterName.Archer);
+            AddCharacter(CharacterName.Knight);
+            AddCharacter(CharacterName.Mage);
+            ChangeCharacter(CharacterName);
+
+            //OnAddHealth(CurrentCharacter.GetMaxHealth(), CurrentCharacter.GetMaxHealth());
+            IsDead = false;
+            CanStartRespawnTimer = false;
+        }
+
+        public void SetVisible(bool value) {
+
+            foreach (KeyValuePair<string, Character> character in Characters)
+                character.Value.SetVisible(value);
+
+            NameLabel.SetVisible(value);
         }
 
         public Character GetCurrentCharacter() {
@@ -216,6 +296,7 @@ namespace CastleBridge {
 
         public void SetDirection(Direction newDirection) {
 
+ 
             foreach (KeyValuePair<string, Character> character in Characters)
                 character.Value.SetDirection(newDirection);
 
@@ -231,7 +312,7 @@ namespace CastleBridge {
             foreach (KeyValuePair<string, Character> character in Characters)
                 character.Value.SetRectangle(newRectangle);
 
-            Name.SetPosition(new Vector2(newRectangle.Left + newRectangle.Width / 2 - 5, newRectangle.Bottom + 5));
+            NameLabel.SetPosition(new Vector2(newRectangle.Left + newRectangle.Width / 2 - 5, newRectangle.Bottom + 5));
         }
 
         public Rectangle GetRectangle() {
@@ -303,19 +384,18 @@ namespace CastleBridge {
         }
         public void MountHorse(Horse horse) {
             CurrentHorse = horse;
+            CurrentHorse.SetOwner(this);
             CurrentHorse.GetTooltip().ChangeText("Press 'F' to dismount");
             SetSpeed(horse.GetSpeed());
-            SetRectangle(new Rectangle(horse.GetRectangle().Left + horse.GetRectangle().Width / 2 - Rectangle.Width / 2,
-                                       horse.GetRectangle().Top - Rectangle.Height / 4,
-                                       Rectangle.Width,
-                                       Rectangle.Height));
         }
 
         public void DismountHorse() {
-            CurrentHorse.RemoveOwner();
-            CurrentHorse.GetTooltip().SetVisible(false);
-            CurrentHorse.GetTooltip().ChangeText("Press 'E' to mount");
-            CurrentHorse.GetTooltip().SetPosition(new Vector2(CurrentHorse.GetRectangle().X + 50, CurrentHorse.GetRectangle().Y - 65));
+            if (CurrentHorse != null) {
+                CurrentHorse.RemoveOwner();
+                CurrentHorse.GetTooltip().SetVisible(false);
+                CurrentHorse.GetTooltip().ChangeText("Press 'E' to mount");
+                CurrentHorse.GetTooltip().SetPosition(new Vector2(CurrentHorse.GetRectangle().X + 50, CurrentHorse.GetRectangle().Y - 65));
+            }
             CurrentHorse = null;
             SetSpeed(DefaultSpeed);
         }
@@ -333,13 +413,15 @@ namespace CastleBridge {
         }
 
         public string GetName() {
-            return Name.GetValue();
+            return NameLabel.GetValue();
         }
 
         public void Draw() {
 
-            Name.Draw();
-            CurrentCharacter.Draw();
+            if (!IsDead) {
+                NameLabel.Draw();
+                CurrentCharacter.Draw();
+            }
         }
     }
 }

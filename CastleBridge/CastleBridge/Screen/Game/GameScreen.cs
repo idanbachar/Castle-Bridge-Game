@@ -23,6 +23,8 @@ namespace CastleBridge {
         private bool IsPressedF;
         private GameClient GameClient;
 
+        private int PlayerRespawnTimer;
+
         public GameScreen(Viewport viewPort) : base(viewPort) {
             Init(viewPort);
         }
@@ -32,6 +34,22 @@ namespace CastleBridge {
             InitMap();
             InitHUD();
             Camera = new Camera(viewPort);
+            PlayerRespawnTimer = 0;
+        }
+
+
+        private void CheckForPlayerRespawn() {
+
+            if (Player.CanStartRespawnTimer) {
+
+                if (PlayerRespawnTimer < 1000)
+                    PlayerRespawnTimer++;
+                else {
+                    PlayerRespawnTimer = 0;
+                    Player.Respawn();
+                }
+            }
+
         }
 
         private void GenerateXp() {
@@ -52,11 +70,8 @@ namespace CastleBridge {
             if (Keyboard.GetState().IsKeyDown(Keys.D)) {
                 Player.SetDirection(Direction.Right);
 
-                if(Player.GetCurrentHorse() != null) {
+                if (Player.GetCurrentHorse() != null) {
                     if (!Player.GetCurrentHorse().IsOnRightMap()) {
-                        Player.GetCurrentHorse().SetDirection(Direction.Right);
-                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
-                        Player.GetCurrentHorse().Move(Direction.Right);
                         Player.SetState(PlayerState.Walk);
                         Player.Move(Direction.Right);
                     }
@@ -73,9 +88,6 @@ namespace CastleBridge {
 
                 if (Player.GetCurrentHorse() != null) {
                     if (!Player.GetCurrentHorse().IsOnLeftMap()) {
-                        Player.GetCurrentHorse().SetDirection(Direction.Left);
-                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
-                        Player.GetCurrentHorse().Move(Direction.Left);
                         Player.SetState(PlayerState.Walk);
                         Player.Move(Direction.Left);
                     }
@@ -92,8 +104,6 @@ namespace CastleBridge {
 
                 if (Player.GetCurrentHorse() != null) {
                     if (!Player.GetCurrentHorse().IsOnTopMap(Map)) {
-                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
-                        Player.GetCurrentHorse().Move(Direction.Up);
                         Player.Move(Direction.Up);
                         Player.SetState(PlayerState.Walk);
                     }
@@ -110,8 +120,6 @@ namespace CastleBridge {
 
                 if (Player.GetCurrentHorse() != null) {
                     if (!Player.GetCurrentHorse().IsOnBottomMap()) {
-                        Player.GetCurrentHorse().SetState(Horsestate.Walk);
-                        Player.GetCurrentHorse().Move(Direction.Down);
                         Player.Move(Direction.Down);
                         Player.SetState(PlayerState.Walk);
                     }
@@ -227,7 +235,6 @@ namespace CastleBridge {
                     team.Value.GetHorse().GetTooltip().SetVisible(true);
                     if (Keyboard.GetState().IsKeyDown(Keys.E) && !IsPressedE) {
                         IsPressedE = true;
-                        team.Value.GetHorse().SetOwner(Player);
                         Player.MountHorse(team.Value.GetHorse());
                         HUD.SetHorseAvatar(Player.GetTeamName());
                         HUD.GetHorseAvatar().SetVisible(true);
@@ -293,7 +300,6 @@ namespace CastleBridge {
                                     Player.GetCurrentCharacter().IncreaseHp(15);
                                     HUD.AddPlayerHealth(15, Player.GetCurrentCharacter().GetMaxHealth());
                                     HUD.AddPopup(new Popup("+15hp", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Red), true);
-                                    HUD.AddPopup(new Popup("+15", HUD.GetPlayerHealthBar().GetRectangle().Left + 3, HUD.GetPlayerHealthBar().GetRectangle().Top, Color.White, Color.Red), false);
                                     Map.GetWorldEntities().RemoveAt(i);
                                 }
                                 else {
@@ -436,7 +442,7 @@ namespace CastleBridge {
                 if (Keyboard.GetState().GetPressedKeys().Length == 0) {
                     Player.SetState(PlayerState.Afk);
                     if (Player.GetCurrentHorse() != null) {
-                        Player.GetCurrentHorse().SetState(Horsestate.Afk);
+                        Player.GetCurrentHorse().SetState(HorseState.Afk);
                     }
                 }
 
@@ -455,38 +461,25 @@ namespace CastleBridge {
 
         public void JoinGame(CharacterName characterName, TeamName team, string name) {
 
-            int x = 0;
-            int y = Map.GetGrass().GetRectangle().Top - 75;
-            Direction direction = Direction.Right;
+            Player = new Player(characterName, team, name, Map.GetGrass().GetRectangle());
+            Player.OnAddHealth += HUD.AddPlayerHealth;
+            Player.OnMinusHealth += HUD.MinusPlayerHealth;
+            Player.Respawn();
 
-            switch (team) {
-                case TeamName.Red:
-                    x = Map.GetGrass().GetRectangle().Left + 150;
-                    direction = Direction.Right;
-                    break;
-                case TeamName.Yellow:
-                    x = Map.GetGrass().GetRectangle().Right - 125;
-                    direction = Direction.Left;
-                    break;
-            }
-
-            Player = new Player(characterName, team, name, x, y, 125, 175);
-            Player.SetDirection(direction);
 
             GameClient = new GameClient();
             GameClient.OnGetThePlayer += GetPlayer;
             GameClient.OnGetRedPlayers += Map.GetTeams()[TeamName.Red].GetPlayers;
             GameClient.OnGetYellowPlayers += Map.GetTeams()[TeamName.Yellow].GetPlayers;
             GameClient.OnJoinPlayer += Map.AddPlayer;
+            GameClient.OnGetTeams += Map.GetTeams;
             GameClient.OnAddPopup += HUD.AddPopup;
             GameClient.Connect("192.168.1.17", 4441);
             GameClient.StartSendingPlayerData();
             GameClient.StartReceivingPlayersData();
-
-
         }
 
- 
+
 
         private void InitMap() {
             Map = new Map();
@@ -519,6 +512,7 @@ namespace CastleBridge {
 
         private void UpdatePlayer() {
             Player.Update();
+            CheckForPlayerHit();
 
             if (Player.CurrentCharacter is Archer) {
 
@@ -589,14 +583,53 @@ namespace CastleBridge {
             }
         }
 
+        private void CheckForPlayerHit() {
+
+            foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
+
+                foreach (KeyValuePair<string, Player> onlinePlayer in team.Value.GetPlayers()) {
+
+                    PlayerState onlineState = onlinePlayer.Value.GetState();
+                    PlayerState playerState = Player.GetState();
+
+                    if (onlinePlayer.Value.GetCurrentCharacter() is Knight) {
+                        if (Player.IsTouchOnlinePlayer(onlinePlayer.Value)) {
+
+                            if (Player.GetTeamName() != onlinePlayer.Value.GetTeamName()) {
+                                if (onlineState == PlayerState.Attack && playerState != PlayerState.Defence &&
+                                    onlinePlayer.Value.GetCurrentAnimation().IsFinished) {
+                                    int onlinePlayerDamage = ((Knight)Player.GetCurrentCharacter()).GetAttackDamage();
+                                    Player.Hit(onlinePlayerDamage);
+                                }
+                            }
+                        }
+                    }
+                    else if (onlinePlayer.Value.GetCurrentCharacter() is Archer) {
+                        if(onlineState == PlayerState.Attack && onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished) {
+                            onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished = false;
+                            Archer archer = onlinePlayer.Value.GetCurrentCharacter() as Archer;
+                            archer.ShootArrow(Direction.Down, Player.GetCurrentLocation());
+                        }
+                    }
+                }
+            }
+        }
+
         public override void Update() {
-            CheckKeyboard();
-            UpdatePlayer();
+
+            if (!Player.IsDead) {
+                CheckKeyboard();
+                UpdatePlayer();
+                GenerateXp();
+            }
+            else {
+                CheckForPlayerRespawn();
+
+            }
             UpdatePlayers();
-            GenerateXp();
             Map.Update();
-            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.WIDTH, Map.HEIGHT);
             HUD.Update();
+            Camera.Focus(new Vector2(Player.GetRectangle().X, Player.GetRectangle().Y), Map.WIDTH, Map.HEIGHT);
         }
 
         public override void Draw() {

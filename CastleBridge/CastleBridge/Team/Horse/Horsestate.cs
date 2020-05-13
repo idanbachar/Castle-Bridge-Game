@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CastleBridge {
-    public enum Horsestate {
+    public enum HorseState {
         Afk,
         Walk
     }

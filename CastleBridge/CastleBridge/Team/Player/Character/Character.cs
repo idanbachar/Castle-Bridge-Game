@@ -25,6 +25,8 @@ namespace CastleBridge {
         protected PlayerState State;
         protected TeamName TeamName;
         private Rectangle StartingRectangle;
+
+        public bool IsDead;
         public Character(CharacterName name, TeamName teamName, int x, int y, int width, int height) {
 
             Name = name;
@@ -38,6 +40,7 @@ namespace CastleBridge {
             Level = 0;
             Xp = 0;
             MaxXp = 100;
+            IsDead = false;
         }
 
         private void InitAnimations() {
@@ -81,6 +84,15 @@ namespace CastleBridge {
 
         }
 
+        public void SetVisible(bool value) {
+
+            AfkAnimation.SetVisible(value);
+            WalkAnimation.SetVisible(value);
+            AttackAnimation.SetVisible(value);
+            LootAnimation.SetVisible(value);
+            DefenceAnimation.SetVisible(value);
+        }
+
         public void SetColor(Color color) {
 
             AfkAnimation.SetColor(color);
@@ -119,14 +131,28 @@ namespace CastleBridge {
 
         public void SetHealth(int hp) {
             Health = hp;
+            CheckIfDead();
+        }
+
+        private void CheckIfDead() {
+            if (Health <= 0) IsDead = true;
+            else IsDead = false;
         }
 
         public void IncreaseHp(int hp) {
-            Health += Health < MaxHealth ? hp : 0;
+            Health += hp;
+            if (Health >= MaxHealth)
+                Health = MaxHealth;
+
+            CheckIfDead();
         }
 
         public void DecreaseHp(int hp) {
-            Health -= (Health - hp) > 0 ? hp : 0;
+            Health -= hp;
+            if (Health <= 0)
+                Health = 0;
+
+            CheckIfDead();
         }
 
         public int GetHealth() {

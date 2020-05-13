@@ -57,27 +57,8 @@ namespace CastleBridge {
 
         public void AddPlayer(CharacterName character, TeamName team, string name) {
 
-            int x = 0;
-            int y = 0;
-            int width = 125;
-            int height = 175;
-            Direction direction = Direction.Right;
-
-            switch (team) {
-                case TeamName.Red:
-                    x = Rnd.Next(MapDimensionRectangle.Left + 25, MapDimensionRectangle.Left + 500);
-                    y = Rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
-                    direction = Direction.Right;
-                    break;
-                case TeamName.Yellow:
-                    x = Rnd.Next(MapDimensionRectangle.Right - 500, MapDimensionRectangle.Right - 100);
-                    y = Rnd.Next(MapDimensionRectangle.Top - 75, MapDimensionRectangle.Top + 300);
-                    direction = Direction.Left;
-                    break;
-            }
-
-            Player player = new Player(character, team, name, x, y, width, height);
-            player.SetDirection(direction);
+            Player player = new Player(character, team, name, MapDimensionRectangle);
+            player.Respawn();
 
             lock (Players) {
                 Players.Add(name, player);
