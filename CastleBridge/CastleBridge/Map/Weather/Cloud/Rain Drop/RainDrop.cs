@@ -8,10 +8,16 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class RainDrop {
 
-        private Animation Animation;
-        private int Speed;
-        public bool IsFinished;
+        private Animation Animation; //Rain drop's animation
+        private int Speed; //Rain drop's speed
+        public bool IsFinished; //Rain drop's is finished indication
 
+        /// <summary>
+        /// Receives x,y coordinates and
+        /// creates a rain drop
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public RainDrop(int x, int y) {
 
             Animation = new Animation("map/clouds/rain drop/drop_", new Rectangle(x, y, 5, 10), 0, 0, 1, 1, false, false);
@@ -20,6 +26,9 @@ namespace CastleBridge {
             IsFinished = false;
         }
 
+        /// <summary>
+        /// Makes rain drop to fall
+        /// </summary>
         public void Fall() {
 
             Animation.SetRectangle(Animation.GetCurrentSpriteImage().GetRectangle().X,
@@ -33,7 +42,12 @@ namespace CastleBridge {
 
         }
 
+        /// <summary>
+        /// Draw rain drop
+        /// </summary>
         public void Draw() {
+
+            //Draw rain drop:
             Animation.Draw();
         }
     }
