@@ -8,20 +8,25 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class CharacterSelectionMenu : Menu {
 
-        private Image RedCastle;
-        private Image YellowCastle;
-        private Image CurrentCastle;
-        private List<Character> RedCharacters;
-        private List<Character> YellowCharacters;
-        private List<Character> CurrentCharacters;
+        private Image RedCastle; //Red castle image
+        private Image YellowCastle; //Yellow castle image
+        private Image CurrentCastle; //Current castle image
+        private List<Character> RedCharacters; //Red characters
+        private List<Character> YellowCharacters; //Yellow characters
+        private List<Character> CurrentCharacters; //Current characters
 
-        private Button BackButton;
-        private Button OkButton;
+        private Button BackButton; //Back button
+        private Button OkButton; //Ok button
 
-        private Image ViSymbol;
+        private Image ViSymbol; //Vi symbol image
 
-        private CharacterName SelectedCharacter;
+        private CharacterName SelectedCharacter; //Selected character
 
+        /// <summary>
+        /// Receives title
+        /// and creates a menu
+        /// </summary>
+        /// <param name="title"></param>
         public CharacterSelectionMenu(string title): base(title) {
             RedCastle = new Image("map/castles/teams/red/outside", "castle", 0, 100, 1400, 431, Color.White);
             YellowCastle = new Image("map/castles/teams/yellow/outside", "castle", 0, 100, 1400, 431, Color.White);
@@ -33,14 +38,19 @@ namespace CastleBridge {
             ViSymbol = new Image("menu/symbols/vi", 0, 0, 105, 70);
             SelectedCharacter = CharacterName.None;
 
+            //Initializes characters:
             InitCharacters();
-        
         }
 
+        /// <summary>
+        /// Receives a selected character and 
+        /// setting a vi image in top of selected character's position
+        /// </summary>
+        /// <param name="selectedCharacter"></param>
         public void SelectCharacter(Character selectedCharacter) {
 
-            foreach(Character character in CurrentCharacters) {
-                if(character == selectedCharacter) {
+            foreach (Character character in CurrentCharacters) {
+                if (character == selectedCharacter) {
 
                     SelectedCharacter = selectedCharacter.GetName();
 
@@ -50,9 +60,11 @@ namespace CastleBridge {
                                           ViSymbol.GetRectangle().Height);
                 }
             }
-
         }
 
+        /// <summary>
+        /// Initializes both teams's characters
+        /// </summary>
         private void InitCharacters() {
             RedCharacters = new List<Character>();
             YellowCharacters = new List<Character>();
@@ -69,9 +81,14 @@ namespace CastleBridge {
             CurrentCharacters = RedCharacters;
         }
 
-        public void SelectCastleByTeam(TeamName team) {
+        /// <summary>
+        /// Receives target team
+        /// and selectes characters of target team
+        /// </summary>
+        /// <param name="targetTeam"></param>
+        public void SelectCastleByTeam(TeamName targetTeam) {
 
-            switch (team) {
+            switch (targetTeam) {
                 case TeamName.Red:
                     CurrentCastle = RedCastle;
                     CurrentCharacters = RedCharacters;
@@ -83,40 +100,69 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Updates stuff
+        /// </summary>
         public override void Update() {
 
+            //Updates weather:
             Weather.Update();
 
+            //Updates back button:
             BackButton.Update();
+
+            //Updates ok button:
             OkButton.Update();
 
+            //Updates each character:
             foreach (Character character in CurrentCharacters)
                 character.Update();
         }
 
+        /// <summary>
+        /// Get back button
+        /// </summary>
+        /// <returns></returns>
         public Button GetBackButton() {
             return BackButton;
         }
 
+        /// <summary>
+        /// Get ok button
+        /// </summary>
+        /// <returns></returns>
         public Button GetOkButton() {
             return OkButton;
         }
 
+        /// <summary>
+        /// Get current characters
+        /// </summary>
+        /// <returns></returns>
         public List<Character> GetCurrentCharacters() {
             return CurrentCharacters;
         }
 
+        /// <summary>
+        /// Draw character selection menu
+        /// </summary>
         public override void Draw() {
             base.Draw();
 
+            //Draw current castle:
             CurrentCastle.Draw();
 
+            //Draw characters:
             foreach (Character character in CurrentCharacters)
                 character.Draw();
 
+            //Draw back button:
             BackButton.Draw();
+
+            //Draw ok button:
             OkButton.Draw();
 
+            //Draw vi symbol only if characters has been selected:
             if (SelectedCharacter != CharacterName.None)
                 ViSymbol.Draw();
         }

@@ -9,22 +9,27 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class NameSelectionMenu : Menu {
 
-        private Image RedCastle;
-        private Image YellowCastle;
-        private Image CurrentCastle;
-        private List<Character> RedCharacters;
-        private List<Character> YellowCharacters;
-        private Character CurrentCharacter;
+        private Image RedCastle; //Red castle image
+        private Image YellowCastle; //Yellow castle image
+        private Image CurrentCastle; //Current castle image
+        private List<Character> RedCharacters; //Red characters
+        private List<Character> YellowCharacters; //Yellow characters
+        private Character CurrentCharacter; //Current character
 
-        private Keys[] lastPressedKeys = new Keys[1];
-        public Text Text;
-        private string Name;
-        private Image InputText;
-        private Button OkButton;
-        private Button BackButton;
-        public bool IsSelected;
-        private bool caps;
+        private Keys[] lastPressedKeys = new Keys[1]; //last pressed keys
+        public Text Text; //Text
+        private string Name; //Name
+        private Image InputText; //Input text image
+        private Button OkButton; //Ok button
+        private Button BackButton; //Back button
+        public bool IsSelected; //Is text selected indication
+        private bool caps; //Caps lock
 
+        /// <summary>
+        /// Receives title
+        /// and creates a menu
+        /// </summary>
+        /// <param name="title"></param>
         public NameSelectionMenu(string title): base(title) {
 
             RedCastle = new Image("map/castles/teams/red/outside", "castle", 0, 100, 1400, 431, Color.White);
@@ -39,9 +44,13 @@ namespace CastleBridge {
             IsSelected = false;
             SelectedTeam = TeamName.None;
 
+            //Initializes characters:
             InitCharacters();
         }
 
+        /// <summary>
+        /// Initializes both teams's characters
+        /// </summary>
         private void InitCharacters() {
             RedCharacters = new List<Character>();
             YellowCharacters = new List<Character>();
@@ -58,6 +67,12 @@ namespace CastleBridge {
             CurrentCharacter = RedCharacters[0];
         }
 
+        /// <summary>
+        /// Receives selected character type name, selected team
+        /// and updates current castle and current character by team and character parameters
+        /// </summary>
+        /// <param name="selectedCharacter"></param>
+        /// <param name="selectedTeam"></param>
         public void SelectTeamAndCharacter(CharacterName selectedCharacter, TeamName selectedTeam) {
 
             switch (selectedTeam) {
@@ -72,6 +87,13 @@ namespace CastleBridge {
             CurrentCharacter = GetSelectedCharacterByTeam(selectedCharacter ,selectedTeam);
         }
 
+        /// <summary>
+        /// Receives target character type name, team
+        /// and returns selected character by team and character parameters
+        /// </summary>
+        /// <param name="targetCharacter"></param>
+        /// <param name="team"></param>
+        /// <returns></returns>
         private Character GetSelectedCharacterByTeam(CharacterName targetCharacter, TeamName team) {
 
             if (team == TeamName.Red) {
@@ -94,6 +116,9 @@ namespace CastleBridge {
             return null;
         }
 
+        /// <summary>
+        /// Checks which keys pressed
+        /// </summary>
         private void GetKeys() {
             KeyboardState kbState = Keyboard.GetState();
             Keys[] pressedKeys = kbState.GetPressedKeys();
@@ -113,6 +138,10 @@ namespace CastleBridge {
             lastPressedKeys = pressedKeys;
         }
 
+        /// <summary>
+        /// Checks keys clicks and write name
+        /// </summary>
+        /// <param name="key"></param>
         private void OnKeyDown(Keys key) {
             //do stuff
             if (key == Keys.Back && Name.Length > 0) //Removes a letter from the name if there is a letter to remove
@@ -152,6 +181,10 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Checks if keys are up
+        /// </summary>
+        /// <param name="key"></param>
         private void OnKeyUp(Keys key) {
             //Sets caps to false if one of the shift keys goes up
             if (key == Keys.LeftShift || key == Keys.RightShift) {
@@ -159,44 +192,81 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Update stuff
+        /// </summary>
         public override void Update() {
 
+            //Check keys pressed:
             GetKeys();
+
+            //Updates weather:
             Weather.Update();
+
+            //Updates current character:
             CurrentCharacter.Update();
 
+            //Checks when to activate name selected indication:
             if (Name.Length > 2)
                 IsSelected = true;
             else
                 IsSelected = false;
 
+            //Update back button:
             BackButton.Update();
+
+            //Update ok button:
             OkButton.Update();
         }
 
+        /// <summary>
+        /// Get back button
+        /// </summary>
+        /// <returns></returns>
         public Button GetBackButton() {
             return BackButton;
         }
 
+        /// <summary>
+        /// Get selected name
+        /// </summary>
+        /// <returns></returns>
         public string GetSelectedName() {
             return Name;
         }
 
+
+        /// <summary>
+        /// Get ok button
+        /// </summary>
+        /// <returns></returns>
         public Button GetOkButton() {
             return OkButton;
         }
 
+
+        /// <summary>
+        /// Draw name selection menu
+        /// </summary>
         public override void Draw() {
             base.Draw();
 
+            //Draw current castle:
             CurrentCastle.Draw();
+
+            //Draw current character:
             CurrentCharacter.Draw();
 
+            //Draw input text:
             InputText.Draw();
+
+            //Draw text:
             Text.Draw();
 
+            //Draw back button:
             BackButton.Draw();
 
+            //Draw ok button only if name is written:
             if (IsSelected)
                 OkButton.Draw();
         }

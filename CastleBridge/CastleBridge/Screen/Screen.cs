@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public abstract class Screen {
 
-        public Screen(Viewport viewPort) {
-
-        }
+        public Screen(Viewport viewPort) { }
 
         public abstract void Update();
 

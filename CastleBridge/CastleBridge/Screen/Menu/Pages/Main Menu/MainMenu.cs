@@ -7,14 +7,9 @@ using System.Threading.Tasks;
 
 namespace CastleBridge {
     public class MainMenu : Menu {
- 
-        public MainMenu(string title): base(title) {
 
+        public MainMenu(string title) : base(title) { }
 
-        }
-
-        public override void Update() {
-
-        }
+        public override void Update() { }
     }
 }

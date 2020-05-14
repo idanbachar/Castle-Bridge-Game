@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class TeamSelectionMenu : Menu {
 
-        private Button RedCastle;
-        private Button YellowCastle;
-        private Button OkButton;
-        public bool IsSelected;
+        private Button RedCastle; //Red castle button
+        private Button YellowCastle; //Yellow castle buttn
+        private Button OkButton; //Ok button
+        public bool IsSelected; //Is team selected indication
 
+        /// <summary>
+        /// Receives title
+        /// and creates a menu
+        /// </summary>
+        /// <param name="title"></param>
         public TeamSelectionMenu(string title): base(title) {
 
             RedCastle = new Button(new Image("menu/castles selection/castle_left_side_noteam", 0, 100, 700, 431), new Image("menu/castles selection/castle_left_side_redteam", 0, 100, 700, 431), string.Empty, Color.White);
@@ -24,49 +29,70 @@ namespace CastleBridge {
             SelectedTeam = TeamName.None;
         }
 
+        /// <summary>
+        /// Update stuff
+        /// </summary>
         public override void Update() {
 
+            //Updates red castle:
             RedCastle.Update();
+
+            //Update yellow castle:
             YellowCastle.Update();
 
+            //Checks if clicking on red castle:
             if (RedCastle.IsClicking()) {
                 IsSelected = true;
                 SelectedTeam = TeamName.Red;
                 YellowCastle.Reset();
             }
+
+            //Checks if clicking on yellow castle:
             if (YellowCastle.IsClicking()) {
                 IsSelected = true;
                 SelectedTeam = TeamName.Yellow;
                 RedCastle.Reset();
             }
+
+            //Checks if there is no team selected:
             if(!RedCastle.IsClicked && !YellowCastle.IsClicked) {
                 IsSelected = false;
                 SelectedTeam = TeamName.None;
             }
 
+            //Updates weather:
             Weather.Update();
 
+            //Updates ok button:
             OkButton.Update();
         }
 
+        //Get red castle button:
         public Button GetRedCastle() {
             return RedCastle;
         }
 
+        //Get yellow castle button:
         public Button GetYellowCastle() {
             return YellowCastle;
         }
 
+        //Get ok button:
         public Button GetOkButton() {
             return OkButton;
         }
  
+        //Draw team selection menu
         public override void Draw() {
             base.Draw();
 
+            //Draw red castle:
             RedCastle.Draw();
+
+            //Draw yellow castle:
             YellowCastle.Draw();
 
+            //Draw ok button only if team is selected:
             if (IsSelected)
                 OkButton.Draw();
         }
