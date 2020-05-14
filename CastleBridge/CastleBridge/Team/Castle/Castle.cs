@@ -8,15 +8,22 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class Castle {
 
-        private Image Image;
-        private TeamName TeamName;
-        private List<Diamond> Diamonds;
-        private Door OutsideDoor;
-        private Door InsideDoor;
-        private Location CurrentLocation;
-        private Image InsideWall;
-        private Image InsideFloor;
+        private Image Image; //Castle's image
+        private TeamName TeamName; //Castle's team
+        private List<Diamond> Diamonds; //Castle's diamonds
+        private Door OutsideDoor; //Castle's outside door
+        private Door InsideDoor; //Castle's inside door
+        private Location CurrentLocation; //Castle's current location
+        private Image InsideWall; //Castle's inside wall
+        private Image InsideFloor; //Castle's inside floor
 
+        /// <summary>
+        /// Receives team and coordinates
+        /// and creates a castle.
+        /// </summary>
+        /// <param name="teamName"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public Castle(TeamName teamName, int x, int y) {
             TeamName = teamName;
             Image = new Image("map/castles/teams/" + teamName + "/outside", "castle", x, y, 1400, 431, Color.White);
@@ -28,6 +35,11 @@ namespace CastleBridge {
             CurrentLocation = Location.Outside;
         }
 
+        /// <summary>
+        /// Receives coordinates and creates diamond
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         private void AddDiamond(int x, int y) {
             switch (TeamName) {
                 case TeamName.Red:
@@ -39,6 +51,9 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Initializes diamonds
+        /// </summary>
         private void InitDiamonds() {
 
             Diamonds = new List<Diamond>();
@@ -46,35 +61,65 @@ namespace CastleBridge {
                 AddDiamond(100, InsideFloor.GetRectangle().Top - 10 + (i * 100));
         }
 
+        /// <summary>
+        /// Get team
+        /// </summary>
+        /// <returns></returns>
         public TeamName GetTeam() {
             return TeamName;
         }
 
+        /// <summary>
+        /// Get diamonds
+        /// </summary>
+        /// <returns></returns>
         public List<Diamond> GetDiamonds() {
             return Diamonds;
         }
 
+        /// <summary>
+        /// Get outside door
+        /// </summary>
+        /// <returns></returns>
         public Door GetOutsideDoor() {
             return OutsideDoor;
         }
 
+        /// <summary>
+        /// Get inside door
+        /// </summary>
+        /// <returns></returns>
         public Door GetInsideDoor() {
             return InsideDoor;
         }
 
+        /// <summary>
+        /// Get current location
+        /// </summary>
+        /// <returns></returns>
         public Location GetCurrentLocation() {
             return CurrentLocation;
         }
 
+        /// <summary>
+        /// Change to a new location
+        /// </summary>
+        /// <param name="newLocation"></param>
         public void ChangeLocationTo(Location newLocation) {
             CurrentLocation = newLocation;
         }
 
+        /// <summary>
+        /// Draw outside castle's stuff
+        /// </summary>
         public void DrawOutside() {
             Image.Draw();
             OutsideDoor.Draw();
         }
- 
+
+        /// <summary>
+        /// Draw inside castle's stuff
+        /// </summary>
         public void DrawInside() {
             InsideFloor.Draw();
             InsideWall.Draw();

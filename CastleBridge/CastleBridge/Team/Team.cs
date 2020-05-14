@@ -8,27 +8,38 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class Team {
 
-        private TeamName Name;
-        private Castle Castle;
-        private Dictionary<string, Player> Players;
-        private Rectangle MapDimensionRectangle;
-        private int MaxPlayers;
-        private int MinPlayers;
-        private Horse Horse;
-        private Random Rnd;
+        private TeamName Name; //Team's name
+        private Castle Castle; //Team's Castle
+        private Dictionary<string, Player> Players; //Team's players
+        private Rectangle MapDimensionRectangle; //Map's dimensions
+        private int MaxPlayers; //Max players each team
+        private int MinPlayers; //Min players each team
+        private Horse Horse; //Team's horse
 
+        /// <summary>
+        /// Receives team name and map dimensions
+        /// and creates a team.
+        /// </summary>
+        /// <param name="teamName"></param>
+        /// <param name="mapDimensionRectangle"></param>
         public Team(TeamName teamName, Rectangle mapDimensionRectangle) {
             Name = teamName;
             Players = new Dictionary<string, Player>();
             MaxPlayers = 6;
             MinPlayers = 2;
             MapDimensionRectangle = mapDimensionRectangle;
-            InitCastles(mapDimensionRectangle);
-            Rnd = new Random();
-            InitHorses();
+
+            //Init castle:
+            InitCastle(mapDimensionRectangle);
+            
+            //Init horse:
+            InitHorse();
         }
 
-        private void InitHorses() {
+        /// <summary>
+        /// Initialize horse
+        /// </summary>
+        private void InitHorse() {
 
             switch (Name) {
 
@@ -43,7 +54,11 @@ namespace CastleBridge {
             }
         }
 
-        private void InitCastles(Rectangle mapDimensionRectangle) {
+        /// <summary>
+        /// Initialize castle
+        /// </summary>
+        /// <param name="mapDimensionRectangle"></param>
+        private void InitCastle(Rectangle mapDimensionRectangle) {
 
             switch (Name) {
                 case TeamName.Red:
@@ -55,36 +70,70 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Add online player to team by selected character, team, name.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="team"></param>
+        /// <param name="name"></param>
         public void AddPlayer(CharacterName character, TeamName team, string name) {
 
+            //Creates player:
             Player player = new Player(character, team, name, MapDimensionRectangle);
+            
+            //Respawn player:
             player.Respawn();
 
+            //Add player to players list using lock function to avoid multi task crash:
             lock (Players) {
                 Players.Add(name, player);
             }
         }
 
+        /// <summary>
+        /// Get players dictionary
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, Player> GetPlayers() {
             return Players;
         }
 
+        /// <summary>
+        /// Get team name
+        /// </summary>
+        /// <returns></returns>
         public TeamName GetName() {
             return Name;
         }
 
+        /// <summary>
+        /// Get Castle
+        /// </summary>
+        /// <returns></returns>
         public Castle GetCastle() {
             return Castle;
         }
 
+        /// <summary>
+        /// Get max players
+        /// </summary>
+        /// <returns></returns>
         public int GetMaxPlayers() {
             return MaxPlayers;
         }
 
+        /// <summary>
+        /// Get min players
+        /// </summary>
+        /// <returns></returns>
         public int GetMinPlayers() {
             return MinPlayers;
         }
 
+        /// <summary>
+        /// Get horse
+        /// </summary>
+        /// <returns></returns>
         public Horse GetHorse() {
             return Horse;
         }

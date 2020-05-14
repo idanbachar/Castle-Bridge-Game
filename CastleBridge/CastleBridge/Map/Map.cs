@@ -8,24 +8,27 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class Map {
 
-        private MapName Name;
-        public static int WIDTH;
-        public static int HEIGHT;
-        private Image Grass;
-        private Weather Weather;
-        private Dictionary<string, MapEntity> WorldEntities;
-        private Dictionary<TeamName, Team> Teams;
-        private Random Rnd;
+        private MapName Name; //Map's name
+        public static int WIDTH; //Map's width
+        public static int HEIGHT; //Map's height
+        private Image Grass; //Map's grass
+        private Weather Weather; //Map's weather
+        private Dictionary<string, MapEntity> WorldEntities; //Map's world entities
+        private Dictionary<TeamName, Team> Teams; //Map's teams
 
         public Map() {
-            Rnd = new Random();
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
             WorldEntities = new Dictionary<string, MapEntity>();
+
+            //Initialize:
             Init();
         }
 
+        /// <summary>
+        /// Initializes map
+        /// </summary>
         private void Init() {
 
             InitGrass();
@@ -34,14 +37,9 @@ namespace CastleBridge {
             InitTeams();
         }
 
-        public void Update() {
-
-            Weather.Update();
-
-            foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.GetHorse().Update();
-        }
-
+        /// <summary>
+        /// Init teams
+        /// </summary>
         private void InitTeams() {
 
             Teams = new Dictionary<TeamName, Team>();
@@ -49,23 +47,20 @@ namespace CastleBridge {
             Teams.Add(TeamName.Yellow, new Team(TeamName.Yellow, Grass.GetRectangle()));
         }
 
-        public void RemoveMapEntity(string key) {
-            if (WorldEntities.ContainsKey(key)) {
-                lock (WorldEntities) {
-                    WorldEntities.Remove(key);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Initializes grass
+        /// </summary>
         private void InitGrass() {
             Grass = new Image("map/" + Name, "grass", 0, HEIGHT / 5, WIDTH, HEIGHT, Color.White);
         }
 
+        /// <summary>
+        /// Initializes weather
+        /// </summary>
         private void InitWeather() {
 
             Weather = new Weather(TimeType.Day, true, WIDTH, 50);
         }
- 
 
         private void InitBackgroundWorldEntities() {
 
@@ -79,10 +74,54 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Update's map stuff like weather/teams's horses
+        /// </summary>
+        public void Update() {
+
+            //Update weather:
+            Weather.Update();
+
+            //Update teams's horses:
+            foreach (KeyValuePair<TeamName, Team> team in Teams)
+                team.Value.GetHorse().Update();
+        }
+ 
+        /// <summary>
+        /// Receives a string key and removes an entity with it
+        /// </summary>
+        /// <param name="key"></param>
+        public void RemoveMapEntity(string key) {
+            if (WorldEntities.ContainsKey(key)) {
+                lock (WorldEntities) {
+                    WorldEntities.Remove(key);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Receives character type name, team, and name
+        /// and adds the online player to current team
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="team"></param>
+        /// <param name="name"></param>
         public void AddPlayer(CharacterName character, TeamName team, string name) {
             Teams[team].AddPlayer(character, team, name);
         }
 
+        /// <summary>
+        /// Receives entity name, coordinates, direction, rotation, location, active indication, and key
+        /// and adds an entity
+        /// </summary>
+        /// <param name="entityName"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="direction"></param>
+        /// <param name="rotation"></param>
+        /// <param name="location"></param>
+        /// <param name="isActive"></param>
+        /// <param name="key"></param>
         public void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location, bool isActive, string key) {
 
             int width = 0;
@@ -127,11 +166,17 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Receives a new location and applies it
+        /// </summary>
+        /// <param name="newLocation"></param>
         public void UpdateLocationsTo(Location newLocation) {
 
+            //Update castles inside/out locations by new location received:
             foreach (KeyValuePair<TeamName, Team> team in Teams)
                 team.Value.GetCastle().ChangeLocationTo(newLocation);
 
+            //Updates map size by new location received:
             switch (newLocation) {
                 case Location.Outside:
                     WIDTH = 10000;
@@ -145,22 +190,43 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Get Grass
+        /// </summary>
+        /// <returns></returns>
         public Image GetGrass() {
             return Grass;
         }
 
+        /// <summary>
+        /// Get world entities
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, MapEntity> GetWorldEntities() {
             return WorldEntities;
         }
 
+        /// <summary>
+        /// Get teams
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<TeamName, Team> GetTeams() {
             return Teams;
         }
 
+
+        /// <summary>
+        /// Get weather
+        /// </summary>
+        /// <returns></returns>
         public Weather GetWeather() {
             return Weather;
         }
 
+        /// <summary>
+        /// Receives player's location and draws castles by it
+        /// </summary>
+        /// <param name="playerLocation"></param>
         public void DrawCastles(Location playerLocation) {
             foreach (KeyValuePair<TeamName, Team> team in Teams)
                 if (team.Value.GetCastle().GetCurrentLocation() == playerLocation || team.Value.GetCastle().GetCurrentLocation() == Location.All) {
@@ -181,8 +247,15 @@ namespace CastleBridge {
                 }
         }
 
+        /// <summary>
+        /// Receives i (layer pos), and player's location 
+        /// and draws map as a tile
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="playerLocation"></param>
         public void DrawTile(int i, Location playerLocation) {
 
+            //Uses 'try' to avoid crashes due world entities dictionary changes during an online session.
             try {
                 foreach (KeyValuePair<string, MapEntity> mapEntity in WorldEntities) {
                     if (mapEntity.Value.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
@@ -194,14 +267,16 @@ namespace CastleBridge {
 
             }
 
-
+            //Run on all teams (Red/Yellow):
             foreach (KeyValuePair<TeamName, Team> team in Teams) {
 
+                //Draw all online players of each team:
                 foreach (KeyValuePair<string, Player> player in team.Value.GetPlayers()) {
                     if (player.Value.GetCurrentAnimation().GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i)
                         if (player.Value.GetCurrentLocation() == playerLocation || player.Value.GetCurrentLocation() == Location.All)
                             player.Value.Draw();
 
+                    //Checks if current online player's character is archer, then draw his arrows if being shot:
                     if (player.Value.CurrentCharacter is Archer) {
                         Archer archer = player.Value.CurrentCharacter as Archer;
                         foreach (Arrow arrow in archer.GetArrows()) {
@@ -209,7 +284,7 @@ namespace CastleBridge {
                                 if (arrow.GetCurrentLocation() == playerLocation || arrow.GetCurrentLocation() == Location.All)
                                     arrow.Draw();
                         }
-                    }
+                    }//Checks if current online player's character is mage, then draw his spells if being cast:
                     else if (player.Value.CurrentCharacter is Mage) {
                         Mage mage = player.Value.CurrentCharacter as Mage;
                         foreach (EnergyBall energyBall in mage.GetSpells()) {
@@ -220,19 +295,18 @@ namespace CastleBridge {
                     }
                 }
 
+                //Draw diamonds of each team:
                 foreach (Diamond diamond in team.Value.GetCastle().GetDiamonds()) {
                     if (diamond.GetImage().GetRectangle().Bottom == i)
                         if (diamond.GetCurrentLocation() == playerLocation || diamond.GetCurrentLocation() == Location.All)
                             diamond.Draw();
                 }
 
-
-
+                //Draw horses of eache team:
                 if (team.Value.GetHorse().GetCurrentAnimation().GetCurrentSpriteImage().GetRectangle().Bottom - 10 == i) {
                     if (team.Value.GetHorse().GetCurrentLocation() == playerLocation || team.Value.GetHorse().GetCurrentLocation() == Location.All)
                         team.Value.GetHorse().Draw();
-                }
-                
+                }                
             }
         }
     }

@@ -218,7 +218,7 @@ namespace CastleBridge {
 
                     if (mage.IsCanShoot()) {
                         mage.GetCurrentAnimation().SetReverse(false);
-                        mage.ShootSpell(shootDirection, Player.GetCurrentLocation(), Player);
+                        mage.CastSpell(shootDirection, Player.GetCurrentLocation(), Player);
                     }
                     else {
                         mage.GetCurrentAnimation().SetReverse(true);
@@ -323,7 +323,7 @@ namespace CastleBridge {
                                     GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
                                     break;
                                 case MapEntityName.Tree:
-                                    Player.SetWoods(5);
+                                    Player.AddWoods(5);
                                     HUD.AddPopup(new Popup("+5 Woods", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
                                     Player.GetCurrentCharacter().AddXp(20);
                                     HUD.AddPlayerXp(20, Player.GetCurrentCharacter().GetMaxXp());
@@ -643,7 +643,7 @@ namespace CastleBridge {
 
                         if (onlineState == PlayerState.Attack && onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished) {
                             onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished = false;
-                            mage.ShootSpell(Direction.Down, Player.GetCurrentLocation(), onlinePlayer.Value);
+                            mage.CastSpell(Direction.Down, Player.GetCurrentLocation(), onlinePlayer.Value);
                         }
 
                         for (int i = 0; i < mage.GetSpells().Count; i++) {

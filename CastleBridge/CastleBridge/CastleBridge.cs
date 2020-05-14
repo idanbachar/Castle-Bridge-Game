@@ -13,23 +13,30 @@ namespace CastleBridge
     /// </summary>
     public class CastleBridge : Game
     {
+        //Game graphics scale:
         public static GraphicsDeviceManager Graphics;
+
+        //Game drawing var:
         public static SpriteBatch SpriteBatch;
 
+        //Game's screen dictionary (Game screen/ Menu screen):
         public Dictionary<ScreenType, Screen> Screens;
+
+        //Game's current displayed screen:
         public ScreenType CurrentScreen;
 
+        //Game's content for loading stuff like textures/fonts/audio:
         public static ContentManager PublicContent;
 
-
- 
+        /// <summary>
+        /// Castle bridge class base:
+        /// </summary>
         public CastleBridge()
         {
             Graphics = new GraphicsDeviceManager(this);
-            Graphics.PreferredBackBufferWidth = 1400;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            Graphics.PreferredBackBufferHeight = 728;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            Graphics.PreferredBackBufferWidth = 1400;
+            Graphics.PreferredBackBufferHeight = 728;
  
-
             Content.RootDirectory = "Content";
             PublicContent = Content;
             
@@ -61,18 +68,32 @@ namespace CastleBridge
             // Create a new SpriteBatch, which can be used to draw textures.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-
-
+            //Create game's screens:
             Screens.Add(ScreenType.Menu, new MenuScreen(GraphicsDevice.Viewport));
             Screens.Add(ScreenType.Game, new GameScreen(GraphicsDevice.Viewport));
-            ((MenuScreen)Screens[ScreenType.Menu]).OnStartGame += StartJoinSession;
-            ((GameScreen)Screens[ScreenType.Game]).OnStartGameAfterLoading += StartGame;
-            ((GameScreen)Screens[ScreenType.Game]).GetGameClient().OnUpdateLoadingPercent += ((LoadingMenu)((MenuScreen)Screens[ScreenType.Menu]).GetMenu(MenuPage.Loading)).UpdateText;
 
+            //Init game events:
+            InitEvents();
 
             // TODO: use this.Content to load your game content here
         }
 
+        /// <summary>
+        /// Init game's screens events to communicate each other.
+        /// </summary>
+        private void InitEvents() {
+            ((MenuScreen)Screens[ScreenType.Menu]).OnStartGame += StartJoinSession;
+            ((GameScreen)Screens[ScreenType.Game]).OnStartGameAfterLoading += StartGame;
+            ((GameScreen)Screens[ScreenType.Game]).GetGameClient().OnUpdateLoadingPercent += ((LoadingMenu)((MenuScreen)Screens[ScreenType.Menu]).GetMenu(MenuPage.Loading)).UpdateText;
+        }
+
+        /// <summary>
+        /// When called, start creating client connection and load map entities items
+        /// and finally starts receiving and sending player's data to the server.
+        /// </summary>
+        /// <param name="characterName"></param>
+        /// <param name="team"></param>
+        /// <param name="name"></param>
         private void StartJoinSession(CharacterName characterName, TeamName team, string name) {
 
             ((MenuScreen)Screens[ScreenType.Menu]).GoToPage(MenuPage.Loading);
@@ -80,6 +101,9 @@ namespace CastleBridge
             ((GameScreen)Screens[ScreenType.Game]).UpdateHud();
         }
 
+        /// <summary>
+        /// Changing current game screen to Game.
+        /// </summary>
         private void StartGame() {
             CurrentScreen = ScreenType.Game;
         }
@@ -105,6 +129,7 @@ namespace CastleBridge
 
             // TODO: Add your update logic here
 
+            //Updates only current displayed screen:
             Screens [CurrentScreen].Update();
 
             base.Update(gameTime);
@@ -117,14 +142,9 @@ namespace CastleBridge
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(new Color(81, 234, 255));
-
-            // TODO: Add your drawing code here
-
  
-
+            //Drawing only current displayed scren:
             Screens [CurrentScreen].Draw();
-
- 
 
             base.Draw(gameTime);
         }
