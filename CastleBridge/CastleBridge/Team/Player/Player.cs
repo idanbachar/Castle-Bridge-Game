@@ -37,6 +37,9 @@ namespace CastleBridge {
         public delegate void MinusHealth(int health, int maxHealth);
         public event MinusHealth OnMinusHealth;
 
+        public delegate void ChangeLocation(Location newLocation);
+        public event ChangeLocation OnChangeLocation;
+
         private Rectangle FloorRectangle;
 
         public Player(CharacterName character, TeamName teamName, string name, Rectangle floorRectangle) {
@@ -73,7 +76,6 @@ namespace CastleBridge {
             }
 
         }
-
 
         public void AddRedDiamond(Diamond diamond) {
             CollectedRedDiamonds.Add(diamond);
@@ -170,6 +172,28 @@ namespace CastleBridge {
             }
 
             entity.GetTooltip().SetVisible(false);
+            return false;
+        }
+
+        public bool IsTouchArrow(Arrow arrow) {
+
+            if (Rectangle.Intersects(arrow.GetAnimation().GetCurrentSpriteImage().GetRectangle()) && 
+                arrow.GetOwner().GetTeamName() != TeamName &&
+                (CurrentLocation == arrow.GetCurrentLocation() || arrow.GetCurrentLocation() == Location.All)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsTouchSpell(EnergyBall spell) {
+
+            if (Rectangle.Intersects(spell.GetAnimation().GetCurrentSpriteImage().GetRectangle()) &&
+                spell.GetOwner().GetTeamName() != TeamName &&
+                (CurrentLocation == spell.GetCurrentLocation() || spell.GetCurrentLocation() == Location.All)) {
+                return true;
+            }
+
             return false;
         }
 
@@ -276,6 +300,9 @@ namespace CastleBridge {
             AddCharacter(CharacterName.Knight);
             AddCharacter(CharacterName.Mage);
             ChangeCharacter(CharacterName);
+            CurrentCharacter.SetCurrentAnimation(State);
+            ChangeLocationTo(Location.Outside);
+            
 
             //OnAddHealth(CurrentCharacter.GetMaxHealth(), CurrentCharacter.GetMaxHealth());
             IsDead = false;
@@ -377,6 +404,9 @@ namespace CastleBridge {
 
         public void ChangeLocationTo(Location newLocation) {
             CurrentLocation = newLocation;
+
+            if (OnChangeLocation != null)
+                OnChangeLocation(newLocation);
         }
 
         public void SetWoods(int woods) {

@@ -19,10 +19,10 @@ namespace CastleBridge {
             Health = 110;
         }
 
-        public void ShootSpell(Direction shootDirection, Location currentLocation) {
+        public void ShootSpell(Direction shootDirection, Location currentLocation, Player owner) {
 
             Spells.Add(new EnergyBall(CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Left + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Width / 2,
-                                    CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Top + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height / 2, Direction, shootDirection, currentLocation));
+                                    CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Top + CurrentAnimation.GetCurrentSpriteImage().GetRectangle().Height / 2, Direction, shootDirection, currentLocation, owner));
 
             CurrentSpells--;
         }

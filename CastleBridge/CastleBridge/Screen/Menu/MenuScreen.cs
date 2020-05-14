@@ -37,7 +37,7 @@ namespace CastleBridge {
             Menus.Add(MenuPage.Loading, new LoadingMenu("Loading. Please wait.."));
             CurrentPage = MenuPage.TeamSelection;
         }
- 
+
         public override void Update() {
 
             Menus[CurrentPage].Update();
@@ -104,6 +104,10 @@ namespace CastleBridge {
 
         public void GoToPage(MenuPage page) {
             CurrentPage = page;
+        }
+
+        public Menu GetMenu(MenuPage page) {
+            return Menus[page];
         }
 
         public override void Draw() {

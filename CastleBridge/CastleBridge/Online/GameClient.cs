@@ -37,14 +37,21 @@ namespace CastleBridge {
         public delegate void FinishedLoading();
         public event FinishedLoading OnFinishedLoading;
 
+        public delegate void UpdateLoadingPercent(int current, int max);
+        public event UpdateLoadingPercent OnUpdateLoadingPercent;
 
         public delegate void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location);
         public event AddEntity OnAddEntity;
+
+        private int MaxEntitiesToLoad;
+        private int CurrentEntitiesLoaded;
 
         private const int ThreadSleep = 100;
         public GameClient() {
 
             Client = new TcpClient();
+            MaxEntitiesToLoad = 0;
+            CurrentEntitiesLoaded = 0;
         }
 
         public void Connect(string ip, int port) {
@@ -215,6 +222,7 @@ namespace CastleBridge {
                             Direction entityDirection = (Direction)Enum.Parse(typeof(Direction), MapEntityPacket.Direction);
                             Location entityLocation = (Location)Enum.Parse(typeof(Location), MapEntityPacket.CurrentLocation);
                             OnAddEntity(entityName, entityX, entityX, entityDirection, 0f, entityLocation);
+                            OnUpdateLoadingPercent(++CurrentEntitiesLoaded, MaxEntitiesToLoad);
                         }
 
                     }
@@ -224,6 +232,9 @@ namespace CastleBridge {
 
                             OnFinishedLoading();
                             StartSendingPlayerData(true);
+                        }
+                        else if (data.IndexOf("map_entities_count") != -1) {
+                            MaxEntitiesToLoad = int.Parse(data.Split('|')[0]);
                         }
                     }
 

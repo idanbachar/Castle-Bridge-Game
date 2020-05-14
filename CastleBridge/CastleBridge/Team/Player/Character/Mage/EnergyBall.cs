@@ -15,8 +15,10 @@ namespace CastleBridge {
         private Direction Direction;
         private Direction ShootUpDownDirection;
         private Location CurrentLocation;
+        private int Damage;
+        private Player Owner;
 
-        public EnergyBall(int startX, int startY, Direction direction, Direction shootUpDownDirection, Location location) {
+        public EnergyBall(int startX, int startY, Direction direction, Direction shootUpDownDirection, Location location, Player owner) {
 
             ShootTime = 0;
             IsFinished = false;
@@ -26,6 +28,8 @@ namespace CastleBridge {
             Animation.SetDirection(direction);
             ShootUpDownDirection = shootUpDownDirection;
             CurrentLocation = location;
+            Damage = 30;
+            Owner = owner;
         }
 
         public void Move() {
@@ -75,6 +79,14 @@ namespace CastleBridge {
 
         public Location GetCurrentLocation() {
             return CurrentLocation;
+        }
+
+        public int GetDamage() {
+            return Damage;
+        }
+
+        public Player GetOwner() {
+            return Owner;
         }
 
         public Animation GetAnimation() {

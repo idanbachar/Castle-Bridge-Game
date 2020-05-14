@@ -35,6 +35,7 @@ namespace CastleBridge {
 
         private void Init(Viewport viewPort) {
 
+            GameClient = new GameClient();
             InitMap();
             InitHUD();
             Camera = new Camera(viewPort);
@@ -196,7 +197,7 @@ namespace CastleBridge {
 
                     if (archer.IsCanShoot()) {
                         archer.GetCurrentAnimation().SetReverse(false);
-                        archer.ShootArrow(shootDirection, Player.GetCurrentLocation());
+                        archer.ShootArrow(shootDirection, Player.GetCurrentLocation(), Player);
                     }
                     else {
                         archer.GetCurrentAnimation().SetReverse(true);
@@ -217,7 +218,7 @@ namespace CastleBridge {
 
                     if (mage.IsCanShoot()) {
                         mage.GetCurrentAnimation().SetReverse(false);
-                        mage.ShootSpell(shootDirection, Player.GetCurrentLocation());
+                        mage.ShootSpell(shootDirection, Player.GetCurrentLocation(), Player);
                     }
                     else {
                         mage.GetCurrentAnimation().SetReverse(true);
@@ -468,10 +469,9 @@ namespace CastleBridge {
             Player = new Player(characterName, team, name, Map.GetGrass().GetRectangle());
             Player.OnAddHealth += HUD.AddPlayerHealth;
             Player.OnMinusHealth += HUD.MinusPlayerHealth;
+            Player.OnChangeLocation += Map.UpdateLocationsTo;
             Player.Respawn();
 
-
-            GameClient = new GameClient();
             GameClient.OnGetThePlayer += GetPlayer;
             GameClient.OnGetRedPlayers += Map.GetTeams()[TeamName.Red].GetPlayers;
             GameClient.OnGetYellowPlayers += Map.GetTeams()[TeamName.Yellow].GetPlayers;
@@ -613,12 +613,40 @@ namespace CastleBridge {
                         }
                     }
                     else if (onlinePlayer.Value.GetCurrentCharacter() is Archer) {
-                        if(onlineState == PlayerState.Attack && onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished) {
+
+                        Archer archer = onlinePlayer.Value.GetCurrentCharacter() as Archer;
+
+                        if (onlineState == PlayerState.Attack && onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished) {
                             onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished = false;
-                            Archer archer = onlinePlayer.Value.GetCurrentCharacter() as Archer;
-                            archer.ShootArrow(Direction.Down, Player.GetCurrentLocation());
+
+                            archer.ShootArrow(Direction.Down, Player.GetCurrentLocation(), onlinePlayer.Value);
+                        }
+
+                        for(int i = 0; i < archer.GetArrows().Count; i++) {
+                            if (Player.IsTouchArrow(archer.GetArrows()[i])) {
+                                Player.Hit(archer.GetArrows()[i].GetDamage());
+                                archer.GetArrows().RemoveAt(i);
+                            }
+                        }
+
+                    }
+                    else if (onlinePlayer.Value.GetCurrentCharacter() is Mage) {
+
+                        Mage mage = onlinePlayer.Value.GetCurrentCharacter() as Mage;
+
+                        if (onlineState == PlayerState.Attack && onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished) {
+                            onlinePlayer.Value.CurrentCharacter.AttackAnimation.IsFinished = false;
+                            mage.ShootSpell(Direction.Down, Player.GetCurrentLocation(), onlinePlayer.Value);
+                        }
+
+                        for (int i = 0; i < mage.GetSpells().Count; i++) {
+                            if (Player.IsTouchSpell(mage.GetSpells()[i])) {
+                                Player.Hit(mage.GetSpells()[i].GetDamage());
+                                mage.GetSpells().RemoveAt(i);
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -703,6 +731,10 @@ namespace CastleBridge {
             HUD.DrawStuck();
             CastleBridge.SpriteBatch.End();
 
+        }
+
+        public GameClient GetGameClient() {
+            return GameClient;
         }
 
         public Player GetPlayer() {

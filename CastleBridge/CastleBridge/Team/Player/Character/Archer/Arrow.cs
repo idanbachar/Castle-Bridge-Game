@@ -15,8 +15,10 @@ namespace CastleBridge {
         private Direction Direction;
         private Direction ShootUpDownDirection;
         private Location CurrentLocation;
+        private int Damage;
+        private Player Owner;
 
-        public Arrow(int startX, int startY, Direction direction, Direction shootUpDownDirection, Location location) {
+        public Arrow(int startX, int startY, Direction direction, Direction shootUpDownDirection, Location location, Player owner) {
 
             ShootTime = 0;
             IsFinished = false;
@@ -26,6 +28,8 @@ namespace CastleBridge {
             Animation.SetDirection(direction);
             ShootUpDownDirection = shootUpDownDirection;
             CurrentLocation = location;
+            Damage = 30;
+            Owner = owner;
         }
 
         public void Move() {
@@ -88,8 +92,16 @@ namespace CastleBridge {
             Speed = speed;
         }
 
+        public int GetDamage() {
+            return Damage;
+        }
+
         public Location GetCurrentLocation() {
             return CurrentLocation;
+        }
+
+        public Player GetOwner() {
+            return Owner;
         }
 
         public void Draw() {
