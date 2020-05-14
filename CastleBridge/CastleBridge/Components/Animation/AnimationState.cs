@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CastleBridge {
     public enum AnimationState {
+
         Forward,
         Backward
-    
     }
 }
