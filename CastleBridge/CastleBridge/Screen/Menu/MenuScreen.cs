@@ -9,25 +9,35 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public class MenuScreen: Screen {
 
-        private MenuPage CurrentPage;
-        private Dictionary<MenuPage, Menu> Menus;
-        private TeamName SelectedTeam;
-        private CharacterName SelectedCharacter;
-        private string SelectedName;
-        private bool IsPressedLeftButton;
+        private MenuPage CurrentPage; //Current menu page
+        private Dictionary<MenuPage, Menu> Menus; //Menu pages
+        private TeamName SelectedTeam; //Selected team
+        private CharacterName SelectedCharacter; //Selected character
+        private string SelectedName; //Selected name
+        private bool IsPressedLeftButton; //Left button pressed indication
 
+        //Start join game event:
         public delegate void StartGame(CharacterName characterName, TeamName team, string selectedName);
         public event StartGame OnStartGame;
 
+        /// <summary>
+        /// Creates menu screen
+        /// </summary>
+        /// <param name="viewPort"></param>
         public MenuScreen(Viewport viewPort) : base(viewPort) {
             Menus = new Dictionary<MenuPage, Menu>();
             SelectedTeam = TeamName.None;
             SelectedCharacter = CharacterName.None;
             SelectedName = "Idan";
             IsPressedLeftButton = false;
+
+            //Initializes:
             Init();
         }
 
+        /// <summary>
+        /// Initializes menu pages:
+        /// </summary>
         private void Init() {
 
             Menus.Add(MenuPage.MainMenu, new MainMenu("Main Menu"));
@@ -38,14 +48,21 @@ namespace CastleBridge {
             CurrentPage = MenuPage.TeamSelection;
         }
 
+        /// <summary>
+        /// Updates menu pages stuff:
+        /// </summary>
         public override void Update() {
 
+            //Updates only current menu page:
             Menus[CurrentPage].Update();
 
             switch (CurrentPage) {
 
+                //Team selection menu:
                 case MenuPage.TeamSelection:
                     TeamSelectionMenu teamSelectionMenu = Menus[CurrentPage] as TeamSelectionMenu;
+
+                    //Checks if pressed 'ok' button -> go to character selection:
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed && teamSelectionMenu.GetOkButton().IsMouseOver) {
                         if (teamSelectionMenu.IsSelected) {
                             SelectedTeam = teamSelectionMenu.GetSelectedTeam();
@@ -54,15 +71,20 @@ namespace CastleBridge {
                         }
                     }
                     break;
+                    //Character selection menu:
                 case MenuPage.CharacterSelection:
                     CharacterSelectionMenu characterSelectionMenu = Menus[CurrentPage] as CharacterSelectionMenu;
+
+                    //Checks if pressed 'back' button -> go to team selection:
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton && characterSelectionMenu.GetBackButton().IsMouseOver) {
                         IsPressedLeftButton = true;
                         GoToPage(MenuPage.TeamSelection);
                         break;
                     }
+                    //Run on all displayed selectable characters:
                     foreach (Character character in characterSelectionMenu.GetCurrentCharacters()) {
 
+                        //Checks if pressed on a current character:
                         if (character.IsMouseOver()) {
                             if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton) {
                                 IsPressedLeftButton = true;
@@ -73,26 +95,36 @@ namespace CastleBridge {
                         }
                     }
 
+                    //Checks if pressed 'ok' button:
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed && characterSelectionMenu.GetOkButton().IsMouseOver) {
 
+                        //Checks if a character has been selected:
                         if (SelectedCharacter != CharacterName.None)
-                            GoToPage(MenuPage.NameSelection);
+                            GoToPage(MenuPage.NameSelection); //go to name selection
 
                     }
                     break;
+                //Name selection menu:
                 case MenuPage.NameSelection:
                     NameSelectionMenu nameSelectionMenu = Menus[CurrentPage] as NameSelectionMenu;
                     nameSelectionMenu.SelectTeamAndCharacter(SelectedCharacter, SelectedTeam);
 
+
+                    //Checks if pressed 'back' button -> go to character selection:
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton && nameSelectionMenu.GetBackButton().IsMouseOver) {
                         IsPressedLeftButton = true;
                         GoToPage(MenuPage.CharacterSelection);
                         break;
                     }
 
+                    //Checks if pressed 'ok' button:
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed && nameSelectionMenu.GetOkButton().IsMouseOver) {
+
+                        //Checks if a name has been selected:
                         if (nameSelectionMenu.IsSelected) {
                             SelectedName = nameSelectionMenu.GetSelectedName();
+
+                            //Starts join game session event:
                             OnStartGame(SelectedCharacter, SelectedTeam, SelectedName);
                         }
                     }
@@ -102,18 +134,31 @@ namespace CastleBridge {
                 IsPressedLeftButton = false;
         }
 
+        /// <summary>
+        /// Receives a page and applies it
+        /// </summary>
+        /// <param name="page"></param>
         public void GoToPage(MenuPage page) {
             CurrentPage = page;
         }
 
+        /// <summary>
+        /// Receives a menu page name and returns the menu
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public Menu GetMenu(MenuPage page) {
             return Menus[page];
         }
 
+        /// <summary>
+        /// Draw current menu page
+        /// </summary>
         public override void Draw() {
 
             CastleBridge.SpriteBatch.Begin();
 
+            //Draw only current menu page:
             Menus[CurrentPage].Draw();
 
             CastleBridge.SpriteBatch.End();

@@ -8,27 +8,50 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public abstract class Menu {
 
-        private Text Title;
-        protected Image Grass;
-        protected Weather Weather;
-        protected TeamName SelectedTeam;
+        private Text Title; //Menu's title
+        protected Image Grass; //Menu's grass image
+        protected Weather Weather; //Menu's weather
+        protected TeamName SelectedTeam; //Menu's selected team
         
+        /// <summary>
+        /// Receives title
+        /// and creates a menu
+        /// </summary>
+        /// <param name="title"></param>
         public Menu(string title) {
             Title = new Text(FontType.Default, title, new Vector2(0, 0), Color.Gold, true, Color.Black);
             Grass = new Image("map/forest/grass", 0, CastleBridge.Graphics.PreferredBackBufferHeight / 2 + 100, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight / 2);
             Weather = new Weather(TimeType.Day, true, CastleBridge.Graphics.PreferredBackBufferWidth, 15);
         }
 
+        /// <summary>
+        /// Update
+        /// </summary>
         public abstract void Update();
 
+        /// <summary>
+        /// Get selected team
+        /// </summary>
+        /// <returns></returns>
         public TeamName GetSelectedTeam() {
             return SelectedTeam;
         }
 
+        /// <summary>
+        /// Draw menu
+        /// </summary>
         public virtual void Draw() {
+
+            //Draw weather's stuck:
             Weather.DrawStuck();
+            
+            //Draw weather's clouds:
             Weather.DrawClouds();
+
+            //Draw grass:
             Grass.Draw();
+
+            //Draw title:
             Title.Draw();
         }
 
