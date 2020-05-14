@@ -221,7 +221,7 @@ namespace CastleBridge {
                             int entityY = MapEntityPacket.Y;
                             Direction entityDirection = (Direction)Enum.Parse(typeof(Direction), MapEntityPacket.Direction);
                             Location entityLocation = (Location)Enum.Parse(typeof(Location), MapEntityPacket.CurrentLocation);
-                            OnAddEntity(entityName, entityX, entityX, entityDirection, 0f, entityLocation);
+                            OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation);
                             OnUpdateLoadingPercent(++CurrentEntitiesLoaded, MaxEntitiesToLoad);
                         }
 
