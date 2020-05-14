@@ -14,8 +14,10 @@ namespace CastleBridge {
         public bool IsTouchable;
         private Direction Direction;
         private Location CurrentLocation;
+        public bool IsActive;
+        private string Key;
 
-        public MapEntity(MapEntityName entityName, MapName mapName, int x, int y, int width, int height, bool isTouchable, Direction direction, float rotation, Location location) {
+        public MapEntity(MapEntityName entityName, MapName mapName, int x, int y, int width, int height, bool isTouchable, Direction direction, float rotation, Location location, bool isActive, string key) {
             
             Name = entityName;
             Direction = direction;
@@ -23,6 +25,8 @@ namespace CastleBridge {
             Animation = new Animation("map/" + mapName + "/" + entityName.ToString().Replace("_", " ") + "/" + entityName + "_", new Rectangle(x, y, width, height), 0, 0, 1, 5, true, true);
             Animation.SetDirection(direction);
             Animation.SetRotation(rotation);
+            IsActive = isActive;
+            Key = key;
 
             Tooltip = new Text(FontType.Default, string.Empty, new Vector2(x + 50, y - 65), Color.Black, true, Color.Gold);
             Tooltip.SetVisible(false);
@@ -84,6 +88,10 @@ namespace CastleBridge {
 
         public void ChangeLocationTo(Location newLocation) {
             CurrentLocation = newLocation;
+        }
+
+        public string GetKey() {
+            return Key;
         }
         public void Draw() {
 

@@ -40,8 +40,11 @@ namespace CastleBridge {
         public delegate void UpdateLoadingPercent(int current, int max);
         public event UpdateLoadingPercent OnUpdateLoadingPercent;
 
-        public delegate void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location);
+        public delegate void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location, bool isActive, string key);
         public event AddEntity OnAddEntity;
+
+        public delegate void RemoveMapEntity(string key);
+        public event RemoveMapEntity OnRemoveMapEntity;
 
         private int MaxEntitiesToLoad;
         private int CurrentEntitiesLoaded;
@@ -70,6 +73,7 @@ namespace CastleBridge {
             NetworkStream netStream = Client.GetStream();
             byte[] bytes = Encoding.ASCII.GetBytes(text);
             netStream.Write(bytes, 0, bytes.Length);
+            Thread.Sleep(ThreadSleep);
 
         }
 
@@ -221,7 +225,9 @@ namespace CastleBridge {
                             int entityY = MapEntityPacket.Y;
                             Direction entityDirection = (Direction)Enum.Parse(typeof(Direction), MapEntityPacket.Direction);
                             Location entityLocation = (Location)Enum.Parse(typeof(Location), MapEntityPacket.CurrentLocation);
-                            OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation);
+                            string key = MapEntityPacket.Key;
+                            bool isActive = MapEntityPacket.IsActive;
+                            OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation, isActive, key);
                             OnUpdateLoadingPercent(++CurrentEntitiesLoaded, MaxEntitiesToLoad);
                         }
 
@@ -235,6 +241,11 @@ namespace CastleBridge {
                         }
                         else if (data.IndexOf("map_entities_count") != -1) {
                             MaxEntitiesToLoad = int.Parse(data.Split('|')[0]);
+                        }
+                        else if (data.IndexOf("Remove Entity") != -1) {
+
+                            string key = data.Split('_')[1];
+                            OnRemoveMapEntity(key);
                         }
                     }
 

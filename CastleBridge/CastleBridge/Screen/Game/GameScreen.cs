@@ -290,57 +290,63 @@ namespace CastleBridge {
 
         private void CheckLoot() {
 
-            for (int i = 0; i < Map.GetWorldEntities().Count; i++) {
+            lock (Map.GetWorldEntities()) {
+                for (int i = 0; i < Map.GetWorldEntities().Count; i++) {
 
-                MapEntity currentEntity = Map.GetWorldEntities()[i];
+                    MapEntity currentEntity = Map.GetWorldEntities()[Map.GetWorldEntities().Keys.ElementAt(i)];
 
-                if (Player.IsTouchWorldEntity(currentEntity)) {
+                    if (Player.IsTouchWorldEntity(currentEntity)) {
 
-                    if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
-                        Player.SetState(PlayerState.Loot);
+                        if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
+                            Player.SetState(PlayerState.Loot);
 
-                        switch (currentEntity.GetName()) {
-                            case MapEntityName.Red_Flower:
-                                if (Player.GetCurrentCharacter().GetHealth() < Player.GetCurrentCharacter().GetMaxHealth()) {
-                                    Player.GetCurrentCharacter().IncreaseHp(15);
-                                    HUD.AddPlayerHealth(15, Player.GetCurrentCharacter().GetMaxHealth());
-                                    HUD.AddPopup(new Popup("+15hp", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Red), true);
-                                    Map.GetWorldEntities().RemoveAt(i);
-                                }
-                                else {
-                                    HUD.AddPopup(new Popup("You have enough health!", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.Red, Color.Black), true);
-                                }
-                                break;
-                            case MapEntityName.Stone:
-                                Player.AddStones(1);
-                                HUD.AddPopup(new Popup("+1 Stone", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-                                Player.GetCurrentCharacter().AddXp(3);
-                                HUD.AddPlayerXp(3, Player.GetCurrentCharacter().GetMaxXp());
-                                HUD.AddPopup(new Popup("+3xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
-                                Map.GetWorldEntities().RemoveAt(i);
-                                break;
-                            case MapEntityName.Tree:
-                                Player.SetWoods(5);
-                                HUD.AddPopup(new Popup("+5 Woods", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-                                Player.GetCurrentCharacter().AddXp(20);
-                                HUD.AddPlayerXp(20, Player.GetCurrentCharacter().GetMaxXp());
-                                HUD.AddPopup(new Popup("+20xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
-                                Map.GetWorldEntities().RemoveAt(i);
-                                break;
-                            case MapEntityName.Arrow:
+                            switch (currentEntity.GetName()) {
+                                case MapEntityName.Red_Flower:
+                                    if (Player.GetCurrentCharacter().GetHealth() < Player.GetCurrentCharacter().GetMaxHealth()) {
+                                        Player.GetCurrentCharacter().IncreaseHp(15);
+                                        HUD.AddPlayerHealth(15, Player.GetCurrentCharacter().GetMaxHealth());
+                                        HUD.AddPopup(new Popup("+15hp", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Red), true);
+                                        Map.RemoveMapEntity(currentEntity.GetKey());
+                                        GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
+                                    }
+                                    else {
+                                        HUD.AddPopup(new Popup("You have enough health!", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.Red, Color.Black), true);
+                                    }
+                                    break;
+                                case MapEntityName.Stone:
+                                    Player.AddStones(1);
+                                    HUD.AddPopup(new Popup("+1 Stone", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                                    Player.GetCurrentCharacter().AddXp(3);
+                                    HUD.AddPlayerXp(3, Player.GetCurrentCharacter().GetMaxXp());
+                                    HUD.AddPopup(new Popup("+3xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
+                                    Map.RemoveMapEntity(currentEntity.GetKey());
+                                    GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
+                                    break;
+                                case MapEntityName.Tree:
+                                    Player.SetWoods(5);
+                                    HUD.AddPopup(new Popup("+5 Woods", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                                    Player.GetCurrentCharacter().AddXp(20);
+                                    HUD.AddPlayerXp(20, Player.GetCurrentCharacter().GetMaxXp());
+                                    HUD.AddPopup(new Popup("+20xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
+                                    Map.RemoveMapEntity(currentEntity.GetKey());
+                                    GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
+                                    break;
+                                case MapEntityName.Arrow:
 
-                                if (Player.GetCurrentCharacter() is Archer) {
-                                    Archer archer = Player.CurrentCharacter as Archer;
-                                    HUD.AddPopup(new Popup("+1 Arrow", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-                                    HUD.AddPopup(new Popup("+1", (int)HUD.GetPlayerWeaponAmmo().GetPosition().X, (int)HUD.GetPlayerWeaponAmmo().GetPosition().Y - 10, Color.White, Color.Black), false);
-                                    archer.AddArrow();
-                                    HUD.SetPlayerWeaponAmmo(archer.CurrentArrows + "/" + archer.MaxArrows);
-                                    Map.GetWorldEntities().RemoveAt(i);
-                                }
-                                break;
+                                    if (Player.GetCurrentCharacter() is Archer) {
+                                        Archer archer = Player.CurrentCharacter as Archer;
+                                        HUD.AddPopup(new Popup("+1 Arrow", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+                                        HUD.AddPopup(new Popup("+1", (int)HUD.GetPlayerWeaponAmmo().GetPosition().X, (int)HUD.GetPlayerWeaponAmmo().GetPosition().Y - 10, Color.White, Color.Black), false);
+                                        archer.AddArrow();
+                                        HUD.SetPlayerWeaponAmmo(archer.CurrentArrows + "/" + archer.MaxArrows);
+                                        Map.RemoveMapEntity(currentEntity.GetKey());
+                                        GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
+                                    }
+                                    break;
+                            }
+
+                            break;
                         }
-
-                        break;
                     }
                 }
             }
@@ -480,6 +486,7 @@ namespace CastleBridge {
             GameClient.OnAddPopup += HUD.AddPopup;
             GameClient.OnAddEntity += Map.AddEntity;
             GameClient.OnFinishedLoading += StartGame;
+            GameClient.OnRemoveMapEntity += Map.RemoveMapEntity;
             GameClient.Connect("192.168.1.17", 4441);
             GameClient.StartReceivingPlayersData();
         }
@@ -533,7 +540,7 @@ namespace CastleBridge {
                         Map.AddEntity(MapEntityName.Arrow,
                                       archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
                                       archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
-                                      archer.GetArrows()[i].GetDirection(), archer.GetArrows()[i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
+                                      archer.GetArrows()[i].GetDirection(), archer.GetArrows()[i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation(), true, "100_" + new Random().Next(1000));
                         archer.GetArrows().RemoveAt(i);
                     }
                 }
@@ -570,7 +577,7 @@ namespace CastleBridge {
                                 Map.AddEntity(MapEntityName.Arrow,
                                               archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().X,
                                               archer.GetArrows()[i].GetAnimation().GetCurrentSpriteImage().GetRectangle().Y,
-                                              archer.GetArrows()[i].GetDirection(), archer.GetArrows()[i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation());
+                                              archer.GetArrows()[i].GetDirection(), archer.GetArrows()[i].GetDirection() == Direction.Right ? 0.7f : -0.7f, Player.GetCurrentLocation(), true, "200_" + new Random().Next(1000));
                                 archer.GetArrows().RemoveAt(i);
                             }
                         }

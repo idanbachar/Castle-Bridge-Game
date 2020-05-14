@@ -13,7 +13,7 @@ namespace CastleBridge {
         public static int HEIGHT;
         private Image Grass;
         private Weather Weather;
-        private List<MapEntity> WorldEntities;
+        private Dictionary<string, MapEntity> WorldEntities;
         private Dictionary<TeamName, Team> Teams;
         private Random Rnd;
 
@@ -22,7 +22,7 @@ namespace CastleBridge {
             Name = MapName.Forest;
             WIDTH = 10000;
             HEIGHT = 2000;
-            WorldEntities = new List<MapEntity>();
+            WorldEntities = new Dictionary<string, MapEntity>();
             Init();
         }
 
@@ -49,6 +49,14 @@ namespace CastleBridge {
             Teams.Add(TeamName.Yellow, new Team(TeamName.Yellow, Grass.GetRectangle()));
         }
 
+        public void RemoveMapEntity(string key) {
+            if (WorldEntities.ContainsKey(key)) {
+                lock (WorldEntities) {
+                    WorldEntities.Remove(key);
+                }
+            }
+        }
+
         private void InitGrass() {
             Grass = new Image("map/" + Name, "grass", 0, HEIGHT / 5, WIDTH, HEIGHT, Color.White);
         }
@@ -61,32 +69,21 @@ namespace CastleBridge {
 
         private void InitBackgroundWorldEntities() {
 
-            for (int i = 0; i < 60; i++)
-                WorldEntities.Add(new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false, Direction.Left, 0f, Location.Outside));
-
-            for (int i = 0; i < 156; i++)
-                WorldEntities.Add(new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false, Direction.Left, 0f, Location.Outside));
-
+            for (int i = 0; i < 60; i++) {
+                string key = "Tree_" + i;
+                WorldEntities.Add(key, new MapEntity(MapEntityName.Tree, MapName.Forest, (i * 200) + 25, Grass.GetRectangle().Top - 250, 200, 250, false, Direction.Left, 0f, Location.Outside, true, key));
+            }
+            for (int i = 0; i < 156; i++) {
+                string key = "Ground_Leaves_" + i;
+                WorldEntities.Add("Ground_Leaves_" + i, new MapEntity(MapEntityName.Ground_Leaves, MapName.Forest, (i * 65), Grass.GetRectangle().Top - 60, 75, 75, false, Direction.Left, 0f, Location.Outside, true, key));
+            }
         }
 
         public void AddPlayer(CharacterName character, TeamName team, string name) {
             Teams[team].AddPlayer(character, team, name);
         }
 
-        private void GenerateWorldEntity() {
-
-            int grassX = Grass.GetRectangle().Left;
-            int grassY = Grass.GetRectangle().Top;
-
-            int x = Rnd.Next(grassX, WIDTH);
-            int y = Rnd.Next(grassY, HEIGHT);
-
-            MapEntityName entity = (MapEntityName)Rnd.Next(0, 5);
-
-            AddEntity(entity, x, y, Direction.Left, 0f, Location.Outside);
-        }
-
-        public void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location) {
+        public void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location, bool isActive, string key) {
 
             int width = 0;
             int height = 0;
@@ -126,7 +123,7 @@ namespace CastleBridge {
             }
 
             lock (WorldEntities) {
-                WorldEntities.Add(new MapEntity(entityName, Name, x, y + height, width, height, isTouchable, direction, rotation, location));
+                WorldEntities.Add(key, new MapEntity(entityName, Name, x, y + height, width, height, isTouchable, direction, rotation, location, isActive, key));
             }
         }
 
@@ -152,7 +149,7 @@ namespace CastleBridge {
             return Grass;
         }
 
-        public List<MapEntity> GetWorldEntities() {
+        public Dictionary<string, MapEntity> GetWorldEntities() {
             return WorldEntities;
         }
 
@@ -186,13 +183,17 @@ namespace CastleBridge {
 
         public void DrawTile(int i, Location playerLocation) {
 
-
-
-            foreach (MapEntity mapEntity in WorldEntities) {
-                if (mapEntity.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
-                    if (mapEntity.GetCurrentLocation() == playerLocation || mapEntity.GetCurrentLocation() == Location.All)
-                        mapEntity.Draw();
+            try {
+                foreach (KeyValuePair<string, MapEntity> mapEntity in WorldEntities) {
+                    if (mapEntity.Value.GetAnimation().GetCurrentSpriteImage().GetRectangle().Bottom == i)
+                        if (mapEntity.Value.GetCurrentLocation() == playerLocation || mapEntity.Value.GetCurrentLocation() == Location.All)
+                            mapEntity.Value.Draw();
+                }
             }
+            catch (Exception) {
+
+            }
+
 
             foreach (KeyValuePair<TeamName, Team> team in Teams) {
 
