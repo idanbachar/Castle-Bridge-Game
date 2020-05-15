@@ -106,6 +106,13 @@ namespace CastleBridge {
             CollectedRedDiamonds.Add(diamond);
         }
 
+        /// <summary>
+        /// Add yellow diamonds to list
+        /// </summary>
+        /// <param name="diamond"></param>
+        public void AddYellowDiamond(Diamond diamond) {
+            CollectedYellowDiamonds.Add(diamond);
+        }
 
         /// <summary>
         /// Drops all red diamonds

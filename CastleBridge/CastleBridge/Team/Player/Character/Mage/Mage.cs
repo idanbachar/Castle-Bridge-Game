@@ -48,7 +48,7 @@ namespace CastleBridge {
         /// Returns true if there are spells to shoot, else returns false
         /// </summary>
         /// <returns></returns>
-        public bool IsCanShoot() {
+        public bool IsCanCast() {
             return CurrentSpells > 0;
         }
 

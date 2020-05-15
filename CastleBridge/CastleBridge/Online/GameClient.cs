@@ -74,19 +74,16 @@ namespace CastleBridge {
             byte[] bytes = Encoding.ASCII.GetBytes(text);
             netStream.Write(bytes, 0, bytes.Length);
             Thread.Sleep(ThreadSleep);
-
         }
 
         public void StartSendingPlayerData(bool isFinishedLoad) {
 
             new Thread(() => SendAllPlayerData(isFinishedLoad)).Start();
-
         }
 
-        public void StartReceivingPlayersData() {
+        public void StartReceivingDataFromServer() {
 
             new Thread(ReceiveDataFromServer).Start();
-
         }
 
         private void SendAllPlayerData(bool isFinishedLoad) {
@@ -126,10 +123,8 @@ namespace CastleBridge {
 
                 Thread.Sleep(ThreadSleep);
             }
- 
         }
  
-
         private void ReceiveDataFromServer() {
 
             NetworkStream netStream = null;
@@ -230,7 +225,6 @@ namespace CastleBridge {
                             OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation, isActive, key);
                             OnUpdateLoadingPercent(++CurrentEntitiesLoaded, MaxEntitiesToLoad);
                         }
-
                     }
                     catch(Exception) {
                         string data = Encoding.ASCII.GetString(bytes).Split('\0')[0];
@@ -256,11 +250,8 @@ namespace CastleBridge {
 
                 Thread.Sleep(ThreadSleep);
             }
-
-
         }
  
-
         public byte[] ObjectToByteArray<T>(T obj) {
             if (obj == null)
                 return null;
