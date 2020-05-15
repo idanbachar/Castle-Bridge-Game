@@ -191,7 +191,7 @@ namespace CastleBridge {
                     netStream.Read(bytes, 0, bytes.Length);
                     object obj = null;
 
-                    //Try to convert received array of bytes data into player packet's object:
+                    //Try to convert received array of bytes data into packet's object:
                     try {
                         obj = ByteArrayToObject(bytes);
 
