@@ -14,42 +14,60 @@ using Microsoft.Xna.Framework;
 namespace CastleBridge {
     public class GameClient {
 
-        private TcpClient Client;
+        private TcpClient Client; //Client
 
+        //Get the player from GameScreen event:
         public delegate Player GetThePlayer();
         public event GetThePlayer OnGetThePlayer;
 
+        //Get the red team's players from GameScreen event:
         public delegate Dictionary<string, Player> GetRedPlayers();
         public event GetRedPlayers OnGetRedPlayers;
 
+        //Get the yellow team's players from GameScreen event:
         public delegate Dictionary<string, Player> GetYellowPlayers();
         public event GetYellowPlayers OnGetYellowPlayers;
 
+        //Start join game session from GameScreen event:
         public delegate void JoinPlayer(CharacterName character, TeamName team, string name);
         public event JoinPlayer OnJoinPlayer;
 
+        //Add popup from GameScreen event:
         public delegate void AddPopup(Popup popup, bool isTile);
         public event AddPopup OnAddPopup;
 
+        //Get both teams from GameScreen event:
         public delegate Dictionary<TeamName, Team> GetTeams();
         public event GetTeams OnGetTeams;
 
+        //Start game on finished loading from GameScreen event:
         public delegate void FinishedLoading();
         public event FinishedLoading OnFinishedLoading;
 
+        //Update loading data from server in percents from CastleBridge event:
         public delegate void UpdateLoadingPercent(int current, int max);
         public event UpdateLoadingPercent OnUpdateLoadingPercent;
 
+        //Add entity to world entites from GameScreen event:
         public delegate void AddEntity(MapEntityName entityName, int x, int y, Direction direction, float rotation, Location location, bool isActive, string key);
         public event AddEntity OnAddEntity;
 
+        //Remove world entity with his key from GameScreen event:
         public delegate void RemoveMapEntity(string key);
         public event RemoveMapEntity OnRemoveMapEntity;
 
+        //Max number of entities to load from server:
         private int MaxEntitiesToLoad;
+
+        //Max number of current entities that are being loaded:
         private int CurrentEntitiesLoaded;
 
+        //Thread sleep time:
         private const int ThreadSleep = 100;
+        
+        /// <summary>
+        /// Creates a game client
+        /// </summary>
         public GameClient() {
 
             Client = new TcpClient();
@@ -57,9 +75,17 @@ namespace CastleBridge {
             CurrentEntitiesLoaded = 0;
         }
 
+        /// <summary>
+        /// Receives ip, port
+        /// and tries to connect to server host
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
         public void Connect(string ip, int port) {
             try {
                 Client.Connect(ip, port);
+
+                //Sends only 1 time connected player's packet to server:
                 SendAllPlayerData(false);
 
             }
@@ -68,6 +94,11 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Receives a text string
+        /// and sends it to the server
+        /// </summary>
+        /// <param name="text"></param>
         public void SendText(string text) {
 
             NetworkStream netStream = Client.GetStream();
@@ -76,23 +107,40 @@ namespace CastleBridge {
             Thread.Sleep(ThreadSleep);
         }
 
+        /// <summary>
+        /// Start Sending player's packet data to server thread
+        /// </summary>
+        /// <param name="isFinishedLoad"></param>
         public void StartSendingPlayerData(bool isFinishedLoad) {
 
             new Thread(() => SendAllPlayerData(isFinishedLoad)).Start();
         }
 
+        /// <summary>
+        /// Start Receiving data from server thread
+        /// </summary>
         public void StartReceivingDataFromServer() {
 
             new Thread(ReceiveDataFromServer).Start();
         }
 
+        /// <summary>
+        /// Receives an is finished load indication, when it's false,
+        /// sends player's packet data only once, when it's true, send player's packet in infinite loop thread
+        /// </summary>
+        /// <param name="isFinishedLoad"></param>
         private void SendAllPlayerData(bool isFinishedLoad) {
 
+            //Run always:
             while (true) {
 
+                //Get player from GameScreen event:
                 Player player = OnGetThePlayer();
+
+                //Create a new player packet:
                 PlayerPacket playerPacket = new PlayerPacket();
 
+                //Sets all player packet vars to player's vars:
                 playerPacket.Name = player.GetName().ToString();
                 playerPacket.CharacterName = player.CurrentCharacter.GetName().ToString();
                 playerPacket.TeamName = player.GetTeamName().ToString();
@@ -107,6 +155,7 @@ namespace CastleBridge {
                 playerPacket.IsHorseOwner = player.GetCurrentHorse() != null;
                 playerPacket.IsAllMapEntitiesLoaded = isFinishedLoad;
 
+                //Try to convert player packet's object into array of bytes and send it to server:
                 try {
 
                     byte[] bytes = ObjectToByteArray(playerPacket);
@@ -121,30 +170,43 @@ namespace CastleBridge {
                 if (!isFinishedLoad)
                     break;
 
+                //Start thread sleep:
                 Thread.Sleep(ThreadSleep);
             }
         }
  
+        /// <summary>
+        /// Receives data from server
+        /// </summary>
         private void ReceiveDataFromServer() {
 
-            NetworkStream netStream = null;
-
+            //Run allways:
             while (true) {
 
+                //Try to read stream data from server host:
                 try {
-                    netStream = Client.GetStream();
+
+                    NetworkStream netStream = Client.GetStream();
                     byte[] bytes = new byte[1024];
                     netStream.Read(bytes, 0, bytes.Length);
                     object obj = null;
+
+                    //Try to convert received array of bytes data into player packet's object:
                     try {
                         obj = ByteArrayToObject(bytes);
 
+                        //Checks if received obj is type of player packet:
                         if (obj is PlayerPacket) {
 
                             PlayerPacket playerPacket = obj as PlayerPacket;
+
+                            //Checks player packet's type:
                             switch (playerPacket.PacketType) {
+
+                                //If packet type is player data:
                                 case PacketType.PlayerData:
 
+                                    //Sets all player packet vars into vars:
                                     TeamName team = (TeamName)Enum.Parse(typeof(TeamName), playerPacket.TeamName);
                                     CharacterName character = (CharacterName)Enum.Parse(typeof(CharacterName), playerPacket.CharacterName);
                                     Direction direction = (Direction)Enum.Parse(typeof(Direction), playerPacket.Direction);
@@ -157,16 +219,27 @@ namespace CastleBridge {
                                     bool currentCharacterIsDead = playerPacket.CurrentCharacterIsDead;
                                     bool isHorseOwner = playerPacket.IsHorseOwner;
 
+                                    //Checks if this is the first time of receiving current player's data (never connected before):
                                     if (!OnGetRedPlayers().ContainsKey(playerPacket.Name) && !OnGetYellowPlayers().ContainsKey(playerPacket.Name)) {
+                                        
+                                        //Start joining session from game screen event (Add new player to the correct team):
                                         OnJoinPlayer(character, team, name);
 
+                                        //Add popup:
                                         OnAddPopup(new Popup(name + " has joined to the " + team + " team!", 100, 100, Color.Red, Color.Black), false);
                                     }
-                                    else {
+                                    else { //If this is not the first time receving current player's data (connected before):
 
+                                        //Checks for his team:
                                         switch (team) {
+
+                                            //If he is on red team:
                                             case TeamName.Red:
+
+                                                //Using lock function to avoid multi task crash:
                                                 lock (OnGetRedPlayers()) {
+
+                                                    //Get current red player from GameScreen event and sets all received player packet's vars into current red player's vars:
                                                     OnGetRedPlayers()[name].ChangeTeam(team);
                                                     OnGetRedPlayers()[name].ChangeCharacter(character);
                                                     OnGetRedPlayers()[name].SetRectangle(rectangle);
@@ -180,13 +253,18 @@ namespace CastleBridge {
                                                         Horse currentHorse = OnGetTeams()[team].GetHorse();
                                                         OnGetRedPlayers()[name].MountHorse(currentHorse);
                                                     }
-                                                    else {
+                                                    else 
                                                         OnGetRedPlayers()[name].DismountHorse();
-                                                    }
                                                 }
                                                 break;
+
+                                            //If he is on yellow team:
                                             case TeamName.Yellow:
+
+                                                //Using lock function to avoid multi task crash:
                                                 lock (OnGetYellowPlayers()) {
+
+                                                    //Get current yellow player from GameScreen event and sets all received player packet's vars into current yellow player's vars:
                                                     OnGetYellowPlayers()[name].ChangeTeam(team);
                                                     OnGetYellowPlayers()[name].ChangeCharacter(character);
                                                     OnGetYellowPlayers()[name].SetRectangle(rectangle);
@@ -200,21 +278,21 @@ namespace CastleBridge {
                                                         Horse currentHorse = OnGetTeams()[team].GetHorse();
                                                         OnGetYellowPlayers()[name].MountHorse(currentHorse);
                                                     }
-                                                    else {
+                                                    else
                                                         OnGetYellowPlayers()[name].DismountHorse();
-                                                    }
                                                 }
-
                                                 break;
                                         }
                                     }
                                     break;
                             }
                         }
+                        //Checks if received obj is type of map entity packet:
                         else if (obj is MapEntityPacket) {
 
                             MapEntityPacket MapEntityPacket = obj as MapEntityPacket;
 
+                            //Sets all map entity packet vars into vars:
                             MapEntityName entityName = (MapEntityName)Enum.Parse(typeof(MapEntityName), MapEntityPacket.Name);
                             int entityX = MapEntityPacket.X;
                             int entityY = MapEntityPacket.Y;
@@ -222,23 +300,42 @@ namespace CastleBridge {
                             Location entityLocation = (Location)Enum.Parse(typeof(Location), MapEntityPacket.CurrentLocation);
                             string key = MapEntityPacket.Key;
                             bool isActive = MapEntityPacket.IsActive;
+
+                            //Add entity to world entites from GameScreen event:
                             OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation, isActive, key);
+
+                            //Update loading data from server in percents from CastleBridge event:
                             OnUpdateLoadingPercent(++CurrentEntitiesLoaded, MaxEntitiesToLoad);
                         }
                     }
+                    //Checks if failed to convert received array of bytes into an object, because of the received data is string:
                     catch(Exception) {
+
+                        //Get data and convert it from array of bytes into string:
                         string data = Encoding.ASCII.GetString(bytes).Split('\0')[0];
+
+                        //Checkes if data is 'Completed Map Entities' command:
                         if (data.Equals("Completed Map Entities")) {
 
+                            //Start game on finished loading from GameScreen event:
                             OnFinishedLoading();
+
+                            //Start Sending player's packet data to server thread:
                             StartSendingPlayerData(true);
                         }
+                        //Checks if data contains 'map_entities_count..' command:
                         else if (data.IndexOf("map_entities_count") != -1) {
+
+                            //Get max entities to load:
                             MaxEntitiesToLoad = int.Parse(data.Split('|')[0]);
                         }
+                        //Checks if data contains 'Remove Entity..' command:
                         else if (data.IndexOf("Remove Entity") != -1) {
 
+                            //Get entity's key:
                             string key = data.Split('_')[1];
+
+                            //Remove world entity with his key from GameScreen event:
                             OnRemoveMapEntity(key);
                         }
                     }
@@ -248,10 +345,18 @@ namespace CastleBridge {
 
                 }
 
+                //Start thread sleep:
                 Thread.Sleep(ThreadSleep);
             }
         }
  
+        /// <summary>
+        /// Receives an object
+        /// and returns it as array of bytes
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public byte[] ObjectToByteArray<T>(T obj) {
             if (obj == null)
                 return null;
@@ -262,6 +367,12 @@ namespace CastleBridge {
             }
         }
 
+        /// <summary>
+        /// Receives array of bytes
+        /// and returns it as an object
+        /// </summary>
+        /// <param name="arrBytes"></param>
+        /// <returns></returns>
         public object ByteArrayToObject(byte[] arrBytes) {
             MemoryStream memStream = new MemoryStream();
             BinaryFormatter binForm = new BinaryFormatter();
@@ -274,6 +385,10 @@ namespace CastleBridge {
             return obj;
         }
 
+        /// <summary>
+        /// Get client
+        /// </summary>
+        /// <returns></returns>
         public TcpClient GetClient() {
             return Client;
         }
