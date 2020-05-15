@@ -20,6 +20,13 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/default.spritefont
 
+#begin fonts/default_bigger.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/default_bigger.spritefont
+
 #begin images/colors/empty.png
 /importer:TextureImporter
 /processor:TextureProcessor

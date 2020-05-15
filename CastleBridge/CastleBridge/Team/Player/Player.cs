@@ -413,7 +413,6 @@ namespace CastleBridge {
             ChangeCharacter(CharacterName);
             CurrentCharacter.SetCurrentAnimation(State);
             ChangeLocationTo(Location.Outside);
-            
 
             //OnAddHealth(CurrentCharacter.GetMaxHealth(), CurrentCharacter.GetMaxHealth());
             IsDead = false;

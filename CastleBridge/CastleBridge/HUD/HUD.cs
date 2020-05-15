@@ -19,6 +19,7 @@ namespace CastleBridge {
         private Text PlayerLevel; //Hud's player's level
         private List<Popup> TilePopups; //Hud's tile popups
         private List<Popup> StuckPopups; //Hud's stuck popups
+        private Text RespawnTimerLabel; //Respawn timer label
 
         /// <summary>
         /// Creates a hud
@@ -40,6 +41,9 @@ namespace CastleBridge {
             PlayerWeaponAmmo = new Text(FontType.Default, "0", new Vector2(PlayerWeapon.GetRectangle().Left, PlayerWeapon.GetRectangle().Bottom + 5), Color.White, true, Color.Black);
             PlayerHealth = new Text(FontType.Default, "100/100", new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top), Color.White, false, Color.Black);
             PlayerLevel = new Text(FontType.Default, "0/100", new Vector2(PlayerLevelBar.GetRectangle().Left + PlayerLevelBar.GetRectangle().Width / 2, PlayerLevelBar.GetRectangle().Top), Color.White, false, Color.Black);
+
+            RespawnTimerLabel = new Text(FontType.Default, string.Empty, new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, 100), Color.White, true, Color.Black);
+            RespawnTimerLabel.SetVisible(false);
         }
 
         /// <summary>
@@ -61,6 +65,15 @@ namespace CastleBridge {
                 TilePopups.Add(popup);
             else
                 StuckPopups.Add(popup);
+        }
+
+        /// <summary>
+        /// Receives text and updates respawn label
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetRespawnLabel(string text) {
+
+            RespawnTimerLabel.ChangeText(text);
         }
 
         /// <summary>
@@ -267,6 +280,14 @@ namespace CastleBridge {
         }
 
         /// <summary>
+        /// Get respawn timer label
+        /// </summary>
+        /// <returns></returns>
+        public Text GetRespawnTimerLabel() {
+            return RespawnTimerLabel;
+        }
+
+        /// <summary>
         /// Draw stuck stuff:
         /// </summary>
         public void DrawStuck() {
@@ -287,6 +308,9 @@ namespace CastleBridge {
             //Draw stuck popups:
             foreach (Popup popup in StuckPopups)
                 popup.Draw();
+
+            //Draw respawn label:
+            RespawnTimerLabel.Draw();
         }
     
     }

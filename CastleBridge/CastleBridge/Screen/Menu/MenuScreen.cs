@@ -41,7 +41,7 @@ namespace CastleBridge {
         private void Init() {
 
             Menus.Add(MenuPage.MainMenu, new MainMenu("Main Menu"));
-            Menus.Add(MenuPage.TeamSelection, new TeamSelectionMenu("Select team by pressing castle sides"));
+            Menus.Add(MenuPage.TeamSelection, new TeamSelectionMenu("Select a team by pressing castle sides"));
             Menus.Add(MenuPage.CharacterSelection, new CharacterSelectionMenu("Select a character to play with"));
             Menus.Add(MenuPage.NameSelection, new NameSelectionMenu("Select a name for your character"));
             Menus.Add(MenuPage.Loading, new LoadingMenu("Loading. Please wait.."));
@@ -63,7 +63,7 @@ namespace CastleBridge {
                     TeamSelectionMenu teamSelectionMenu = Menus[CurrentPage] as TeamSelectionMenu;
 
                     //Checks if pressed 'ok' button -> go to character selection:
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && teamSelectionMenu.GetOkButton().IsMouseOver) {
+                    if (teamSelectionMenu.GetOkButton().IsClicking()) {
                         if (teamSelectionMenu.IsSelected) {
                             SelectedTeam = teamSelectionMenu.GetSelectedTeam();
                             GoToPage(MenuPage.CharacterSelection);
@@ -76,8 +76,8 @@ namespace CastleBridge {
                     CharacterSelectionMenu characterSelectionMenu = Menus[CurrentPage] as CharacterSelectionMenu;
 
                     //Checks if pressed 'back' button -> go to team selection:
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton && characterSelectionMenu.GetBackButton().IsMouseOver) {
-                        IsPressedLeftButton = true;
+                    if (characterSelectionMenu.GetBackButton().IsClicking() && !IsPressedLeftButton) {
+
                         GoToPage(MenuPage.TeamSelection);
                         break;
                     }
@@ -96,12 +96,11 @@ namespace CastleBridge {
                     }
 
                     //Checks if pressed 'ok' button:
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && characterSelectionMenu.GetOkButton().IsMouseOver) {
+                    if (characterSelectionMenu.GetOkButton().IsClicking() && !IsPressedLeftButton) {
 
                         //Checks if a character has been selected:
                         if (SelectedCharacter != CharacterName.None)
                             GoToPage(MenuPage.NameSelection); //go to name selection
-
                     }
                     break;
                 //Name selection menu:
@@ -109,16 +108,15 @@ namespace CastleBridge {
                     NameSelectionMenu nameSelectionMenu = Menus[CurrentPage] as NameSelectionMenu;
                     nameSelectionMenu.SelectTeamAndCharacter(SelectedCharacter, SelectedTeam);
 
-
                     //Checks if pressed 'back' button -> go to character selection:
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton && nameSelectionMenu.GetBackButton().IsMouseOver) {
+                    if (nameSelectionMenu.GetBackButton().IsClicking() && !IsPressedLeftButton) {
                         IsPressedLeftButton = true;
                         GoToPage(MenuPage.CharacterSelection);
                         break;
                     }
 
                     //Checks if pressed 'ok' button:
-                    if (Mouse.GetState().LeftButton == ButtonState.Pressed && nameSelectionMenu.GetOkButton().IsMouseOver) {
+                    if (nameSelectionMenu.GetOkButton().IsClicking() && !IsPressedLeftButton) {
 
                         //Checks if a name has been selected:
                         if (nameSelectionMenu.IsSelected) {
@@ -130,6 +128,13 @@ namespace CastleBridge {
                     }
                     break;
             }
+
+            //Check mouse's left button press:
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed && !IsPressedLeftButton) {
+                IsPressedLeftButton = true;
+            }
+
+            //Check mouse's left button released:
             if (Mouse.GetState().LeftButton == ButtonState.Released)
                 IsPressedLeftButton = false;
         }

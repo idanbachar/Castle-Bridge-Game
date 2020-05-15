@@ -56,13 +56,13 @@ namespace CastleBridge {
             YellowCharacters = new List<Character>();
  
 
-            RedCharacters.Add(new Archer(CharacterName.Archer, TeamName.Red, 100, 250, 250, 400));
-            RedCharacters.Add(new Knight(CharacterName.Knight, TeamName.Red, 100, 250, 250, 400));
-            RedCharacters.Add(new Mage(CharacterName.Mage, TeamName.Red, 100, 250, 250, 400));
+            RedCharacters.Add(new Archer(CharacterName.Archer, TeamName.Red, 100, 250, 350, 500));
+            RedCharacters.Add(new Knight(CharacterName.Knight, TeamName.Red, 100, 250, 350, 500));
+            RedCharacters.Add(new Mage(CharacterName.Mage, TeamName.Red, 100, 250, 350, 500));
 
-            YellowCharacters.Add(new Archer(CharacterName.Archer, TeamName.Yellow, 100, 250, 250, 400));
-            YellowCharacters.Add(new Knight(CharacterName.Knight, TeamName.Yellow, 100, 250, 250, 400));
-            YellowCharacters.Add(new Mage(CharacterName.Mage, TeamName.Yellow, 100, 250, 250, 400));
+            YellowCharacters.Add(new Archer(CharacterName.Archer, TeamName.Yellow, 100, 250, 350, 500));
+            YellowCharacters.Add(new Knight(CharacterName.Knight, TeamName.Yellow, 100, 250, 350, 500));
+            YellowCharacters.Add(new Mage(CharacterName.Mage, TeamName.Yellow, 100, 250, 350, 500));
 
             CurrentCharacter = RedCharacters[0];
         }

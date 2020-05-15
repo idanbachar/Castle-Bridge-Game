@@ -19,7 +19,7 @@ namespace CastleBridge {
         /// </summary>
         /// <param name="title"></param>
         public Menu(string title) {
-            Title = new Text(FontType.Default, title, new Vector2(0, 0), Color.Gold, true, Color.Black);
+            Title = new Text(FontType.Default_Bigger, title, new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 2 - (CastleBridge.Graphics.PreferredBackBufferWidth / 4) + 15, 50), Color.Gold, true, Color.Black);
             Grass = new Image("map/forest/grass", 0, CastleBridge.Graphics.PreferredBackBufferHeight / 2 + 100, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight / 2);
             Weather = new Weather(TimeType.Day, true, CastleBridge.Graphics.PreferredBackBufferWidth, 15);
         }

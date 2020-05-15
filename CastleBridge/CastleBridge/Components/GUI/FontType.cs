@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CastleBridge {
     public enum FontType {
-        Default
+        Default,
+        Default_Bigger
     }
 }

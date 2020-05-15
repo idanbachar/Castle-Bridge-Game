@@ -23,7 +23,7 @@ namespace CastleBridge {
         private bool IsPressedF;
         private GameClient GameClient; //Game client
 
-        private int PlayerRespawnTimer; //Player respawn timer
+        private Thread RespawnThread; //Respawn thread
 
         //Start game after loading online stuff event:
         public delegate void StartGameAfterLoading();
@@ -45,8 +45,7 @@ namespace CastleBridge {
 
             GameClient = new GameClient();
             Camera = new Camera(viewPort);
-            PlayerRespawnTimer = 0;
-            
+
             //Initializes map:
             InitMap();
 
@@ -74,22 +73,52 @@ namespace CastleBridge {
         }
 
         /// <summary>
-        /// Checks for player respawn
+        /// Checks for player respawn and starts respawn countdown if can
         /// </summary>
         private void CheckForPlayerRespawn() {
 
+            //Start respawn timer only if player is dead and can respawn:
             if (Player.CanStartRespawnTimer) {
 
-                if (PlayerRespawnTimer < 1000)
-                    PlayerRespawnTimer++;
-                else {
-                    PlayerRespawnTimer = 0;
+                //If not currently respawning:
+                if (RespawnThread == null) {
 
-                    //Respawn player:
-                    Player.Respawn();
+                    //Start respawn thread:
+                    RespawnThread = new Thread(RespawnTimer);
+                    RespawnThread.Start();
                 }
             }
+        }
 
+        /// <summary>
+        /// Respawn timer countdown
+        /// </summary>
+        private void RespawnTimer() {
+
+            int PlayerRespawnTimer = 5; //Player's respawn timer countdown (5 seconds)
+            HUD.GetRespawnTimerLabel().SetVisible(true); //Sets respawn timer label visibility to true
+
+            while (true) {
+
+                //Change respawn timer label text to timer countdown:
+                HUD.SetRespawnLabel("Respawn in " + PlayerRespawnTimer + " seconds.");
+
+                //Handle timer:
+                if (PlayerRespawnTimer > 0)
+                    PlayerRespawnTimer--;
+                else {
+                    PlayerRespawnTimer = 5;
+                    Player.Respawn();
+                    HUD.Update();
+                    HUD.GetRespawnTimerLabel().SetVisible(false);
+                    break;
+                }
+
+                Thread.Sleep(1000);
+            }
+
+
+            RespawnThread = null;
         }
 
         /// <summary>

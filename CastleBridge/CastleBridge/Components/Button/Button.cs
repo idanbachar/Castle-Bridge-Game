@@ -13,9 +13,10 @@ namespace CastleBridge {
         private Image OverImage; //Button's over image
         private Image CurrentImage; //Button's current image
         private Text Text; //Button's text
-        public bool IsMouseOver; //Button's is mouse over indication
         public bool IsClicked; //Button's is clicked indication
         private bool IsPressedLeftButton; //Button's is pressed left button
+        public int PressedCounts; //Button's pressed counts
+        public int MaxPresses; //Button's maximum presses
 
         /// <summary>
         /// Receives default image, over image, text, text color
@@ -31,9 +32,10 @@ namespace CastleBridge {
             OverImage = overImage;
             CurrentImage = defaultImage;
             Text = new Text(FontType.Default, text, new Vector2(CurrentImage.GetRectangle().Left + 5, CurrentImage.GetRectangle().Top + 5), textColor, false, Color.Black);
-            IsMouseOver = false;
             IsClicked = false;
             IsPressedLeftButton = false;
+            PressedCounts = 0;
+            MaxPresses = 1;
         }
 
         /// <summary>
@@ -41,20 +43,22 @@ namespace CastleBridge {
         /// </summary>
         public void Update() {
 
-            //Check if mouse is over button:
-            CheckMouseOver();
+            //Update mouse over features:
+            IsMouseOver();
+
+            //Check if released pressing left button:
+            if (Mouse.GetState().LeftButton == ButtonState.Released)
+                IsPressedLeftButton = false;
         }
 
         /// <summary>
         /// Checks mouse over button
         /// </summary>
-        private void CheckMouseOver() {
+        private bool IsMouseOver() {
 
             Rectangle mouseRectangle = new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 10, 10);
 
-            //Checks if mouse is touching button
             if (mouseRectangle.Intersects(CurrentImage.GetRectangle())) {
-                IsMouseOver = true;
 
                 //Replace current button's image to over image:
                 CurrentImage = OverImage;
@@ -62,12 +66,12 @@ namespace CastleBridge {
                 //Sets current button's color:
                 CurrentImage.SetColor(Color.WhiteSmoke);
 
+                return true;
             }
-            else { //else 
-                IsMouseOver = false;
+            else {
 
-                //Checks if not clicked on button:
-                if (!IsClicked) {
+                //Checks pressed counts:
+                if (PressedCounts < MaxPresses) {
 
                     //Replace current button's image to default:
                     CurrentImage = DefaultImage;
@@ -77,9 +81,9 @@ namespace CastleBridge {
                 }
             }
 
-            if (Mouse.GetState().LeftButton == ButtonState.Released)
-                IsPressedLeftButton = false;
+            return false;
         }
+
 
         /// <summary>
         /// Checks if clicking on button
@@ -91,9 +95,14 @@ namespace CastleBridge {
 
                 IsPressedLeftButton = true;
 
-                if (IsMouseOver) {
-                    IsClicked = !IsClicked;
-                    return IsClicked;
+                if (IsMouseOver()) {
+
+                    if (PressedCounts < MaxPresses)
+                        PressedCounts++;
+                    else {
+                        Reset();
+                    }
+                    return true;
                 }
             }
             return false;
@@ -106,6 +115,7 @@ namespace CastleBridge {
 
             IsClicked = false;
             CurrentImage = DefaultImage;
+            PressedCounts = 0;
         }
 
         /// <summary>

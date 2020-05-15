@@ -23,7 +23,7 @@ namespace CastleBridge {
 
             RedCastle = new Button(new Image("menu/castles selection/castle_left_side_noteam", 0, 100, 700, 431), new Image("menu/castles selection/castle_left_side_redteam", 0, 100, 700, 431), string.Empty, Color.White);
             YellowCastle = new Button(new Image("menu/castles selection/castle_right_side_noteam", RedCastle.GetCurrentImage().GetRectangle().Right, 100, 700, 431), new Image("menu/castles selection/castle_right_side_yellowteam", RedCastle.GetCurrentImage().GetRectangle().Right, 100, 700, 431), string.Empty, Color.White);
-            OkButton = new Button(new Image("menu/button backgrounds/empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100 , CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35), new Image("menu/button backgrounds" ,"empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35, Color.Red), "Next", Color.Black);
+            OkButton = new Button(new Image("menu/button backgrounds/empty", 0, CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35), new Image("menu/button backgrounds" ,"empty", 0, CastleBridge.Graphics.PreferredBackBufferHeight - 100, 100, 35, Color.Red), "Next", Color.Black);
 
             IsSelected = false;
             SelectedTeam = TeamName.None;
@@ -42,20 +42,20 @@ namespace CastleBridge {
 
             //Checks if clicking on red castle:
             if (RedCastle.IsClicking()) {
-                IsSelected = true;
+                IsSelected = RedCastle.PressedCounts <= RedCastle.MaxPresses ? true : false;
                 SelectedTeam = TeamName.Red;
                 YellowCastle.Reset();
             }
 
             //Checks if clicking on yellow castle:
             if (YellowCastle.IsClicking()) {
-                IsSelected = true;
+                IsSelected = YellowCastle.PressedCounts <= YellowCastle.MaxPresses ? true : false;
                 SelectedTeam = TeamName.Yellow;
                 RedCastle.Reset();
             }
 
             //Checks if there is no team selected:
-            if(!RedCastle.IsClicked && !YellowCastle.IsClicked) {
+            if(RedCastle.PressedCounts < RedCastle.MaxPresses && YellowCastle.PressedCounts < YellowCastle.MaxPresses) {
                 IsSelected = false;
                 SelectedTeam = TeamName.None;
             }
