@@ -55,6 +55,14 @@ namespace CastleBridge {
         }
 
         /// <summary>
+        /// Get rectangle
+        /// </summary>
+        /// <returns></returns>
+        public Rectangle GetRectangle() {
+            return Image.GetRectangle();
+        }
+
+        /// <summary>
         /// Receives a visible value and applies it
         /// </summary>
         /// <param name="value"></param>
@@ -98,7 +106,7 @@ namespace CastleBridge {
         /// Removes player owner (sets owner to null)
         /// </summary>
         public void RemoveOwner() {
-            OwnerName = null;
+            OwnerName = string.Empty;
         }
 
         /// <summary>

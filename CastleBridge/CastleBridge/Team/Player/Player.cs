@@ -29,9 +29,12 @@ namespace CastleBridge {
 
         public bool CanStartRespawnTimer; //Player's can start respawn after dies indication
 
+        private Queue<Diamond> Diamonds; //Player's queue of collected diamonds
+
         private Random Rnd;
 
         private Image DiamondCarrierAvatar; //Player's diamond carrier avatar
+        private Text CurrentCarryingDiamondsLabel; //Player's current carrying diamonds count label
 
         //Set health event:
         public delegate void SetHealth(int health, int maxHealth);
@@ -77,6 +80,12 @@ namespace CastleBridge {
             CanStartRespawnTimer = false;
             IsDead = false;
             DiamondCarrierAvatar = new Image("player/diamonds avatars/team/" + teamName, "carry_diamond_avatar", Rectangle.X, Rectangle.Y, 50, 50, Color.White);
+            Diamonds = new Queue<Diamond>();
+
+            CurrentCarryingDiamonds = 0;
+            CurrentCarryingDiamondsLabel = new Text(FontType.Default, CurrentCarryingDiamondsLabel + "/3",
+                                                    new Vector2(DiamondCarrierAvatar.GetRectangle().Right + 3,
+                                                                DiamondCarrierAvatar.GetRectangle().Top), Color.White, false, Color.White);
         }
 
         /// <summary>
@@ -106,8 +115,42 @@ namespace CastleBridge {
         /// <summary>
         /// Add diamond
         /// </summary>
-        public void AddDiamond() {
-            CurrentCarryingDiamonds++;
+        public void AddDiamond(Diamond diamond) {
+
+            Diamonds.Enqueue(diamond);
+            CurrentCarryingDiamonds = Diamonds.Count;
+        }
+
+        /// <summary>
+        /// Remove and return 1 diamond
+        /// </summary>
+        public Diamond RemoveDiamond() {
+
+            Diamond diamond = null;
+
+            //Only if carrying diamonds:
+            if (CurrentCarryingDiamonds > 0) {
+                
+                //Get diamond from queue:
+                diamond = Diamonds.Dequeue();
+
+                //Sets diamond's visible to true:
+                diamond.SetVisible(true);
+
+                //Removes diamond's owner:
+                diamond.RemoveOwner();
+
+                //Changes diamond's location to owner's location:
+                diamond.ChangeLocationTo(CurrentLocation);
+
+                //Sets diamond's rectangle near player's position:
+                diamond.SetRectangle(new Rectangle(Rectangle.X, Rectangle.Y, diamond.GetRectangle().Width, diamond.GetRectangle().Height));
+
+                //Update current carrying diamonds:
+                CurrentCarryingDiamonds = Diamonds.Count;
+            }
+
+            return diamond;
         }
 
         /// <summary>
@@ -320,13 +363,18 @@ namespace CastleBridge {
         /// </summary>
         public void Update() {
 
+            //Update current character if exists:
             if (CurrentCharacter != null)
                 CurrentCharacter.Update();
 
+            //Check if carrying diamonds then sets diamond owner indication to true, else to false:
             if (CurrentCarryingDiamonds > 0)
                 IsDiamondOwner = true;
             else if (CurrentCarryingDiamonds == 0)
                 IsDiamondOwner = false;
+
+            //Update current carrying diamonds label:
+            CurrentCarryingDiamondsLabel.ChangeText(CurrentCarryingDiamonds + "/3");
 
             IsDead = CurrentCharacter.IsDead;
             if (IsDead) {
@@ -371,6 +419,8 @@ namespace CastleBridge {
                     SetDirection(Direction.Left);
                     break;
             }
+
+            x = FloorRectangle.Right - 125 - Rnd.Next(150);
 
             Rectangle = new Rectangle(x, y, 125, 175);
             NameLabel = new Text(FontType.Default, Name, new Vector2(Rectangle.Left + Rectangle.Width / 2 - 5, Rectangle.Bottom + 5), Color.Gold, true, Color.Black);
@@ -442,6 +492,10 @@ namespace CastleBridge {
                                               newRectangle.Top - DiamondCarrierAvatar.GetRectangle().Height, 
                                               DiamondCarrierAvatar.GetRectangle().Width,
                                               DiamondCarrierAvatar.GetRectangle().Height);
+
+            //Applies new position on current carrying diamonds label:
+            CurrentCarryingDiamondsLabel.SetPosition(new Vector2(DiamondCarrierAvatar.GetRectangle().Right + 3,
+                                                                 DiamondCarrierAvatar.GetRectangle().Top));
 
             //Updates name label position:
             NameLabel.SetPosition(new Vector2(newRectangle.Left + newRectangle.Width / 2 - 5, newRectangle.Bottom + 5));
@@ -639,6 +693,14 @@ namespace CastleBridge {
         }
 
         /// <summary>
+        /// Get diamonds
+        /// </summary>
+        /// <returns></returns>
+        public Queue<Diamond> GetDiamonds() {
+            return Diamonds;
+        }
+
+        /// <summary>
         /// Draw player
         /// </summary>
         public void Draw() {
@@ -653,9 +715,11 @@ namespace CastleBridge {
                 CurrentCharacter.Draw();
             }
 
-            //Draw diamond carrier avatar only if carrying diamonds:
-            if (IsDiamondOwner)
+            //Draw diamond carrier avatar and current carrying diamonds label only if carrying diamonds:
+            if (IsDiamondOwner) {
                 DiamondCarrierAvatar.Draw();
+                CurrentCarryingDiamondsLabel.Draw();
+            }
         }
     }
 }

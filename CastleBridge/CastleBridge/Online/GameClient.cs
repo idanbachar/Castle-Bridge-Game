@@ -203,23 +203,27 @@ namespace CastleBridge {
         }
 
         /// <summary>
-        /// Receives diamond taken by player and sends it to server host
+        /// Receives diamond of player and sends it to server host
         /// </summary>
         /// <param name="takenDiamond"></param>
-        public void SendTakenDiamondToServer(Diamond takenDiamond) {
+        public void SendDiamondChangesToServer(Diamond takenDiamond) {
 
             //Create a new diamond packet:
             DiamondPacket diamondPacket = new DiamondPacket(takenDiamond.GetImage().GetRectangle().X, takenDiamond.GetImage().GetRectangle().Y, takenDiamond.GetTeam().ToString(), takenDiamond.GetKey());
 
             diamondPacket.CurrentLocation = takenDiamond.GetCurrentLocation().ToString();
-            diamondPacket.Visible = false;
+            diamondPacket.Visible = takenDiamond.GetVisible();
+            diamondPacket.X = takenDiamond.GetRectangle().X;
+            diamondPacket.Y = takenDiamond.GetRectangle().Y;
+            diamondPacket.Width = takenDiamond.GetRectangle().Width;
+            diamondPacket.Height = takenDiamond.GetRectangle().Height;
             diamondPacket.Owner = takenDiamond.GetOwnerName();
 
             //Sets all diamond packet vars to diamond's vars:
 
             //Try to convert player packet's object into array of bytes and send it to server:
             try {
-
+                    
                 byte[] bytes = ObjectToByteArray(diamondPacket);
                 NetworkStream netStream = Client.GetStream();
                 netStream.Write(bytes, 0, bytes.Length);
@@ -377,11 +381,15 @@ namespace CastleBridge {
                             TeamName diamondTeam = (TeamName)Enum.Parse(typeof(TeamName), DiamondPacket.TeamName);
                             int diamondX = DiamondPacket.X;
                             int diamondY = DiamondPacket.Y;
+                            int diamondWidth = DiamondPacket.Width;
+                            int diamondHeight = DiamondPacket.Height;
                             Location diamondLocation = (Location)Enum.Parse(typeof(Location), DiamondPacket.CurrentLocation);
                             string key = DiamondPacket.Key;
+                            bool visible = DiamondPacket.Visible;
 
-                            OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetVisible(false);
-
+                            OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetVisible(visible);
+                            OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetTeam(diamondTeam);
+                            OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetRectangle(new Rectangle(diamondX, diamondY, diamondWidth, diamondHeight));
                         }
                     }
                     //Checks if failed to convert received array of bytes into an object, because of the received data is string:

@@ -21,6 +21,7 @@ namespace CastleBridge {
         private bool IsPressedD3;
         private bool IsPressedE;
         private bool IsPressedF;
+        private bool IsPressedX;
         private GameClient GameClient; //Game client
 
         private Thread RespawnThread; //Respawn thread
@@ -616,14 +617,14 @@ namespace CastleBridge {
                                 //Set player as diamond's owner:
                                 diamond.Value.SetOwner(Player.GetName());
 
-                                //Add 1 diamond to player:
-                                Player.AddDiamond();
-
-                                //Send current taken diamond's packet data to server host:
-                                GameClient.SendTakenDiamondToServer(diamond.Value);
-
                                 //Sets diamond's visibility to false:
                                 diamond.Value.SetVisible(false);
+
+                                //Add 1 diamond to player:
+                                Player.AddDiamond(diamond.Value);
+
+                                //Send current taken diamond's packet data to server host:
+                                GameClient.SendDiamondChangesToServer(diamond.Value);
 
                                 //Remove current diamond:
                                 //team.Value.GetCastle().GetDiamonds().RemoveAt(i);
@@ -738,10 +739,30 @@ namespace CastleBridge {
         private void CheckDiamondsDrops() {
 
             //Checks if player is pressing 'X' button on keyboard:
-            if (Keyboard.GetState().IsKeyDown(Keys.X)) {
+            if (Keyboard.GetState().IsKeyDown(Keys.X) && !IsPressedX) {
+                IsPressedX = true;
 
-                Player.DropAllCarryingDiamonds();
+                //Get dropped diamond only if player is carrying diamonds:
+                Diamond diamond = Player.RemoveDiamond();
+
+                //Check if player dropped diamond:
+                if (diamond != null) {
+
+                    //Update the right diamond:
+                    Map.GetTeams()[diamond.GetTeam()].GetCastle().GetDiamonds()[diamond.GetKey()] = diamond; 
+
+
+                    //Send current taken diamond's packet data to server host:
+                    GameClient.SendDiamondChangesToServer(diamond);
+                }
             }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.X))
+                IsPressedX = false;
+        }
+
+        private TeamName GetOppositeTeam(TeamName currentTeam) {
+            return currentTeam == TeamName.Red ? TeamName.Yellow : TeamName.Red;
         }
 
         /// <summary>
@@ -811,12 +832,6 @@ namespace CastleBridge {
 
             //Connect to server thread:
             new Thread(() => GameClient.Connect("192.168.1.17", 4441)).Start();
-
-            //if(ConnectServerThread == null) {
-
-            //    ConnectServerThread = new Thread(() => GameClient.Connect("192.168.1.17", 4441));
-            //    ConnectServerThread.Start();
-            //}
         }
 
         /// <summary>
