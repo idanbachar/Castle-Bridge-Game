@@ -21,15 +21,17 @@ namespace CastleBridge {
         private int Woods; //Player's woods
         private Horse CurrentHorse; //Player's current horse (null if isn't an owner.)
         private Location CurrentLocation; //Player's current location
-        private List<Diamond> CollectedRedDiamonds; //Player's collected red diamonds
-        private List<Diamond> CollectedYellowDiamonds; //Player's collected yellow diamonds
         private CharacterName CharacterName; //Player's character name type (Knight/Archer/Mage)
         private string Name; //Player's name's string
         public bool IsDead; //Player's dead indication
+        private bool IsDiamondOwner; //Player's diamonds owning indication
+        private int CurrentCarryingDiamonds; //Player's current carrying diamonds count
 
         public bool CanStartRespawnTimer; //Player's can start respawn after dies indication
 
         private Random Rnd;
+
+        private Image DiamondCarrierAvatar; //Player's diamond carrier avatar
 
         //Set health event:
         public delegate void SetHealth(int health, int maxHealth);
@@ -67,8 +69,6 @@ namespace CastleBridge {
             State = PlayerState.Afk;
             Stones = 0;
             Woods = 0;
-            CollectedRedDiamonds = new List<Diamond>();
-            CollectedYellowDiamonds = new List<Diamond>();
             CurrentHorse = null;
             CurrentLocation = Location.Outside;
             FloorRectangle = floorRectangle;
@@ -76,6 +76,7 @@ namespace CastleBridge {
             Rnd = new Random();
             CanStartRespawnTimer = false;
             IsDead = false;
+            DiamondCarrierAvatar = new Image("player/diamonds avatars/team/" + teamName, "carry_diamond_avatar", Rectangle.X, Rectangle.Y, 50, 50, Color.White);
         }
 
         /// <summary>
@@ -103,71 +104,28 @@ namespace CastleBridge {
         }
 
         /// <summary>
-        /// Add red diamonds to list
+        /// Add diamond
         /// </summary>
-        /// <param name="diamond"></param>
-        public void AddRedDiamond(Diamond diamond) {
-            CollectedRedDiamonds.Add(diamond);
+        public void AddDiamond() {
+            CurrentCarryingDiamonds++;
         }
 
         /// <summary>
-        /// Add yellow diamonds to list
+        /// Receives carrying diamonds and applies it
         /// </summary>
-        /// <param name="diamond"></param>
-        public void AddYellowDiamond(Diamond diamond) {
-            CollectedYellowDiamonds.Add(diamond);
+        /// <param name="carryingDiamonds"></param>
+        public void SetCurrentCarryingDiamonds(int carryingDiamonds) {
+
+            CurrentCarryingDiamonds = carryingDiamonds;
         }
 
         /// <summary>
-        /// Drops all red diamonds
+        /// Drop all carrying diamonds
         /// </summary>
-        /// <returns></returns>
-        public List<Diamond> DropAllRedDiamonds() {
-
-            Random rnd = new Random();
-
-            List<Diamond> diamondsToDrop = new List<Diamond>();
-
-            foreach (Diamond diamond in CollectedRedDiamonds) {
-                diamond.ChangeLocationTo(CurrentLocation);
-                diamond.RemoveOwner();
-                diamond.SetRectangle(new Rectangle(Rectangle.X + rnd.Next(0, 200),
-                                                   Rectangle.Bottom,
-                                                   diamond.GetImage().GetRectangle().Width,
-                                                   diamond.GetImage().GetRectangle().Height));
-                diamondsToDrop.Add(diamond);
-            }
-
-            CollectedRedDiamonds.Clear();
-
-            return diamondsToDrop;
+        public void DropAllCarryingDiamonds() {
+            CurrentCarryingDiamonds = 0;
         }
 
-        /// <summary>
-        /// Drops all yellow diamonds
-        /// </summary>
-        /// <returns></returns>
-        public List<Diamond> DropAllYellowDiamonds() {
-
-            Random rnd = new Random();
-
-            List<Diamond> diamondsToDrop = new List<Diamond>();
-
-            foreach (Diamond diamond in CollectedYellowDiamonds) {
-                diamond.ChangeLocationTo(CurrentLocation);
-                diamond.RemoveOwner();
-                diamond.SetRectangle(new Rectangle(Rectangle.X + rnd.Next(0, 200),
-                                                   Rectangle.Bottom,
-                                                   diamond.GetImage().GetRectangle().Width,
-                                                   diamond.GetImage().GetRectangle().Height));
-
-                diamondsToDrop.Add(diamond);
-            }
-
-            CollectedYellowDiamonds.Clear();
-
-            return diamondsToDrop;
-        }
 
         /// <summary>
         /// Adds a new character
@@ -291,7 +249,8 @@ namespace CastleBridge {
 
             if (Rectangle.Intersects(diamond.GetImage().GetRectangle()) &&
                 CurrentHorse == null &&
-                diamond.GetOwner() == null &&
+                diamond.GetOwnerName() == string.Empty &&
+                diamond.GetVisible() &&
                 (CurrentLocation == diamond.GetCurrentLocation() || diamond.GetCurrentLocation() == Location.All))
                 return true;
 
@@ -363,6 +322,11 @@ namespace CastleBridge {
 
             if (CurrentCharacter != null)
                 CurrentCharacter.Update();
+
+            if (CurrentCarryingDiamonds > 0)
+                IsDiamondOwner = true;
+            else if (CurrentCarryingDiamonds == 0)
+                IsDiamondOwner = false;
 
             IsDead = CurrentCharacter.IsDead;
             if (IsDead) {
@@ -472,6 +436,12 @@ namespace CastleBridge {
             //Applies new rectangle on each character:
             foreach (KeyValuePair<string, Character> character in Characters)
                 character.Value.SetRectangle(newRectangle);
+
+            //Applies new rectangle on diamond carrier avatar:
+            DiamondCarrierAvatar.SetRectangle(newRectangle.Left + DiamondCarrierAvatar.GetRectangle().Width / 2, 
+                                              newRectangle.Top - DiamondCarrierAvatar.GetRectangle().Height, 
+                                              DiamondCarrierAvatar.GetRectangle().Width,
+                                              DiamondCarrierAvatar.GetRectangle().Height);
 
             //Updates name label position:
             NameLabel.SetPosition(new Vector2(newRectangle.Left + newRectangle.Width / 2 - 5, newRectangle.Bottom + 5));
@@ -653,19 +623,11 @@ namespace CastleBridge {
         }
 
         /// <summary>
-        /// Get collected red diamonds
+        /// Get current carrying diamonds
         /// </summary>
         /// <returns></returns>
-        public List<Diamond> GetCollectedRedDiamonds() {
-            return CollectedRedDiamonds;
-        }
-
-        /// <summary>
-        /// Get collected yellow diamonds
-        /// </summary>
-        /// <returns></returns>
-        public List<Diamond> GetCollectedYellowDiamonds() {
-            return CollectedYellowDiamonds;
+        public int GetCurrentCarryingDiamonds() {
+            return CurrentCarryingDiamonds;
         }
 
         /// <summary>
@@ -690,6 +652,10 @@ namespace CastleBridge {
                 //Draw current character:
                 CurrentCharacter.Draw();
             }
+
+            //Draw diamond carrier avatar only if carrying diamonds:
+            if (IsDiamondOwner)
+                DiamondCarrierAvatar.Draw();
         }
     }
 }

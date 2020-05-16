@@ -132,6 +132,14 @@ namespace CastleBridge {
         }
 
         /// <summary>
+        /// Get visible value
+        /// </summary>
+        /// <returns></returns>
+        public bool GetVisible() {
+            return Visible;
+        }
+
+        /// <summary>
         /// Receives a rotation
         /// and applies it
         /// </summary>

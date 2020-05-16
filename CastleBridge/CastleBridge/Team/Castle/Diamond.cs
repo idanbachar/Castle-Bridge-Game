@@ -10,8 +10,9 @@ namespace CastleBridge {
 
         private Image Image; //Diamond's image
         private TeamName TeamName; //Diamon'ds team
-        private Player Owner; //Diamond's player owner
+        private string OwnerName; //Diamond's player owner
         private Location CurrentLocation; //Diamond's current location
+        private string Key;
 
         /// <summary>
         /// Receives team, coordinates and location
@@ -21,11 +22,12 @@ namespace CastleBridge {
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="location"></param>
-        public Diamond(TeamName teamName, int x, int y, Location location) {
+        public Diamond(TeamName teamName, int x, int y, Location location, string key) {
             TeamName = teamName;
             Image = new Image("map/castles/teams/" + TeamName + "/inside/diamond/diamond", x, y, 75, 75);
-            Owner = null;
+            OwnerName = string.Empty;
             CurrentLocation = location;
+            Key = key;
         }
 
         /// <summary>
@@ -52,6 +54,21 @@ namespace CastleBridge {
             Image.SetRectangle(newRectangle.X, newRectangle.Y, newRectangle.Width, newRectangle.Height);
         }
 
+        /// <summary>
+        /// Receives a visible value and applies it
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetVisible(bool value) {
+            Image.SetVisible(value);
+        }
+
+        /// <summary>
+        /// Get visible value
+        /// </summary>
+        /// <returns></returns>
+        public bool GetVisible() {
+            return Image.GetVisible();
+        }
 
         /// <summary>
         /// Receives a new location and applies it
@@ -65,23 +82,23 @@ namespace CastleBridge {
         /// Get player owner
         /// </summary>
         /// <returns></returns>
-        public Player GetOwner() {
-            return Owner;
+        public string GetOwnerName() {
+            return OwnerName;
         }
 
         /// <summary>
         /// Receives a player and applies it
         /// </summary>
         /// <param name="player"></param>
-        public void SetOwner(Player player) {
-            Owner = player;
+        public void SetOwner(string name) {
+            OwnerName = name;
         }
 
         /// <summary>
         /// Removes player owner (sets owner to null)
         /// </summary>
         public void RemoveOwner() {
-            Owner = null;
+            OwnerName = null;
         }
 
         /// <summary>
@@ -90,6 +107,14 @@ namespace CastleBridge {
         /// <returns></returns>
         public Image GetImage() {
             return Image;
+        }
+
+        /// <summary>
+        /// Get diamond's key
+        /// </summary>
+        /// <returns></returns>
+        public string GetKey() {
+            return Key;
         }
 
         /// <summary>
@@ -106,7 +131,7 @@ namespace CastleBridge {
         public void Draw() {
 
             //Draw diamond only if there is no owner:
-            if (Owner == null)
+            if (OwnerName == string.Empty)
                 Image.Draw();
         }
 

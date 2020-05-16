@@ -10,6 +10,7 @@ using System.IO;
 using CastleBridge.OnlineLibraries;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CastleBridge {
     public class GameClient {
@@ -126,6 +127,7 @@ namespace CastleBridge {
             NetworkStream netStream = Client.GetStream();
             byte[] bytes = Encoding.ASCII.GetBytes(text);
             netStream.Write(bytes, 0, bytes.Length);
+
             Thread.Sleep(ThreadSleep);
         }
 
@@ -178,6 +180,7 @@ namespace CastleBridge {
                 playerPacket.CurrentCharacterIsDead = player.CurrentCharacter.IsDead;
                 playerPacket.IsHorseOwner = player.GetCurrentHorse() != null;
                 playerPacket.IsAllMapEntitiesLoaded = isFinishedLoad;
+                playerPacket.CarryingDiamondsCount = player.GetCurrentCarryingDiamonds();
 
                 //Try to convert player packet's object into array of bytes and send it to server:
                 try {
@@ -197,6 +200,35 @@ namespace CastleBridge {
                 //Start thread sleep:
                 Thread.Sleep(ThreadSleep);
             }
+        }
+
+        /// <summary>
+        /// Receives diamond taken by player and sends it to server host
+        /// </summary>
+        /// <param name="takenDiamond"></param>
+        public void SendTakenDiamondToServer(Diamond takenDiamond) {
+
+            //Create a new diamond packet:
+            DiamondPacket diamondPacket = new DiamondPacket(takenDiamond.GetImage().GetRectangle().X, takenDiamond.GetImage().GetRectangle().Y, takenDiamond.GetTeam().ToString(), takenDiamond.GetKey());
+
+            diamondPacket.CurrentLocation = takenDiamond.GetCurrentLocation().ToString();
+            diamondPacket.Visible = false;
+            diamondPacket.Owner = takenDiamond.GetOwnerName();
+
+            //Sets all diamond packet vars to diamond's vars:
+
+            //Try to convert player packet's object into array of bytes and send it to server:
+            try {
+
+                byte[] bytes = ObjectToByteArray(diamondPacket);
+                NetworkStream netStream = Client.GetStream();
+                netStream.Write(bytes, 0, bytes.Length);
+
+            }
+            catch (Exception e) {
+                Console.WriteLine(e.Message);
+            }
+
         }
  
         /// <summary>
@@ -242,6 +274,7 @@ namespace CastleBridge {
                                     bool isAttackAnimationFinished = playerPacket.IsAttackAnimationFinished;
                                     bool currentCharacterIsDead = playerPacket.CurrentCharacterIsDead;
                                     bool isHorseOwner = playerPacket.IsHorseOwner;
+                                    int currentCarryingDiamonds = playerPacket.CarryingDiamondsCount;
 
                                     //Checks if this is the first time of receiving current player's data (never connected before):
                                     if (!OnGetRedPlayers().ContainsKey(playerPacket.Name) && !OnGetYellowPlayers().ContainsKey(playerPacket.Name)) {
@@ -273,6 +306,8 @@ namespace CastleBridge {
                                                     OnGetRedPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
                                                     OnGetRedPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
                                                     OnGetRedPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
+                                                    OnGetRedPlayers()[name].SetCurrentCarryingDiamonds(currentCarryingDiamonds);
+
                                                     if (isHorseOwner) {
                                                         Horse currentHorse = OnGetTeams()[team].GetHorse();
                                                         OnGetRedPlayers()[name].MountHorse(currentHorse);
@@ -298,6 +333,8 @@ namespace CastleBridge {
                                                     OnGetYellowPlayers()[name].GetCurrentCharacter().SetHealth(currentCharacterHp);
                                                     OnGetYellowPlayers()[name].GetCurrentAnimation().IsFinished = isAttackAnimationFinished;
                                                     OnGetYellowPlayers()[name].CurrentCharacter.IsDead = currentCharacterIsDead;
+                                                    OnGetYellowPlayers()[name].SetCurrentCarryingDiamonds(currentCarryingDiamonds);
+
                                                     if (isHorseOwner) {
                                                         Horse currentHorse = OnGetTeams()[team].GetHorse();
                                                         OnGetYellowPlayers()[name].MountHorse(currentHorse);
@@ -330,6 +367,21 @@ namespace CastleBridge {
 
                             //Add entity to world entites from GameScreen event:
                             OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation, isActive, key);
+                        }
+                        //Checks if received obj is type of diamond packet:
+                        else if (obj is DiamondPacket) {
+
+                            DiamondPacket DiamondPacket = obj as DiamondPacket;
+
+                            //Sets all diamond packet vars into vars:
+                            TeamName diamondTeam = (TeamName)Enum.Parse(typeof(TeamName), DiamondPacket.TeamName);
+                            int diamondX = DiamondPacket.X;
+                            int diamondY = DiamondPacket.Y;
+                            Location diamondLocation = (Location)Enum.Parse(typeof(Location), DiamondPacket.CurrentLocation);
+                            string key = DiamondPacket.Key;
+
+                            OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetVisible(false);
+
                         }
                     }
                     //Checks if failed to convert received array of bytes into an object, because of the received data is string:

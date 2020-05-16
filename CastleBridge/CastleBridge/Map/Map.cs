@@ -296,10 +296,10 @@ namespace CastleBridge {
                 }
 
                 //Draw diamonds of each team:
-                foreach (Diamond diamond in team.Value.GetCastle().GetDiamonds()) {
-                    if (diamond.GetImage().GetRectangle().Bottom == i)
-                        if (diamond.GetCurrentLocation() == playerLocation || diamond.GetCurrentLocation() == Location.All)
-                            diamond.Draw();
+                foreach (KeyValuePair<string, Diamond> diamond in team.Value.GetCastle().GetDiamonds()) {
+                    if (diamond.Value.GetImage().GetRectangle().Bottom == i)
+                        if (diamond.Value.GetCurrentLocation() == playerLocation || diamond.Value.GetCurrentLocation() == Location.All)
+                            diamond.Value.Draw();
                 }
 
                 //Draw horses of eache team:

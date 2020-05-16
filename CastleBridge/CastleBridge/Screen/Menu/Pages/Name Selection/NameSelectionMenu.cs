@@ -36,11 +36,12 @@ namespace CastleBridge {
             YellowCastle = new Image("map/castles/teams/yellow/outside", "castle", 0, 100, 1400, 431, Color.White);
             CurrentCastle = RedCastle;
 
-            InputText = new Image("menu/button backgrounds/empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, CastleBridge.Graphics.PreferredBackBufferHeight / 2, 200, 25);
+            InputText = new Image("menu/button backgrounds/empty", CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 250, CastleBridge.Graphics.PreferredBackBufferHeight / 2, 500, 50);
+            InputText.SetColor(Color.Black);
             OkButton = new Button(new Image("menu/button backgrounds/empty", InputText.GetRectangle().Left, InputText.GetRectangle().Bottom + 10, 100, 35), new Image("menu/button backgrounds", "empty", InputText.GetRectangle().Left, InputText.GetRectangle().Bottom + 10, 100, 35, Color.Red), "Ok", Color.Black);
             BackButton = new Button(new Image("menu/button backgrounds/empty", CastleBridge.Graphics.PreferredBackBufferWidth - 100, 20, 100, 35), new Image("menu/button backgrounds", "empty", CastleBridge.Graphics.PreferredBackBufferWidth - 100, 20, 100, 35, Color.Red), "Back", Color.Black);
             Name = string.Empty;
-            Text = new Text(FontType.Default, Name, new Vector2(InputText.GetRectangle().X, InputText.GetRectangle().Y), Color.Black, false, Color.Red);
+            Text = new Text(FontType.Default_Bigger, Name, new Vector2(InputText.GetRectangle().X, InputText.GetRectangle().Y), Color.Gold, false, Color.Red);
             IsSelected = false;
             SelectedTeam = TeamName.None;
 

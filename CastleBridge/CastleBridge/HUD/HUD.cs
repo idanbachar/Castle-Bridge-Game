@@ -20,6 +20,7 @@ namespace CastleBridge {
         private List<Popup> TilePopups; //Hud's tile popups
         private List<Popup> StuckPopups; //Hud's stuck popups
         private Text RespawnTimerLabel; //Respawn timer label
+        private Text VersionText; //Version text label
 
         /// <summary>
         /// Creates a hud
@@ -44,6 +45,8 @@ namespace CastleBridge {
 
             RespawnTimerLabel = new Text(FontType.Default_Bigger, string.Empty, new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 3 + 50, 100), Color.Gold, true, Color.Black);
             RespawnTimerLabel.SetVisible(false);
+
+            VersionText = new Text(FontType.Default_Bigger, "Alpha", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth - 150, CastleBridge.Graphics.PreferredBackBufferHeight - 50), Color.White, false, Color.White);
         }
 
         /// <summary>
@@ -318,6 +321,9 @@ namespace CastleBridge {
 
             //Draw respawn label:
             RespawnTimerLabel.Draw();
+
+            //Draw version label:
+            VersionText.Draw();
         }
     
     }

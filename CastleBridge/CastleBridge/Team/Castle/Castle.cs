@@ -10,7 +10,7 @@ namespace CastleBridge {
 
         private Image Image; //Castle's image
         private TeamName TeamName; //Castle's team
-        private List<Diamond> Diamonds; //Castle's diamonds
+        private Dictionary <string, Diamond> Diamonds; //Castle's diamonds
         private Door OutsideDoor; //Castle's outside door
         private Door InsideDoor; //Castle's inside door
         private Location CurrentLocation; //Castle's current location
@@ -31,6 +31,8 @@ namespace CastleBridge {
             InsideWall = new Image("map/castles/teams/" + teamName + "/inside/castle_wall", 0, y, 1400, 431);
             InsideDoor = new Door(614, 303, 188, 107, teamName, teamName == TeamName.Red ? Location.Inside_Red_Castle : Location.Inside_Yellow_Castle);
             InsideFloor = new Image("map/castles/teams/" + teamName + "/inside/floor/castle_floor", 0, CastleBridge.Graphics.PreferredBackBufferHeight / 2, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight);
+
+            Diamonds = new Dictionary<string, Diamond>();
             InitDiamonds();
             CurrentLocation = Location.Outside;
         }
@@ -40,13 +42,14 @@ namespace CastleBridge {
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        private void AddDiamond(int x, int y) {
+        private void AddDiamond(int x, int y, string key) {
+
             switch (TeamName) {
                 case TeamName.Red:
-                    Diamonds.Add(new Diamond(TeamName, x, y, Location.Inside_Red_Castle));
+                    Diamonds.Add(key, new Diamond(TeamName, x, y, Location.Inside_Red_Castle, key));
                     break;
                 case TeamName.Yellow:
-                    Diamonds.Add(new Diamond(TeamName, x, y, Location.Inside_Yellow_Castle));
+                    Diamonds.Add(key, new Diamond(TeamName, x, y, Location.Inside_Yellow_Castle, key));
                     break;
             }
         }
@@ -56,9 +59,10 @@ namespace CastleBridge {
         /// </summary>
         private void InitDiamonds() {
 
-            Diamonds = new List<Diamond>();
-            for(int i = 1; i <= 3; i++)
-                AddDiamond(100, InsideFloor.GetRectangle().Top - 10 + (i * 100));
+            for (int i = 1; i <= 3; i++) {
+                string key = "diamond#" + TeamName + "#" + i;
+                AddDiamond(100, InsideFloor.GetRectangle().Top - 10 + (i * 100), key);
+            }
         }
 
         /// <summary>
@@ -73,7 +77,7 @@ namespace CastleBridge {
         /// Get diamonds
         /// </summary>
         /// <returns></returns>
-        public List<Diamond> GetDiamonds() {
+        public Dictionary<string, Diamond> GetDiamonds() {
             return Diamonds;
         }
 

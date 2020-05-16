@@ -25,7 +25,7 @@ namespace CastleBridge {
         public Door(int x, int y, int width, int height, TeamName teamName, Location location) {
 
             Image = new Image("map/castles/teams/" + teamName + "/outside/door", "door", x, y, width, height, Color.White);
-            Tooltip = new Text(FontType.Default, string.Empty, new Vector2(x , y - 170), Color.Black, true, Color.Gold);
+            Tooltip = new Text(FontType.Default, string.Empty, new Vector2(x , y - 170), Color.Gold, true, Color.Black);
             CurrentLocation = location;
 
             //Creates door's tooltip by current location:

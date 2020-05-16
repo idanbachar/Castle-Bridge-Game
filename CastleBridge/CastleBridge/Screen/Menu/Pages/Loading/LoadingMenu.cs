@@ -17,7 +17,7 @@ namespace CastleBridge {
         /// <param name="title"></param>
         public LoadingMenu(string title): base(title) {
 
-            Text = new Text(FontType.Default_Bigger, "Loading Game", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 3, CastleBridge.Graphics.PreferredBackBufferHeight / 2 - 100), Color.Gold, true, Color.Black);
+            Text = new Text(FontType.Default_Bigger, "Connecting to server...", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 3, CastleBridge.Graphics.PreferredBackBufferHeight / 2 - 100), Color.Gold, true, Color.Black);
             Title.SetVisible(false);
         }
 

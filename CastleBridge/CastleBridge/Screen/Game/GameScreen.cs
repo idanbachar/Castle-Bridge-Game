@@ -525,7 +525,7 @@ namespace CastleBridge {
                                         Map.RemoveMapEntity(currentEntity.GetKey());
 
                                         //Send remove entity command to the server:
-                                        GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
+                                        new Thread(() => GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName())).Start();
                                     }
                                     else { //If player has enough hp:
 
@@ -555,7 +555,7 @@ namespace CastleBridge {
                                     Map.RemoveMapEntity(currentEntity.GetKey());
 
                                     //Send remove entity command to the server:
-                                    GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
+                                    new Thread(() => GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName())).Start();
                                     break;
                                 //If current entity is arrow:
                                 case MapEntityName.Arrow:
@@ -579,7 +579,7 @@ namespace CastleBridge {
                                         Map.RemoveMapEntity(currentEntity.GetKey());
 
                                         //Send remove entity command to the server:
-                                        GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName());
+                                        new Thread(() => GameClient.SendText("Remove Entity_" + currentEntity.GetKey() + "_" + Player.GetName())).Start();
                                     }
                                     else { //If player's current character is not archer:
 
@@ -599,48 +599,47 @@ namespace CastleBridge {
             foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
 
                 //Run on each team's castle's diamonds:
-                for (int i = 0; i < team.Value.GetCastle().GetDiamonds().Count; i++) {
-
-                    //Get current diamond:
-                    Diamond diamond = team.Value.GetCastle().GetDiamonds()[i];
+                foreach (KeyValuePair<string, Diamond> diamond in team.Value.GetCastle().GetDiamonds()) {
 
                     //Checks if player is touching current diamond:
-                    if (Player.IsTouchDiamond(diamond)) {
+                    if (Player.IsTouchDiamond(diamond.Value)) {
 
                         //Checks if player is pressing 'E' button on keyboard at the moment the player's state is not looting:
                         if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
 
-                            //Change player's state to loot:
-                            Player.SetState(PlayerState.Loot);
+                            //Only if current diamond's team is not equals to player's team:
+                            if (Player.GetTeamName() != diamond.Value.GetTeam()) {
 
-                            //Set player as diamond's owner:
-                            diamond.SetOwner(Player);
+                                //Change player's state to loot:
+                                Player.SetState(PlayerState.Loot);
 
-                            //Checks current diamond's team and add it to the right list:
-                            switch (diamond.GetTeam()) {
-                                case TeamName.Red:
-                                    Player.AddRedDiamond(diamond); //Add to red list
-                                    break;
-                                case TeamName.Yellow:
-                                    Player.AddYellowDiamond(diamond); //Add to yellow list
-                                    break;
+                                //Set player as diamond's owner:
+                                diamond.Value.SetOwner(Player.GetName());
+
+                                //Add 1 diamond to player:
+                                Player.AddDiamond();
+
+                                //Send current taken diamond's packet data to server host:
+                                GameClient.SendTakenDiamondToServer(diamond.Value);
+
+                                //Sets diamond's visibility to false:
+                                diamond.Value.SetVisible(false);
+
+                                //Remove current diamond:
+                                //team.Value.GetCastle().GetDiamonds().RemoveAt(i);
+
+                                //Add popup:
+                                HUD.AddPopup(new Popup("+1 Diamond", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+
+                                //Add xp for player:
+                                Player.GetCurrentCharacter().AddXp(50);
+
+                                //Update hud's player's xp bar:
+                                HUD.AddPlayerXp(50, Player.GetCurrentCharacter().GetMaxXp());
+
+                                //Add popup:
+                                HUD.AddPopup(new Popup("+50xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
                             }
-
-                            //Remove current diamond:
-                            team.Value.GetCastle().GetDiamonds().RemoveAt(i);
-                            
-                            //Add popup:
-                            HUD.AddPopup(new Popup("+1 Diamond", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-
-                            //Add xp for player:
-                            Player.GetCurrentCharacter().AddXp(50);
-
-                            //Update hud's player's xp bar:
-                            HUD.AddPlayerXp(50, Player.GetCurrentCharacter().GetMaxXp());
-
-                            //Add popup:
-                            HUD.AddPopup(new Popup("+50xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
-                            
                             break;
                         }
                     }
@@ -741,27 +740,7 @@ namespace CastleBridge {
             //Checks if player is pressing 'X' button on keyboard:
             if (Keyboard.GetState().IsKeyDown(Keys.X)) {
 
-                //Checks if player's is collected red diamonds:
-                if (Player.GetCollectedRedDiamonds().Count > 0) {
-
-                    //Get dropped red diamonds:
-                    List<Diamond> droppedRedDiamonds = Player.DropAllRedDiamonds();
-
-                    //Set all dropped red diamonds into red team:
-                    foreach (Diamond diamond in droppedRedDiamonds)
-                        Map.GetTeams()[TeamName.Red].GetCastle().GetDiamonds().Add(diamond);
-                }
-
-                //Checks if player's is collected yellow diamonds:
-                if (Player.GetCollectedYellowDiamonds().Count > 0) {
-
-                    //Get dropped yellow diamonds:
-                    List<Diamond> droppedYellowDiamonds = Player.DropAllYellowDiamonds();
-
-                    //Set all dropped yellow diamonds into red team:
-                    foreach (Diamond diamond in droppedYellowDiamonds)
-                        Map.GetTeams()[TeamName.Yellow].GetCastle().GetDiamonds().Add(diamond);
-                }
+                Player.DropAllCarryingDiamonds();
             }
         }
 
