@@ -325,11 +325,11 @@ namespace CastleBridge {
                             string key = MapEntityPacket.Key;
                             bool isActive = MapEntityPacket.IsActive;
 
-                            //Add entity to world entites from GameScreen event:
-                            OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation, isActive, key);
-
                             //Update loading data from server in percents from CastleBridge event:
                             OnUpdateLoadingPercent(++CurrentEntitiesLoaded, MaxEntitiesToLoad);
+
+                            //Add entity to world entites from GameScreen event:
+                            OnAddEntity(entityName, entityX, entityY, entityDirection, 0f, entityLocation, isActive, key);
                         }
                     }
                     //Checks if failed to convert received array of bytes into an object, because of the received data is string:
