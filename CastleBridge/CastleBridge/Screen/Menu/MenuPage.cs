@@ -11,6 +11,7 @@ namespace CastleBridge {
         TeamSelection,
         CharacterSelection,
         NameSelection,
-        Loading
+        Loading,
+        Error
     }
 }

@@ -29,6 +29,8 @@ namespace CastleBridge {
         public delegate void StartGameAfterLoading();
         public event StartGameAfterLoading OnStartGameAfterLoading;
 
+        private Thread ConnectServerThread;
+
         /// <summary>
         /// Game screen
         /// </summary>
@@ -827,11 +829,14 @@ namespace CastleBridge {
             GameClient.OnFinishedLoading += StartGame;
             GameClient.OnRemoveMapEntity += Map.RemoveMapEntity;
 
-            //Connect to server:
-            GameClient.Connect("192.168.1.17", 4441);
+            //Connect to server thread:
+            new Thread(() => GameClient.Connect("192.168.1.17", 4441)).Start();
 
-            //Start receiving data from server:
-            GameClient.StartReceivingDataFromServer();
+            //if(ConnectServerThread == null) {
+
+            //    ConnectServerThread = new Thread(() => GameClient.Connect("192.168.1.17", 4441));
+            //    ConnectServerThread.Start();
+            //}
         }
 
         /// <summary>

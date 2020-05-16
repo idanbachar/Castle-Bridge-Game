@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CastleBridge {
     public abstract class Menu {
 
-        private Text Title; //Menu's title
+        protected Text Title; //Menu's title
         protected Image Grass; //Menu's grass image
         protected Weather Weather; //Menu's weather
         protected TeamName SelectedTeam; //Menu's selected team

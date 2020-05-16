@@ -17,7 +17,8 @@ namespace CastleBridge {
         /// <param name="title"></param>
         public LoadingMenu(string title): base(title) {
 
-            Text = new Text(FontType.Default, "Loading Game", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, CastleBridge.Graphics.PreferredBackBufferHeight / 2 - 100), Color.Black, false, Color.Red);
+            Text = new Text(FontType.Default_Bigger, "Loading Game", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 3, CastleBridge.Graphics.PreferredBackBufferHeight / 2 - 100), Color.Gold, true, Color.Black);
+            Title.SetVisible(false);
         }
 
         /// <summary>
@@ -30,13 +31,18 @@ namespace CastleBridge {
 
             double percent = ((double)currentItemsDownloaded / (double)maxItemsToDownload) * 100;
 
-            Text.ChangeText("Downloading map data: (" + percent + "%)");
+            Text.ChangeText("Downloading map data: (" + (int)percent + "%)");
         }
 
         /// <summary>
         /// Update stuff
         /// </summary>
-        public override void Update() { }
+        public override void Update() {
+
+            //Updates weather:
+            Weather.Update();
+
+        }
  
         /// <summary>
         /// Get text

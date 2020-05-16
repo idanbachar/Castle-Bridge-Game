@@ -45,6 +45,7 @@ namespace CastleBridge {
             Menus.Add(MenuPage.CharacterSelection, new CharacterSelectionMenu("Select a character to play with"));
             Menus.Add(MenuPage.NameSelection, new NameSelectionMenu("Select a name for your character"));
             Menus.Add(MenuPage.Loading, new LoadingMenu("Loading. Please wait.."));
+            Menus.Add(MenuPage.Error, new ErrorMenu("Connection lost :("));
             CurrentPage = MenuPage.TeamSelection;
         }
 
@@ -71,7 +72,7 @@ namespace CastleBridge {
                         }
                     }
                     break;
-                    //Character selection menu:
+                //Character selection menu:
                 case MenuPage.CharacterSelection:
                     CharacterSelectionMenu characterSelectionMenu = Menus[CurrentPage] as CharacterSelectionMenu;
 
@@ -127,6 +128,17 @@ namespace CastleBridge {
                         }
                     }
                     break;
+                //Error menu:
+                case MenuPage.Error:
+                    ErrorMenu errorMenu = Menus[CurrentPage] as ErrorMenu;
+
+                    //Checks if pressed 'back' button -> go to name selection:
+                    if (errorMenu.GetBackButton().IsClicking() && !IsPressedLeftButton) {
+                        IsPressedLeftButton = true;
+                        GoToPage(MenuPage.NameSelection);
+                        break;
+                    }
+                    break;
             }
 
             //Check mouse's left button press:
@@ -154,6 +166,13 @@ namespace CastleBridge {
         /// <returns></returns>
         public Menu GetMenu(MenuPage page) {
             return Menus[page];
+        }
+
+        /// <summary>
+        /// Change current menu's page to error page
+        /// </summary>
+        public void ConnectionLost() {
+            GoToPage(MenuPage.Error);
         }
 
         /// <summary>

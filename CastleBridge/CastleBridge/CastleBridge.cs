@@ -85,6 +85,7 @@ namespace CastleBridge
             ((MenuScreen)Screens[ScreenType.Menu]).OnStartGame += StartJoinSession;
             ((GameScreen)Screens[ScreenType.Game]).OnStartGameAfterLoading += StartGame;
             ((GameScreen)Screens[ScreenType.Game]).GetGameClient().OnUpdateLoadingPercent += ((LoadingMenu)((MenuScreen)Screens[ScreenType.Menu]).GetMenu(MenuPage.Loading)).UpdateText;
+            ((GameScreen)Screens[ScreenType.Game]).GetGameClient().OnConnectionLost += ((MenuScreen)Screens[ScreenType.Menu]).ConnectionLost;
         }
 
         /// <summary>

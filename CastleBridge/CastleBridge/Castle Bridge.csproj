@@ -55,6 +55,7 @@
     <Compile Include="Screen\Menu\Menu.cs" />
     <Compile Include="Screen\Menu\MenuPage.cs" />
     <Compile Include="Screen\Menu\Pages\Character Selection\CharacterSelectionMenu.cs" />
+    <Compile Include="Screen\Menu\Pages\Error\ErrorMenu.cs" />
     <Compile Include="Screen\Menu\Pages\Loading\LoadingMenu.cs" />
     <Compile Include="Screen\Menu\Pages\Main Menu\MainMenu.cs" />
     <Compile Include="Screen\Menu\Pages\Name Selection\NameSelectionMenu.cs" />

@@ -56,6 +56,10 @@ namespace CastleBridge {
         public delegate void RemoveMapEntity(string key);
         public event RemoveMapEntity OnRemoveMapEntity;
 
+        //Connection lost event when can't connect to the server host:
+        public delegate void ConnectionLost();
+        public event ConnectionLost OnConnectionLost;
+
         //Max number of entities to load from server:
         private int MaxEntitiesToLoad;
 
@@ -64,6 +68,8 @@ namespace CastleBridge {
 
         //Thread sleep time:
         private const int ThreadSleep = 100;
+
+        private bool IsConnectedToServer;
         
         /// <summary>
         /// Creates a game client
@@ -71,6 +77,7 @@ namespace CastleBridge {
         public GameClient() {
 
             Client = new TcpClient();
+            IsConnectedToServer = false;
             MaxEntitiesToLoad = 0;
             CurrentEntitiesLoaded = 0;
         }
@@ -82,15 +89,30 @@ namespace CastleBridge {
         /// <param name="ip"></param>
         /// <param name="port"></param>
         public void Connect(string ip, int port) {
+
             try {
+
+                //Try to connect server host:
                 Client.Connect(ip, port);
 
-                //Sends only 1 time connected player's packet to server:
-                SendAllPlayerData(false);
+                IsConnectedToServer = true;
 
+                //Only if connected successfully to server host:
+                if (IsConnectedToServer) {
+
+                    //Sends only 1 time connected player's packet to server:
+                    SendAllPlayerData(false);
+
+                    //Start receiving data from server:
+                    StartReceivingDataFromServer();
+                }
             }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
+            catch (Exception) {
+
+                IsConnectedToServer = false;
+
+                //Start connection lost event when can't connect to the server host:
+                OnConnectionLost();
             }
         }
 
@@ -113,7 +135,8 @@ namespace CastleBridge {
         /// <param name="isFinishedLoad"></param>
         public void StartSendingPlayerData(bool isFinishedLoad) {
 
-            new Thread(() => SendAllPlayerData(isFinishedLoad)).Start();
+            if (IsConnectedToServer)
+                new Thread(() => SendAllPlayerData(isFinishedLoad)).Start();
         }
 
         /// <summary>
@@ -121,7 +144,8 @@ namespace CastleBridge {
         /// </summary>
         public void StartReceivingDataFromServer() {
 
-            new Thread(ReceiveDataFromServer).Start();
+            if (IsConnectedToServer)
+                new Thread(ReceiveDataFromServer).Start();
         }
 
         /// <summary>
