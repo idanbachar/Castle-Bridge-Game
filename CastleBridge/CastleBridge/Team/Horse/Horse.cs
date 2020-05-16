@@ -41,7 +41,7 @@ namespace CastleBridge {
 
             Direction = Direction.Left;
             Owner = null;
-            Tooltip = new Text(FontType.Default, "Press 'E' to mount", new Vector2(x + 50, y - 65), Color.Black, true, Color.Gold);
+            Tooltip = new Text(FontType.Default, "Press 'E' to mount horse.", new Vector2(x + 50, y - 65), Color.Gold, true, Color.Black);
             
             //Set tooltip visible:
             Tooltip.SetVisible(false);

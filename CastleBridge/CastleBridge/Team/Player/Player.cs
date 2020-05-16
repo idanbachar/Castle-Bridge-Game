@@ -31,6 +31,10 @@ namespace CastleBridge {
 
         private Random Rnd;
 
+        //Set health event:
+        public delegate void SetHealth(int health, int maxHealth);
+        public event SetHealth OnSetHealth;
+
         //Add health event:
         public delegate void AddHealth(int health, int maxHealth);
         public event AddHealth OnAddHealth;
@@ -381,6 +385,7 @@ namespace CastleBridge {
         /// </summary>
         public void Dead() {
             CanStartRespawnTimer = true;
+            DismountHorse();
         }
 
         /// <summary>
@@ -414,7 +419,9 @@ namespace CastleBridge {
             CurrentCharacter.SetCurrentAnimation(State);
             ChangeLocationTo(Location.Outside);
 
-            //OnAddHealth(CurrentCharacter.GetMaxHealth(), CurrentCharacter.GetMaxHealth());
+            if (OnSetHealth != null)
+                OnSetHealth(CurrentCharacter.GetMaxHealth(), CurrentCharacter.GetMaxHealth());
+
             IsDead = false;
             CanStartRespawnTimer = false;
         }
@@ -613,7 +620,7 @@ namespace CastleBridge {
         public void MountHorse(Horse horse) {
             CurrentHorse = horse;
             CurrentHorse.SetOwner(this);
-            CurrentHorse.GetTooltip().ChangeText("Press 'F' to dismount");
+            CurrentHorse.GetTooltip().ChangeText("Press 'F' to dismount horse.");
 
             //Change speed to horse's speed:
             SetSpeed(horse.GetSpeed());
@@ -628,7 +635,7 @@ namespace CastleBridge {
             if (CurrentHorse != null) {
                 CurrentHorse.RemoveOwner();
                 CurrentHorse.GetTooltip().SetVisible(false);
-                CurrentHorse.GetTooltip().ChangeText("Press 'E' to mount");
+                CurrentHorse.GetTooltip().ChangeText("Press 'E' to mount horse.");
                 CurrentHorse.GetTooltip().SetPosition(new Vector2(CurrentHorse.GetRectangle().X + 50, CurrentHorse.GetRectangle().Y - 65));
             }
             CurrentHorse = null;

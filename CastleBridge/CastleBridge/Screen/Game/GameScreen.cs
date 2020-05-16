@@ -812,6 +812,7 @@ namespace CastleBridge {
 
             //Initializes player's events:
             Player.OnAddHealth += HUD.AddPlayerHealth;
+            Player.OnSetHealth += HUD.SetPlayerHealth;
             Player.OnMinusHealth += HUD.MinusPlayerHealth;
             Player.OnChangeLocation += Map.UpdateLocationsTo;
             

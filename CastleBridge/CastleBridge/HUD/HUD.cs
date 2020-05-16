@@ -42,7 +42,7 @@ namespace CastleBridge {
             PlayerHealth = new Text(FontType.Default, "100/100", new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top), Color.White, false, Color.Black);
             PlayerLevel = new Text(FontType.Default, "0/100", new Vector2(PlayerLevelBar.GetRectangle().Left + PlayerLevelBar.GetRectangle().Width / 2, PlayerLevelBar.GetRectangle().Top), Color.White, false, Color.Black);
 
-            RespawnTimerLabel = new Text(FontType.Default, string.Empty, new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, 100), Color.White, true, Color.Black);
+            RespawnTimerLabel = new Text(FontType.Default_Bigger, string.Empty, new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 3 + 50, 100), Color.Gold, true, Color.Black);
             RespawnTimerLabel.SetVisible(false);
         }
 
@@ -113,6 +113,13 @@ namespace CastleBridge {
         /// <param name="teamName"></param>
         public void SetHorseAvatar(TeamName teamName) {
             HorseAvatar.ChangeImage("horse/teams/" + teamName + "/avatar/horse_avatar");
+        }
+
+        public void SetPlayerHealth(int health, int maxHealth) {
+
+            PlayerHealthBar.SetRectangle(PlayerHealthBar.GetRectangle().X, PlayerHealthBar.GetRectangle().Y, health, PlayerHealthBar.GetRectangle().Height);
+            PlayerHealth.ChangeText(health + "/" + maxHealth + "hp");
+            PlayerHealth.SetPosition(new Vector2(PlayerHealthBar.GetRectangle().Left + PlayerHealthBar.GetRectangle().Width / 2, PlayerHealthBar.GetRectangle().Top));
         }
 
         /// <summary>

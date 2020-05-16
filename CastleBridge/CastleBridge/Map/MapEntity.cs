@@ -49,29 +49,29 @@ namespace CastleBridge {
             IsActive = isActive;
             Key = key;
 
-            Tooltip = new Text(FontType.Default, string.Empty, new Vector2(x + 50, y - 65), Color.Black, true, Color.Gold);
+            Tooltip = new Text(FontType.Default, string.Empty, new Vector2(x + 50, y - 65), Color.Gold, true, Color.Black);
             Tooltip.SetVisible(false);
 
             switch (entityName) {
                 case MapEntityName.Red_Flower:
                     Tooltip.ChangeText("Press 'E' to eat" +
                         "\n" +
-                        "(+15hp)");
+                        "(+15) Hp.");
                     break;
                 case MapEntityName.Stone:
                     Tooltip.ChangeText("Press 'E' to take" +
                         "\n" +
-                        "(+1 Stone)");
+                        "(+1) Stone.");
                     break;
                 case MapEntityName.Tree:
                     Tooltip.ChangeText("Press 'E' to cut" +
                         "\n" +
-                        "(+5 Woods)");
+                        "(+5) Woods.");
                     break;
                 case MapEntityName.Arrow:
                     Tooltip.ChangeText("Press 'E' to take" +
                         "\n" +
-                        "(+1 Arrow)");
+                        "(+1) Arrow.");
                     break;
             }
 
