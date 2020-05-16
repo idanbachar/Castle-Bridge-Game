@@ -163,6 +163,12 @@ namespace CastleBridge {
             {
                 caps = true;
             }
+            else if(key == Keys.RightControl || key == Keys.LeftControl || key == Keys.RightAlt || key == Keys.LeftAlt || key == Keys.Enter ||
+                key == Keys.Right || key == Keys.Left || key == Keys.Up || key == Keys.Down ||
+                key == Keys.D1 || key == Keys.D2 || key == Keys.D3 || key == Keys.D4 || key == Keys.D5 || key == Keys.D6 || key == Keys.D7 ||
+                key == Keys.D8 || key == Keys.D9 || key == Keys.D0) {
+
+            }
             else if (!caps && Name.Length < 16) //If the name isn't too long, and !caps the letter will be added without caps
             {
                 if (key == Keys.Space) {

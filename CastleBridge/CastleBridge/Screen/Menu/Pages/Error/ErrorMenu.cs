@@ -18,7 +18,7 @@ namespace CastleBridge {
         /// <param name="title"></param>
         public ErrorMenu(string title): base(title) {
 
-            Text = new Text(FontType.Default_Bigger, "Connection lost :(", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 3, CastleBridge.Graphics.PreferredBackBufferHeight / 2 - 100), Color.Gold, true, Color.Black);
+            Text = new Text(FontType.Default_Bigger, "Connection lost :(", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth / 2 - 100, CastleBridge.Graphics.PreferredBackBufferHeight / 2 - 100), Color.Gold, true, Color.Black);
             Title.SetVisible(false);
 
             BackButton = new Button(new Image("menu/button backgrounds/empty", CastleBridge.Graphics.PreferredBackBufferWidth - 100, 20, 100, 35), new Image("menu/button backgrounds", "empty", CastleBridge.Graphics.PreferredBackBufferWidth - 100, 20, 100, 35, Color.Red), "Back", Color.Black);
