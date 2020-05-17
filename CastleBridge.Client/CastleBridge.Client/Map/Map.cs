@@ -62,6 +62,9 @@ namespace CastleBridge.Client {
             Weather = new Weather(TimeType.Day, true, WIDTH, 50);
         }
 
+        /// <summary>
+        /// Initializes background entities like trees and ground leavs
+        /// </summary>
         private void InitBackgroundWorldEntities() {
 
             for (int i = 0; i < 60; i++) {
