@@ -294,9 +294,13 @@ namespace CastleBridge.Client {
                 CurrentHorse == null &&
                 diamond.GetOwnerName() == string.Empty &&
                 diamond.GetVisible() &&
-                (CurrentLocation == diamond.GetCurrentLocation() || diamond.GetCurrentLocation() == Location.All))
+                TeamName != diamond.GetTeam() &&
+                (CurrentLocation == diamond.GetCurrentLocation() || diamond.GetCurrentLocation() == Location.All)) {
+                diamond.GetTooltip().SetVisible(true);
                 return true;
+            }
 
+            diamond.GetTooltip().SetVisible(false);
             return false;
         }
 

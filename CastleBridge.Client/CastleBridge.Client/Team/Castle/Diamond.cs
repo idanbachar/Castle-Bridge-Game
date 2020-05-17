@@ -12,7 +12,8 @@ namespace CastleBridge.Client {
         private TeamName TeamName; //Diamon'ds team
         private string OwnerName; //Diamond's player owner
         private Location CurrentLocation; //Diamond's current location
-        private string Key;
+        private Text Tooltip; //Diamond's tooltip
+        private string Key; //Diamond's unique key
 
         /// <summary>
         /// Receives team, coordinates and location
@@ -28,6 +29,16 @@ namespace CastleBridge.Client {
             OwnerName = string.Empty;
             CurrentLocation = location;
             Key = key;
+
+            Tooltip = new Text(FontType.Default, "Press 'E' to steal\n(+1) Diamond.", new Vector2(x + 50, y - 65), Color.Gold, true, Color.Black);
+            Tooltip.SetVisible(false);
+        }
+
+        /// <summary>
+        /// Update stuff
+        /// </summary>
+        public void Update() {
+            Tooltip.SetPosition(new Vector2(Image.GetRectangle().X + 50, Image.GetRectangle().Y - 65));
         }
 
         /// <summary>
@@ -76,6 +87,14 @@ namespace CastleBridge.Client {
         /// <returns></returns>
         public bool GetVisible() {
             return Image.GetVisible();
+        }
+
+        /// <summary>
+        /// Get tooltip
+        /// </summary>
+        /// <returns></returns>
+        public Text GetTooltip() {
+            return Tooltip;
         }
 
         /// <summary>
@@ -141,6 +160,9 @@ namespace CastleBridge.Client {
             //Draw diamond only if there is no owner:
             if (OwnerName == string.Empty)
                 Image.Draw();
+
+            //Draw diamond's tooltip:
+            Tooltip.Draw();
         }
 
     }

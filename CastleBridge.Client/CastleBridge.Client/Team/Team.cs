@@ -71,6 +71,18 @@ namespace CastleBridge.Client {
         }
 
         /// <summary>
+        /// Update stuff
+        /// </summary>
+        public void Update() {
+
+            //Update castle:
+            Castle.Update();
+
+            //Update horse:
+            Horse.Update();
+        }
+
+        /// <summary>
         /// Add online player to team by selected character, team, name.
         /// </summary>
         /// <param name="character"></param>

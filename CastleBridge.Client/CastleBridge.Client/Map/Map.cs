@@ -82,9 +82,12 @@ namespace CastleBridge.Client {
             //Update weather:
             Weather.Update();
 
-            //Update teams's horses:
-            foreach (KeyValuePair<TeamName, Team> team in Teams)
-                team.Value.GetHorse().Update();
+            //Update teams:
+            foreach (KeyValuePair<TeamName, Team> team in Teams) {
+
+                //Update team:
+                team.Value.Update();
+            }
         }
  
         /// <summary>

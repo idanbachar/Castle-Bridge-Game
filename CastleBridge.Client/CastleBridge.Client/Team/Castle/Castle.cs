@@ -33,7 +33,10 @@ namespace CastleBridge.Client {
             InsideFloor = new Image("map/castles/teams/" + teamName + "/inside/floor/castle_floor", 0, CastleBridge.Graphics.PreferredBackBufferHeight / 2, CastleBridge.Graphics.PreferredBackBufferWidth, CastleBridge.Graphics.PreferredBackBufferHeight);
 
             Diamonds = new Dictionary<string, Diamond>();
+
+            //Initializes diamonds:
             InitDiamonds();
+
             CurrentLocation = Location.Outside;
         }
 
@@ -63,6 +66,16 @@ namespace CastleBridge.Client {
                 string key = "diamond#" + TeamName + "#" + i;
                 AddDiamond(100, InsideFloor.GetRectangle().Top - 10 + (i * 100), key);
             }
+        }
+
+        /// <summary>
+        /// Update stuff
+        /// </summary>
+        public void Update() {
+
+            //Update diamonds:
+            foreach (KeyValuePair<string, Diamond> diamond in Diamonds)
+                diamond.Value.Update();
         }
 
         /// <summary>
