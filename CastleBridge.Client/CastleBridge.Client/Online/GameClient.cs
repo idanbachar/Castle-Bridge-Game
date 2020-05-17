@@ -386,10 +386,13 @@ namespace CastleBridge.Client {
                             Location diamondLocation = (Location)Enum.Parse(typeof(Location), DiamondPacket.CurrentLocation);
                             string key = DiamondPacket.Key;
                             bool visible = DiamondPacket.Visible;
+                            string owner = DiamondPacket.Owner;
 
+                            //Get current diamond from GameScreen event and sets all received diamond packet's vars into current diamond vars:
                             OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetVisible(visible);
                             OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetTeam(diamondTeam);
                             OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetRectangle(new Rectangle(diamondX, diamondY, diamondWidth, diamondHeight));
+                            OnGetTeams()[diamondTeam].GetCastle().GetDiamonds()[key].SetOwner(owner);
                         }
                     }
                     //Checks if failed to convert received array of bytes into an object, because of the received data is string:
