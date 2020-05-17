@@ -233,6 +233,8 @@ namespace CastleBridge.Client {
                 Console.WriteLine(e.Message);
             }
 
+            Thread.Sleep(ThreadSleep);
+
         }
  
         /// <summary>
@@ -287,7 +289,7 @@ namespace CastleBridge.Client {
                                         OnJoinPlayer(character, team, name);
 
                                         //Add popup:
-                                        OnAddPopup(new Popup(name + " has joined to the " + team + " team!", 100, 100, Color.Red, Color.Black), false);
+                                        OnAddPopup(new Popup(name + " has joined to the " + team + " team!", CastleBridge.Graphics.PreferredBackBufferWidth / 2 + 280, CastleBridge.Graphics.PreferredBackBufferHeight - 100, Color.Red, Color.Black, false), false);
                                     }
                                     else { //If this is not the first time receving current player's data (connected before):
 

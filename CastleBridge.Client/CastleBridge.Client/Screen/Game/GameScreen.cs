@@ -30,8 +30,6 @@ namespace CastleBridge.Client {
         public delegate void StartGameAfterLoading();
         public event StartGameAfterLoading OnStartGameAfterLoading;
 
-        private Thread ConnectServerThread;
-
         /// <summary>
         /// Game screen
         /// </summary>
@@ -483,6 +481,57 @@ namespace CastleBridge.Client {
         }
 
         /// <summary>
+        /// Checks player's stealing
+        /// </summary>
+        private void CheckSteal() {
+
+            //Run on each team:
+            foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
+
+                //Run on each team's castle's diamonds:
+                foreach (KeyValuePair<string, Diamond> diamond in team.Value.GetCastle().GetDiamonds()) {
+
+                    //Checks if player is touching current diamond:
+                    if (Player.IsTouchDiamond(diamond.Value)) {
+
+                        //Checks if player is pressing 'E' button on keyboard at the moment the player's state is not looting:
+                        if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
+
+                                //Change player's state to loot:
+                                Player.SetState(PlayerState.Loot);
+
+                                //Set player as diamond's owner:
+                                diamond.Value.SetOwner(Player.GetName());
+
+                                //Sets diamond's visibility to false:
+                                diamond.Value.SetVisible(false);
+
+                                //Add 1 diamond to player:
+                                Player.AddDiamond(diamond.Value);
+
+                                //Send current taken diamond's packet data to server host:
+                                new Thread(() => GameClient.SendDiamondChangesToServer(diamond.Value)).Start();
+
+                                //Add popup:
+                                HUD.AddPopup(new Popup("+1 Diamond", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
+
+                                //Add xp for player:
+                                Player.GetCurrentCharacter().AddXp(50);
+
+                                //Update hud's player's xp bar:
+                                HUD.AddPlayerXp(50, Player.GetCurrentCharacter().GetMaxXp());
+
+                                //Add popup:
+                                HUD.AddPopup(new Popup("+50xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
+                            
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Checks player's looting
         /// </summary>
         private void CheckLoot() {
@@ -596,57 +645,6 @@ namespace CastleBridge.Client {
                 }
             }
 
-            //Run on each team:
-            foreach (KeyValuePair<TeamName, Team> team in Map.GetTeams()) {
-
-                //Run on each team's castle's diamonds:
-                foreach (KeyValuePair<string, Diamond> diamond in team.Value.GetCastle().GetDiamonds()) {
-
-                    //Checks if player is touching current diamond:
-                    if (Player.IsTouchDiamond(diamond.Value)) {
-
-                        //Checks if player is pressing 'E' button on keyboard at the moment the player's state is not looting:
-                        if (Keyboard.GetState().IsKeyDown(Keys.E) && Player.GetState() != PlayerState.Loot) {
-
-                            //Only if current diamond's team is not equals to player's team:
-                            if (Player.GetTeamName() != diamond.Value.GetTeam()) {
-
-                                //Change player's state to loot:
-                                Player.SetState(PlayerState.Loot);
-
-                                //Set player as diamond's owner:
-                                diamond.Value.SetOwner(Player.GetName());
-
-                                //Sets diamond's visibility to false:
-                                diamond.Value.SetVisible(false);
-
-                                //Add 1 diamond to player:
-                                Player.AddDiamond(diamond.Value);
-
-                                //Send current taken diamond's packet data to server host:
-                                GameClient.SendDiamondChangesToServer(diamond.Value);
-
-                                //Remove current diamond:
-                                //team.Value.GetCastle().GetDiamonds().RemoveAt(i);
-
-                                //Add popup:
-                                HUD.AddPopup(new Popup("+1 Diamond", Player.GetRectangle().X, Player.GetRectangle().Y - 30, Color.White, Color.Black), true);
-
-                                //Add xp for player:
-                                Player.GetCurrentCharacter().AddXp(50);
-
-                                //Update hud's player's xp bar:
-                                HUD.AddPlayerXp(50, Player.GetCurrentCharacter().GetMaxXp());
-
-                                //Add popup:
-                                HUD.AddPopup(new Popup("+50xp", HUD.GetPlayerLevelBar().GetRectangle().Left + 3, HUD.GetPlayerLevelBar().GetRectangle().Top, Color.White, Color.Green), false);
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-
             //Checks if player's current state is loot and at the moment the loot animation is finished:
             if (Player.GetState() == PlayerState.Loot && Player.CurrentCharacter.LootAnimation.IsFinished) {
 
@@ -749,11 +747,11 @@ namespace CastleBridge.Client {
                 if (diamond != null) {
 
                     //Update the right diamond:
-                    Map.GetTeams()[diamond.GetTeam()].GetCastle().GetDiamonds()[diamond.GetKey()] = diamond; 
+                    Map.GetTeams()[diamond.GetTeam()].GetCastle().GetDiamonds()[diamond.GetKey()] = diamond;
 
 
                     //Send current taken diamond's packet data to server host:
-                    GameClient.SendDiamondChangesToServer(diamond);
+                    new Thread(() => GameClient.SendDiamondChangesToServer(diamond)).Start();
                 }
             }
 
@@ -793,6 +791,7 @@ namespace CastleBridge.Client {
             CheckAttack();
             CheckDefence();
             CheckLoot();
+            CheckSteal();
             CheckMountHorse();
             CheckEnterExitCastleDoors();
             CheckDiamondsDrops();
@@ -839,6 +838,9 @@ namespace CastleBridge.Client {
         /// </summary>
         private void StartGame() {
             OnStartGameAfterLoading();
+
+            //Add popup:
+            HUD.AddPopup(new Popup("You joined to the " + Player.GetTeamName() + " team!", CastleBridge.Graphics.PreferredBackBufferWidth / 2 + 280, CastleBridge.Graphics.PreferredBackBufferHeight - 100, Color.Red, Color.Black, false), false);
         }
        
         /// <summary>
