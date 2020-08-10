@@ -3,7 +3,7 @@
 ## What is Castle Bridge?
 
 
-Castle Bridge is an adventure swords fighting multiplayer game that takes place in the mediavel era
+**Castle Bridge** is an adventure swords fighting multiplayer game that takes place in the mediavel era
 <br/>
 where there no mercy, and too many wars between kingdoms.
 <br/>
