@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace CastleBridge.Client {
         private CharacterName SelectedCharacter; //Selected character
         private string SelectedName; //Selected name
         private bool IsPressedLeftButton; //Left button pressed indication
+        private Text CopyrightText;
 
         //Start join game event:
         public delegate void StartGame(CharacterName characterName, TeamName team, string selectedName);
@@ -47,6 +49,9 @@ namespace CastleBridge.Client {
             Menus.Add(MenuPage.Loading, new LoadingMenu("Loading. Please wait.."));
             Menus.Add(MenuPage.Error, new ErrorMenu("Connection lost :("));
             CurrentPage = MenuPage.TeamSelection;
+
+            //init copyright text:
+            CopyrightText = new Text(FontType.Default, "Made by Idan Bachar.", new Vector2(CastleBridge.Graphics.PreferredBackBufferWidth - 320, CastleBridge.Graphics.PreferredBackBufferHeight - 50), Color.White, false, Color.White);
         }
 
         /// <summary>
@@ -184,6 +189,9 @@ namespace CastleBridge.Client {
 
             //Draw only current menu page:
             Menus[CurrentPage].Draw();
+
+            //Draw copyright text:
+            CopyrightText.Draw();
 
             CastleBridge.SpriteBatch.End();
         }
