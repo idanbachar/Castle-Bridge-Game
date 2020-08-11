@@ -1,6 +1,6 @@
 # Castle Bridge
 
-<img width="500" src="https://gitlab.com/idanbachar-xna-games-projects/castle-bridge-project/castle-bridge-client/uploads/f08f6439b690d0c142604be44ac62847/Castle_Bridge.png">
+<img width="500" src="https://gitlab.com/idanbachar-xna-games-projects/castle-bridge-project/castle-bridge-client/uploads/1fb592bb9d0ef5b678ae9702ef08a09e/Castle_Bridge.png">
 
 ## What is Castle Bridge?
 
