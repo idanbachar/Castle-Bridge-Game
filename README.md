@@ -11,6 +11,13 @@ where there no mercy, and too many wars between kingdoms.
 <br/>
 Only the strongest team **maby** stand a chance to win the battle.  
 
+
+-Click image below to watch the gameplay video:
+
+<a href="https://www.youtube.com/watch?v=Bdwd4W2WVA4&">
+    <img src="http://i3.ytimg.com/vi/Bdwd4W2WVA4/hqdefault.jpg">
+</a>
+
 ## Rules/How to play
 
 -**Two teams** in the game:
