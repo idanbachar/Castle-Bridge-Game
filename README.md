@@ -40,18 +40,18 @@ Only the strongest team **maby** stand a chance to win the battle.
     </tr>
     <tr>
         <td>Archer</td>
-        <td><img width="100" src="images/characters/red_archer.png"/></td>
-        <td><img width="100" src="images/characters/yellow_archer.png"/></td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/characters/red_archer.png"/></td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/characters/yellow_archer.png"/></td>
     </tr>
         <tr>
         <td>Knight</td>
-        <td><img width="100" src="images/characters/red_knight.png"/></td>
-        <td><img width="100" src="images/characters/yellow_knight.png"/></td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/characters/red_knight.png"/></td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/characters/yellow_knight.png"/></td>
     </tr>
         <tr>
         <td>Mage</td>
-        <td><img width="100" src="images/characters/red_mage.png"/></td>
-        <td><img width="100" src="images/characters/yellow_mage.png"/></td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/characters/red_mage.png"/></td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/characters/yellow_mage.png"/></td>
     </tr>
 </table>
 
@@ -59,14 +59,8 @@ Only the strongest team **maby** stand a chance to win the battle.
 
 <br/>
 
-<img width="100" src="images/diamonds/red_diamond.png"/>X3
+<img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/diamonds/red_diamond.png"/>X3
 
 <br/>
 
-<img width="100" src="images/diamonds/yellow_diamond.png"/>X3
-
-## Credits
-
-Game developed by <a href="https://www.linkedin.com/in/idanbachar/">Idan Bachar</a>.
-
-© 2021 Idan Bachar All Rights Reserved.
+<img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/diamonds/yellow_diamond.png"/>X3
