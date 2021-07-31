@@ -64,3 +64,5 @@ Only the strongest team **maby** stand a chance to win the battle.
 <br/>
 
 <img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/diamonds/yellow_diamond.png"/>X3
+
+Your goal is to steal all 3 diamonds of opposite team, and bring them to yours before opposite team wins.
