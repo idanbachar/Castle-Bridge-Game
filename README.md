@@ -65,15 +65,6 @@ Only the strongest team **maby** stand a chance to win the battle.
 
 <img width="100" src="images/diamonds/yellow_diamond.png"/>X3
 
-## Screenshots Gallery
-<img width="500" src="images/gameplay/gameplay_1.png"/>
-<img width="500" src="images/gameplay/gameplay_2.png"/>
-<img width="500" src="images/gameplay/gameplay_3.png"/>
-<img width="500" src="images/gameplay/gameplay_4.png"/>
-<img width="500" src="images/gameplay/gameplay_5.png"/>
-<img width="500" src="images/gameplay/gameplay_6.png"/>
-<img width="500" src="images/gameplay/gameplay_7.png"/>
-
 ## Credits
 
 Game developed by <a href="https://www.linkedin.com/in/idanbachar/">Idan Bachar</a>.
