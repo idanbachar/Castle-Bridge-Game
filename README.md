@@ -25,8 +25,8 @@ Only the strongest team **maby** stand a chance to win the battle.
         <td>Yellow Team</td>
     </tr>
     <tr>
-        <td><img width="100" src="images/castles/red_castle.png"/></td>
-        <td><img width="100" src="images/castles/yellow_castle.png"/> </td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/castles/red_castle.png"/></td>
+        <td><img width="100" src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/castles/yellow_castle.png"/></td>
     </tr>
 </table>
 
