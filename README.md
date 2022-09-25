@@ -8,7 +8,7 @@ Only the strongest team may stand a chance of winning the battle.
 
 ### Teams
 
-<table border="1">
+<table border="1" cellspacing="0">
  <tr>
   <th>Red</th>
   <th>Yellow</th>
@@ -25,7 +25,7 @@ Only the strongest team may stand a chance of winning the battle.
 
 ### Characters
 
-<table border="1">
+<table border="1" cellspacing="0">
  <tr>
   <th>Name</th>
   <th>Red</th>
