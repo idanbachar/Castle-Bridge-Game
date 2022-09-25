@@ -1,12 +1,17 @@
-## Castle Bridge
+# Castle Bridge
 
-**Castle Bridge** is an adventure sword fighting multiplayer game that takes place in the medieval era.  
-Battles with no mercy, and too many wars between kingdoms.  
+**Castle Bridge** is an adventure sword fighting multiplayer game that takes place in the medieval era.
+Battles with no mercy, and too many wars between kingdoms.
 Only the strongest team may stand a chance of winning the battle.
 
 ---
 
+## How to play?
+
 ### Teams
+
+The game is divided into two groups - red and yellow.
+The goal of each team is to invade the opposing team's palace, steal three diamonds from it and bring them to your palace before the opposing team.
 
 <table border="1" cellspacing="0">
  <tr>
@@ -25,11 +30,19 @@ Only the strongest team may stand a chance of winning the battle.
 
 ### Characters
 
+Each group has three characters:
+1. **Archer**
+2. **Knight**
+3. **Mage**
+
+Each character has unique attacks and a different appearance and a different strategy.
+The characters must be used wisely, the strategy is what will determine the end of the battle.
+
 <table border="1" cellspacing="0">
  <tr>
-  <th>Name</th>
-  <th>Red</th>
-  <th>Yellow</th>
+  <th>Character</th>
+  <th>Red Team</th>
+  <th>Yellow Team</th>
  </tr>
  <tr>
   <td>Archer</td>
@@ -56,6 +69,25 @@ Only the strongest team may stand a chance of winning the battle.
   </td>
   <td>
    <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/characters/yellow_mage.png?raw=true" width="100" />
+  </td>
+ </tr>
+</table>
+
+### Diamonds
+
+Three diamonds per group. The first team to steal the diamonds and bring them to their destination wins.
+
+<table border="1" cellspacing="0">
+ <tr>
+  <th>Red Diamond</th>
+  <th>Yellow Diamond</th>
+ </tr>
+ <tr>
+  <td>
+   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/diamonds/red_diamond.png" width="100" />
+  </td>
+  <td>
+   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/diamonds/yellow_diamond.png" width="100" />
   </td>
  </tr>
 </table>
