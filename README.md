@@ -1,10 +1,10 @@
 # Castle Bridge
 
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/cover/cover.png?raw=true" width="450" />
-
 **Castle Bridge** is an adventure sword fighting multiplayer game that takes place in the medieval era.
 Battles with no mercy, and too many wars between kingdoms.
 Only the strongest team may stand a chance of winning the battle.
+
+   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/cover/cover.png?raw=true" width="450" />
 
 ---
 
