@@ -4,7 +4,7 @@
 Battles with no mercy, and too many wars between kingdoms.
 Only the strongest team may stand a chance of winning the battle.
 
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/cover/cover.png?raw=true" width="450" />
+   <img src="./images/cover/cover.png" width="450" />
 
 ---
 
@@ -59,19 +59,19 @@ The characters must be used wisely, the strategy is what will determine the end 
  <tr>
   <td>Knight</td>
   <td>
-   <img src="./images/characters/red_knight.png.png" width="100" />
+   <img src="./images/characters/red_knight.png" width="100" />
   </td>
   <td>
-   <img src="./images/characters/yellow_knight.png.png" width="100" />
+   <img src="./images/characters/yellow_knight.png" width="100" />
   </td>
  </tr>
  <tr>
   <td>Mage</td>
   <td>
-   <img src="./images/characters/red_mage.png.png" width="100" />
+   <img src="./images/characters/red_mage.png" width="100" />
   </td>
   <td>
-   <img src="./images/characters/yellow_mage.png.png" width="100" />
+   <img src="./images/characters/yellow_mage.png" width="100" />
   </td>
  </tr>
 </table>
