@@ -22,7 +22,7 @@ The goal of each team is to invade the opposing team's palace, steal three diamo
  </tr>
  <tr>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/castles/red_castle.png" width="250" />
+   <img src="./images/castles/red_castle.png" width="250" />
   </td>
   <td>
    <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/castles/yellow_castle.png" width="250" />
