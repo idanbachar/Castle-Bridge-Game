@@ -25,7 +25,7 @@ The goal of each team is to invade the opposing team's palace, steal three diamo
    <img src="./images/castles/red_castle.png" width="250" />
   </td>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/castles/yellow_castle.png" width="250" />
+   <img src="./images//castles//yellow_castle.png" width="250" />
   </td>
  </tr>
 </table>
@@ -33,6 +33,7 @@ The goal of each team is to invade the opposing team's palace, steal three diamo
 ### Characters
 
 Each group has three characters:
+
 1. **Archer**
 2. **Knight**
 3. **Mage**
@@ -49,28 +50,28 @@ The characters must be used wisely, the strategy is what will determine the end 
  <tr>
   <td>Archer</td>
   <td>
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/characters/red_archer.png?raw=true" width="100" />
+   <img src="./images/characters/red_archer.png" width="100" />
   </td>
   <td>
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/characters/yellow_archer.png?raw=true" width="100" />
+   <img src="./images/characters/yellow_archer.png" width="100" />
   </td>
  </tr>
  <tr>
   <td>Knight</td>
   <td>
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/characters/red_knight.png?raw=true" width="100" />
+   <img src="./images/characters/red_knight.png.png" width="100" />
   </td>
   <td>
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/characters/yellow_knight.png?raw=true" width="100" />
+   <img src="./images/characters/yellow_knight.png.png" width="100" />
   </td>
  </tr>
  <tr>
   <td>Mage</td>
   <td>
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/characters/red_mage.png?raw=true" width="100" />
+   <img src="./images/characters/red_mage.png.png" width="100" />
   </td>
   <td>
-   <img src="https://github.com/idanbachar/castle-bridge-game/raw/master/images/characters/yellow_mage.png?raw=true" width="100" />
+   <img src="./images/characters/yellow_mage.png.png" width="100" />
   </td>
  </tr>
 </table>
@@ -86,42 +87,42 @@ Three diamonds per group. The first team to steal the diamonds and bring them to
  </tr>
  <tr>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/diamonds/red_diamond.png" width="100" />
+   <img src="./images/diamonds/red_diamond.png" width="100" />
   </td>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/diamonds/yellow_diamond.png" width="100" />
+   <img src="./images/diamonds/yellow_diamond.png" width="100" />
   </td>
  </tr>
 </table>
 
-
 ### Gallery
+
 <table border="1" cellspacing="0">
  <tr>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/gameplay/gameplay_1.png" width="350" />
+   <img src="./images/gameplay/gameplay_1.png" width="350" />
   </td>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/gameplay/gameplay_2.png" width="350" />
+   <img src="./images/gameplay/gameplay_2.png" width="350" />
   </td>
    <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/gameplay/gameplay_3.png" width="350" />
+   <img src="./images/gameplay/gameplay_3.png" width="350" />
   </td>
  </tr>
  <tr>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/gameplay/gameplay_4.png" width="350" />
+   <img src="./images/gameplay/gameplay_4.png" width="350" />
   </td>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/gameplay/gameplay_5.png" width="350" />
+   <img src="./images/gameplay/gameplay_5.png" width="350" />
   </td>
    <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/gameplay/gameplay_6.png" width="350" />
+   <img src="./images/gameplay/gameplay_6.png" width="350" />
   </td>
  </tr>
  <tr>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/gameplay/gameplay_7.png" width="350" />
+   <img src="./images/gameplay/gameplay_7.png" width="350" />
   </td>
  </tr>
 </table>
