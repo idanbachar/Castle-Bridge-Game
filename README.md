@@ -22,10 +22,10 @@ The goal of each team is to invade the opposing team's palace, steal three diamo
  </tr>
  <tr>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/castles/red_castle.png" width="250" />
+   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/castles/red_castle.png" width="250" />
   </td>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/castles/yellow_castle.png" width="250" />
+   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/castles/yellow_castle.png" width="250" />
   </td>
  </tr>
 </table>
@@ -86,10 +86,10 @@ Three diamonds per group. The first team to steal the diamonds and bring them to
  </tr>
  <tr>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/diamonds/red_diamond.png" width="100" />
+   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/diamonds/red_diamond.png" width="100" />
   </td>
   <td>
-   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-client/master/images/diamonds/yellow_diamond.png" width="100" />
+   <img src="https://raw.githubusercontent.com/idanbachar/castle-bridge-game/master/images/diamonds/yellow_diamond.png" width="100" />
   </td>
  </tr>
 </table>
